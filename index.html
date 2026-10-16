@@ -19,7 +19,7 @@
 :root{
   --bg:#E7E3EC; --felt:#F4F2F7; --panel:#FFFFFF; --panel2:#F0EDF4; --text:#1B1820; --muted:#5C5666; --line:#CDC6D6;
   --rise:#93650A; --arcane:#5E41BC; --strike:#B3302A; --wild:#555A68; --heart:#BC2F4B;
-  --hunter:#2B78AD; --arcanist:#1C8579; --dragonkin:#AD5918; --demon:#A1304F; --oathbound:#8C6D12;
+  --hunter:#2B78AD; --arcanist:#1C8579; --dragonkin:#AD5918; --demon:#A1304F; --oathbound:#8C6D12; --eclipse:#6A2C8E;
   --focus:#5E41BC;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -29,13 +29,13 @@
   :root:not([data-theme="light"]){
     --bg:#121015; --felt:#18151D; --panel:#221E28; --panel2:#2A2531; --text:#EDEAF2; --muted:#A8A3B3; --line:#3A3542;
     --rise:#E8B64C; --arcane:#A98BF0; --strike:#EF6A5E; --wild:#DCE0E8; --heart:#FF6B85;
-    --hunter:#4FA3D9; --arcanist:#3FBFAE; --dragonkin:#E0833A; --demon:#D9587C; --oathbound:#E3BE55; --focus:#A98BF0;
+    --hunter:#4FA3D9; --arcanist:#3FBFAE; --dragonkin:#E0833A; --demon:#D9587C; --oathbound:#E3BE55; --eclipse:#B77BE0; --focus:#A98BF0;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121015; --felt:#18151D; --panel:#221E28; --panel2:#2A2531; --text:#EDEAF2; --muted:#A8A3B3; --line:#3A3542;
   --rise:#E8B64C; --arcane:#A98BF0; --strike:#EF6A5E; --wild:#DCE0E8; --heart:#FF6B85;
-  --hunter:#4FA3D9; --arcanist:#3FBFAE; --dragonkin:#E0833A; --demon:#D9587C; --oathbound:#E3BE55; --focus:#A98BF0;
+  --hunter:#4FA3D9; --arcanist:#3FBFAE; --dragonkin:#E0833A; --demon:#D9587C; --oathbound:#E3BE55; --eclipse:#B77BE0; --focus:#A98BF0;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -823,6 +823,68 @@ button.deckpile{cursor:pointer}
 .tutcard{border-color:var(--hunter)}
 .tutnudge{border-color:var(--hunter);color:var(--hunter)}
 @media (prefers-reduced-motion: reduce){.coachhl{animation:none!important}}
+
+/* ---------- the Eclipse ---------- */
+.anompips{color:var(--eclipse)}
+.anompips i.on{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--eclipse) 75%,transparent))}
+.act.trans,.primary.trans{background:linear-gradient(90deg,var(--eclipse),#b0174f);color:#fff;border-color:transparent}
+.cf.cf-eclipse{background:linear-gradient(180deg,color-mix(in srgb,var(--eclipse) 16%,var(--panel)),var(--panel) 55%)}
+.cf.cf-eclipse .cf-art{box-shadow:0 0 0 1px color-mix(in srgb,#d81b60 55%,transparent)}
+.cf.cf-eclipse .cf-lv{grid-template-columns:5.3em 2.8em 2.8em 1fr}
+.cf.cf-eclipse.cf-t-summon .cf-art{border-radius:46% 46% .5em .5em / 34% 34% .5em .5em}
+.cf.cf-eclipse.cf-t-skill .cf-top{background:linear-gradient(90deg,color-mix(in srgb,var(--eclipse) 85%,#000),#8e1240);color:#fff;border-radius:.45em;padding:.1em .35em}
+.cf.cf-eclipse.cf-t-counter{border-style:double;border-width:.42em}
+.cf.cf-eclipse.cf-t-counter .cf-art{outline:1px dashed color-mix(in srgb,var(--eclipse) 70%,transparent);outline-offset:-.35em}
+.cf.cf-eclipse.cf-t-aura{box-shadow:0 0 0 1px var(--eclipse),0 0 1.4em color-mix(in srgb,var(--eclipse) 45%,transparent)}
+.cf.cf-eclipse.cf-t-aura .cf-art{border-radius:50%/40%}
+.unit.fx-transcend{animation:transGlow 1.4s ease-out}
+@keyframes transGlow{0%{box-shadow:0 0 0 0 #d81b60}40%{box-shadow:0 0 30px 8px color-mix(in srgb,#d81b60 70%,transparent)}100%{box-shadow:none}}
+
+/* ---------- reveal to opponent, waiting chip, back-row discard ---------- */
+.revq{position:fixed;top:64px;right:16px;z-index:9;display:flex;flex-direction:column;gap:10px;pointer-events:none;align-items:flex-end}
+.rvl{background:var(--panel);border:2px solid var(--c);border-radius:14px;padding:8px;box-shadow:0 12px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:6px;align-items:center}
+.rvh{font-size:13px;font-weight:600;color:var(--text);max-width:170px;text-align:center}
+.rvh b{color:var(--c)}
+.rvl .cf{--w:150px;pointer-events:none}
+.rvback{width:110px;height:150px;border-radius:10px;background:var(--panel2);color:var(--c);display:flex;align-items:center;justify-content:center;border:2px solid var(--line)}
+.rvback svg{width:70%;height:70%}
+@media (max-width:640px){.revq{top:52px;right:8px;left:8px;align-items:center}.revq .rvl:nth-last-child(n+3){display:none}.rvl{flex-direction:row;padding:6px;gap:8px;max-width:calc(100vw - 16px)}.rvl .cf{--w:92px}.rvh{max-width:110px}.rvback{width:70px;height:96px}}
+.waitchip{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:11;background:var(--text);color:var(--bg);font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.3);pointer-events:none;animation:tipIn .2s ease-out}
+.backrow .slot.filled{position:relative}
+.updiscard{position:absolute;top:50%;right:4px;transform:translateY(-50%);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;line-height:1.4}
+.updiscard:hover{background:var(--panel2)}
+@media (max-width:640px){.updiscard{font-size:10px;padding:0 6px;right:2px}}
+
+/* ---------- details panel ---------- */
+.detail.big{gap:20px}
+.detail.big .dside{display:flex;flex-direction:column;gap:12px;min-width:240px;max-width:520px}
+.dsec{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:color-mix(in srgb,var(--panel2) 55%,transparent)}
+.dsec h3{margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dsec p{margin:0 0 6px;font-size:14px;line-height:1.45}
+.dsec p:last-child{margin-bottom:0}
+.dsec.dlive{border-color:var(--focus,#A98BF0);background:color-mix(in srgb,var(--focus,#A98BF0) 8%,var(--panel))}
+.dsec.dclass{border-color:var(--c);background:color-mix(in srgb,var(--c) 7%,var(--panel))}
+.dsec.dclass h3{color:var(--c)}
+.drows{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:14px}
+.drows dt{color:var(--muted);font-weight:600}
+.drows dd{margin:0}
+.drows dd svg{vertical-align:-3px}
+.dparts{display:block;font-size:12px;color:var(--muted)}
+.deff{font-size:15px!important}
+.dnote{font-size:13px!important;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,var(--focus,#A98BF0) 10%,transparent)}
+.dstatus{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.dstatus li{padding:4px 8px;border-radius:8px;border-left:3px solid var(--muted);background:var(--panel)}
+.dstatus li.bad{border-color:#d0455e}.dstatus li.ok{border-color:#3aa86b}.dstatus li.wait{border-color:#d9a43a}
+.dlv{border-radius:8px;padding:6px 8px;margin-bottom:6px;opacity:.62;border:1px dashed var(--line)}
+.dlv.on{opacity:1;border-style:solid}
+.dlv.here{border-color:var(--focus,#A98BF0);background:color-mix(in srgb,var(--focus,#A98BF0) 9%,transparent)}
+.dlvh{display:flex;align-items:center;gap:10px;font-size:13px}
+.dlvh b{font-family:Cinzel,Georgia,serif;font-size:14px}
+.dlvh span{display:inline-flex;align-items:center;gap:3px;font-weight:700}
+.dlvh em{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.dlv ul{margin:4px 0 0;padding-left:18px;font-size:13.5px;line-height:1.4}
+.dlv .muted{font-size:12.5px;margin:4px 0 0}
+@media (max-width:640px){.detail.big .dside{min-width:0;max-width:none}.dsec{padding:8px 10px}}
 </style>
 </head>
 <body>
@@ -859,13 +921,15 @@ const CLASSES={
  arcanist:{name:'Arcanist',blurb:'Spells, tricks and Echo recasts.'},
  dragonkin:{name:'Dragonkin',blurb:'Huge dragons that grow with your stored crests (Hoard).'},
  demon:{name:'Demon',blurb:'Pay hearts for power (Pact).'},
- oathbound:{name:'The Oathbound',blurb:'Protect your Summons, earn Oath, then strike back. At 2 hearts, the Last Oath.'}
+ oathbound:{name:'The Oathbound',blurb:'Protect your Summons, earn Oath, then strike back. At 2 hearts, the Last Oath.'},
+ eclipse:{name:'The Eclipse',blurb:'Bend their choices, redirect their attacks, and Transcend.'}
 };
 function ladder(cls,lv,max){
  if(cls==='hunter') return 'Rank '+(lv===max?'S':['E','D','C','B'][lv-1]);
  if(cls==='arcanist') return 'Circle '+['I','II','III','IV','V'][lv-1];
  if(cls==='dragonkin') return ['Young','Adult','Ancient'][lv-1]||('Age '+lv);
  if(cls==='oathbound') return ['Squire','Knight','Paladin'][lv-1]||('Rank '+lv);
+ if(cls==='eclipse') return ['Dormant','Stirring','Ascended'][lv-1]||('Stage '+lv);
  return lv===max?'Unsealed':(lv+' seal'+(lv>1?'s':'')+' broken');
 }
 
@@ -904,7 +968,12 @@ const ABIL={
  bulwark:'Bulwark: takes 300 less damage from every attack and effect.',
  oathStrike:'+200 ATK for each Oath you have.',
  onKillOath:'When this destroys a Summon, gain 1 Oath.',
- aegis:"Your other Summons can't be targeted by enemy Skills."
+ aegis:"Your other Summons can't be targeted by enemy Skills.",
+ deathAnom:'When this is destroyed, gain 1 Anomaly.',
+ killAnom:'When this destroys a Summon, gain 1 Anomaly.',
+ onSummonAnom:'When summoned, gain 1 Anomaly.',
+ anomStrike:'+200 ATK for each Anomaly you have.',
+ transcend:'Transcendence: once per turn in your Play phase, spend 2 Anomaly to cast a free copy of the last Skill your opponent cast (not Auras).'
 };
 const KW={
  hunt:'Hunt: when this destroys a Summon, it levels up for free.',
@@ -912,9 +981,11 @@ const KW={
  pact:'Pact: you may pay hearts for missing crests; each heart pays for 2 crests.',
  echo:'Echo: may be cast again from your death pile, then goes to the bottom of your deck.',
  oath:'Oath: an Oathbound resource (max 3). Gain 1 when one of your Summons survives an enemy attack, Skill, ability or Counter, or when one of your Counters springs. Spend it to empower cards marked Oath.',
- vow:'Vow: an optional promise. Accept a real drawback to make the card much stronger.'
+ vow:'Vow: an optional promise. Accept a real drawback to make the card much stronger.',
+ anomaly:'Anomaly: an Eclipse resource (max 3). Gain 1 whenever one of your Counters springs, and from cards that say so. Spend it to empower cards marked Anomaly, or to Transcend.'
 };
-const OATH_RULES='The Oathbound gain 1 Oath (max 3) when one of their Summons survives an enemy attack, Skill, ability or Counter, or when one of their Counters springs. Awakening: The Last Oath. At 2 hearts or fewer, their Summons get +500 ATK, and the first time each turn an enemy card effect would destroy one of their Summons, it survives with 100 HP instead.';
+const ANOM_RULES='The Eclipse gains 1 Anomaly (max 3) whenever one of its Counters springs, and from cards that say so. Transcendence: at Ascended, The Tribrid can, once per turn in your Play phase, spend 2 Anomaly to cast a free copy of the last Skill your opponent cast (not Auras), choosing new targets.';
+const OATH_RULES='The Oathbound gain 1 Oath (max 3) when one of their Summons survives an enemy attack, Skill, ability or Counter, or when one of their Counters springs. Awakening: The Last Oath. At 2 hearts or fewer, their Summons get +400 ATK, and the first time each turn an enemy card effect would destroy one of their Summons, it survives with 100 HP instead.';
 
 /* ---------- card definitions ---------- */
 function SU(cls,name,cost,levels,abil,kw,extra){return Object.assign({cls:cls,type:'summon',name:name,cost:cost,levels:levels,abil:abil||{},kw:kw||[]},extra||{});}
@@ -1065,7 +1136,7 @@ const DEFS={
  o_smite:SK('oathbound','Smite',{A:2},'smite','Deal 1000 damage to an enemy Summon. <b>Oath 1:</b> then heal each of your Summons by 500.',{target:'enemySummon',oath:1}),
  o_martyr:SK('oathbound','Martyr’s Oath',{A:1},'auraMartyr','Aura. When one of your Summons is destroyed, gain 1 Oath.',{sub:'aura'}),
  o_riposte:CO('oathbound','Riposte',{A:1},'enemyAttackSummon','reverse','When an enemy Summon attacks one of your Summons.','Your Summon strikes first instead.'),
- o_faith:CO('oathbound','Shield of Faith',{A:2},'ownWouldDestroy','surviveHeal','When one of your Summons would be destroyed.','It survives instead and is fully healed.'),
+ o_faith:CO('oathbound','Shield of Faith',{A:1},'ownWouldDestroy','surviveHeal','When one of your Summons would be destroyed.','It survives instead with 100 HP.'),
  o_commander:SU('oathbound','Knight-Commander',{R:2},[[1200,1400],[1600,1800],[2100,2200]],{1:['onSummonLevelAlly']}),
  o_marcus:SU('oathbound','Sir Marcus, the Oathbound',{R:3,A:1},[[2400,2600],[3000,3100],[3700,3600]],{1:['aegis'],2:['skillProof'],3:['oathStrike']}),
  o_muster:SK('oathbound','Sworn Muster',{A:1},'tutorSummon','Search your deck for a Summon, add it to your hand, then shuffle.'),
@@ -1073,9 +1144,40 @@ const DEFS={
  o_vigil:SK('oathbound','Night Vigil',{A:2},'vigil','Draw 2 cards. <b>Vow:</b> lose 1 heart and draw 4 instead.',{vowText:'Take the Vow: lose 1 heart and draw 4 cards instead of 2.'}),
  o_chapel:SK('oathbound','Chapel of Vows',{A:1},'auraChapel','Aura. At the start of your turn, if you have any Oath, add 1 Rise to your dial.',{sub:'aura'}),
  o_aegis:SK('oathbound','Aegis of Dawn',{A:2},'auraAegis','Aura. Your Summons take 300 less damage from enemy Skills, abilities and Counters.',{sub:'aura'}),
- o_hall:SK('oathbound','Hall of Paladins',{A:2},'auraHall','Aura. Your Summons at Paladin (their top level) get +500 ATK.',{sub:'aura'}),
+ o_hall:SK('oathbound','Hall of Paladins',{A:2},'auraHall','Aura. Your Summons at Paladin (their top level) get +300 ATK.',{sub:'aura'}),
  o_rebuke:CO('oathbound','Divine Rebuke',{A:2},'enemySkillTargets','cancel',"When an opponent's Skill targets one of your Summons.",'Cancel it.'),
- o_avenge:CO('oathbound','Avenging Oath',{A:1},'ownDestroyed','vengeance1000','When one of your Summons is destroyed in battle.','Deal 1000 damage to the Summon that destroyed it.')
+ o_avenge:CO('oathbound','Avenging Oath',{A:1},'ownDestroyed','vengeance1000','When one of your Summons is destroyed in battle.','Deal 1000 damage to the Summon that destroyed it.'),
+ /* ----- The Eclipse (Enzo's deck): vampires, witches, wolves and hybrids. First 17 are Enzo's; the first 20 make the 40-card deck. ----- */
+ e_blood:SU('eclipse','Newborn',{R:1},[[900,1000],[1200,1300],[1600,1600]],{1:['deathAnom'],3:['lifesteal']}),
+ e_alpha:SU('eclipse','The Alpha',{R:2},[[1500,1200],[1900,1500],[2500,1900]],{1:['killAnom'],3:['vsHigher300']}),
+ e_hex:SU('eclipse','Spellbinder',{R:2},[[1100,1600],[1400,2000],[1800,2500]],{1:['onSummonFreeze'],2:['skillProof'],3:['startDmg300']}),
+ e_prog:SU('eclipse','The Hybrid',{R:3},[[2200,2100],[2800,2600],[3400,3100]],{1:['onSummonAnom'],2:['lifesteal'],3:['killAnom']}),
+ e_tri:SU('eclipse','The Tribrid',{R:3,A:1},[[2500,2500],[3100,3000],[3700,3500]],{1:['onSummonAnom'],2:['skillProof'],3:['transcend']}),
+ e_oath:SK('eclipse','Sacrifice',{A:1},'bloodOath','One of your Summons takes 500 damage. Draw 2 cards and gain 1 Anomaly.',{target:'ownSummon'}),
+ e_circle:SK('eclipse','Boundary Spell',{A:1},'bindCircle','Choose an enemy Summon. On its owner’s next turn it can’t attack or level up.',{target:'enemySummon'}),
+ e_fate:SK('eclipse','Premonition',{A:1},'borrowFate','Look at your opponent’s hand. Choose a Skill or Counter in it and discard it.'),
+ e_reveal:SK('eclipse','Dispel',{A:2},'revelation','Destroy one of your opponent’s face-down Counters. Grimoire stops this.'),
+ e_trap:CO('eclipse','Wolfsbane',{A:1},'enemySummon','dmg700anom','When your opponent summons.','Deal 700 damage to it. If that destroys it, gain 1 Anomaly.'),
+ e_rev:CO('eclipse','Reversal Spell',{A:1},'enemyAttackSummon','redirect','When an enemy Summon attacks one of your Summons.','You choose another of their Summons. The attacker hits that one instead, with its full ATK, and nothing strikes back. If they have no other Summon, the attack just stops.'),
+ e_seal:CO('eclipse','Silence',{A:2},'enemySkill','cancel','When your opponent casts a Skill.','Cancel it.'),
+ e_inst:CO('eclipse','Daylight Ring',{A:1},'ownWouldDestroy','surviveHeal','When one of your Summons would be destroyed.','It survives instead with 100 HP.'),
+ e_ecl:SK('eclipse','Coven Circle',{A:1},'auraAnom','Aura. At the start of your turn, gain 1 Anomaly.',{sub:'aura'}),
+ e_ward:SK('eclipse','Bloodline',{A:1},'auraBloodline','Aura. When one of your Summons is destroyed, draw 1 card.',{sub:'aura'}),
+ e_veil:SK('eclipse','Grimoire',{A:1},'auraVeil','Aura. Your face-down Counters can’t be destroyed by enemy cards. When one of your Counters springs, draw 1 card.',{sub:'aura'}),
+ e_conv:SK('eclipse','Dark Magic',{A:2},'auraConv','Aura. Your Summons get +300 ATK for each Anomaly you have. At the start of your turn, lose 1 Anomaly.',{sub:'aura'}),
+ e_fledge:SU('eclipse','Lone Wolf',{R:1},[[900,600],[1200,800],[1600,1000]],{1:['swift']}),
+ e_siphon:SK('eclipse','Siphon',{A:1},'siphon','Deal 800 damage to an enemy Summon. <b>Anomaly 1:</b> deal 1300 instead.',{target:'enemySummon',tag:'Strike',anom:1}),
+ e_omen:CO('eclipse','Curse',{A:1},'enemySummon','omen','When your opponent summons.','They discard a random card from their hand.'),
+ e_moon:SK('eclipse','Full Moon',{A:2},'auraAtk300','Aura. Your Summons get +300 ATK.',{sub:'aura'}),
+ e_familiar:SU('eclipse','Siphoner',{R:1},[[600,1000],[900,1300],[1200,1600]],{1:['onSummonAnom','deathDraw']}),
+ e_veilw:SU('eclipse','Heretic',{R:2},[[1300,1400],[1700,1800],[2200,2200]],{1:['anomStrike']}),
+ e_thrall:SU('eclipse','Ripper',{R:2},[[1700,1100],[2100,1400],[2700,1800]],{1:['anomStrike'],2:['lifesteal'],3:['directPlus1']}),
+ e_matri:SU('eclipse','The Original',{R:3},[[2300,2300],[2800,2700],[3400,3100]],{1:['onSummonLevelAlly'],3:['cleave']}),
+ e_mirror:SK('eclipse','Compulsion',{A:1},'mirrorHex','Choose an enemy Summon. It strikes another of its owner’s Summons with its full ATK.',{target:'enemySummon'}),
+ e_evo:SK('eclipse','Transition',{A:1},'darkEvo','Level up one of your Summons, even if it already levelled up this turn. <b>Anomaly 1:</b> draw 1 card.',{target:'ownBelowMax',anom:1}),
+ e_pact:SK('eclipse','Call the Pack',{A:1},'tutorSummon','Search your deck for a Summon, add it to your hand, then shuffle.'),
+ e_total:SK('eclipse','Total Eclipse',{A:2},'totalEclipse','Deal 600 damage to every enemy Summon. Gain 1 Anomaly for each one destroyed. <b>Anomaly 1:</b> deal 900 instead.',{anom:1}),
+ e_mirrorB:CO('eclipse','Cloaking Spell',{A:1},'enemyDirect','negateDirect','When an enemy Summon attacks you directly.','Cancel that hit.')
 };
 const DECKS={};
 Object.keys(DEFS).forEach(function(id){const c=DEFS[id].cls;(DECKS[c]=DECKS[c]||[]).push([id,2]);});
@@ -1086,7 +1188,8 @@ const ART_PAL={
  arcanist:{a:'#071f1d',b:'#1b6e64',acc:'#7ff0de',glow:'#3fbfae'},
  dragonkin:{a:'#1e0b03',b:'#8f3e10',acc:'#ffc070',glow:'#ff8a3a'},
  demon:{a:'#1a040b',b:'#71162f',acc:'#ff8aa6',glow:'#e0405f'},
- oathbound:{a:'#171103',b:'#6b5212',acc:'#ffe7a3',glow:'#f5c84c'}
+ oathbound:{a:'#171103',b:'#6b5212',acc:'#ffe7a3',glow:'#f5c84c'},
+ eclipse:{a:'#07030c',b:'#2c0d36',acc:'#f0b3ff',glow:'#d81b60'}
 };
 /* subjects drawn in a 40x40 box. f = filled silhouettes, s = stroked lines, e = accent details */
 const SUBJ={
@@ -1144,6 +1247,8 @@ const SUBJ={
  altar:{f:['M5 31h30v8H5Z','M10 23h20v8H10Z','M20 3c3 6 8 9 7 15-.6 3-3 5-7 5s-6.4-2-7-5c-1-6 4-9 7-15Z'],e:['M20 11c1.5 3 3 4 2.6 6.4-.3 1.6-1.3 2.4-2.6 2.4s-2.3-.8-2.6-2.4C17 15 18.5 14 20 11Z']},
  moon:{f:['M24 2a18 18 0 1 0 14 26A14 14 0 1 1 24 2Z']},
  halo:{s:['M7 7a13 4 0 0 0 26 0','M30 5a13 4 0 0 0-19-2.6'],f:['M20 17C14 7 4 6 1 13c4 0 6 4 4 8 4-2 6 2 4 6 4-4 8-2 11-3Z','M20 17C26 7 36 6 39 13c-4 0-6 4-4 8-4-2-6 2-4 6-4-4-8-2-11-3Z','M18.2 15h3.6v24h-3.6Z'],e:['M15 30h10v2.4H15Z']},
+ hybrid:{f:['M14 10c0-4 3-7 6-7s6 3 6 7-3 7-6 7-6-3-6-7Z','M15 6L10 0l2.6 8Z','M25 6l5-6-2.6 8Z','M12 18h16l3 12-4 1-1 8h-4l-2-6-2 6h-4l-1-8-4-1Z','M12 19C6 12 1 13 0 19c3 0 4 3 3 6 3-1 5 1 4 4 2-3 4-4 5-6Z','M28 19c6-7 11-6 12 0-3 0-4 3-3 6-3-1-5 1-4 4-2-3-4-4-5-6Z'],e:['M16.6 9h2.2v1.6h-2.2ZM21.2 9h2.2v1.6h-2.2Z']},
+ eclipse:{s:['M20 20m-18 0a18 18 0 1 0 36 0a18 18 0 1 0-36 0'],f:['M20 5a15 15 0 1 1 0 30a15 15 0 1 1 0-30Z'],e:['M20 5a15 15 0 0 1 0 30a10 15 0 0 0 0-30Z']},
  paladin:{s:['M9 4a11 3.4 0 1 0 22 0a11 3.4 0 1 0-22 0'],f:['M20 9C11 9 7 16 7 24v8l5 3V26h16v9l5-3v-8C33 16 29 9 20 9Z','M5 36h30v3H5Z'],e:['M12 22h16v2.4H12Z','M19 12h2v8h-2Z']}
 };
 const ART_MAP={
@@ -1169,6 +1274,12 @@ Object.assign(ART_MAP,{
  d_scout:['flame',0,.8],d_guardian:['shield'],d_matriarch:['egg',1],d_elder:['dragon',0,1.2],d_heart:['drop'],d_tbreath:['gem',1],d_inferno:['flame',0,1.1],d_rekindle:['flame',1],d_resolve:['scale'],d_buffet:['wings'],
  m_cultist:['hooded',1],m_wraith:['hooded',0,1.1],m_paineater:['claw',1],m_brute:['demon',1],m_king:['crown'],m_harvest:['scythe',1],m_lifedrain:['drop'],m_rite:['altar',1],m_hellmaw:['wolf',1],m_shield:['shield',1]
 });
+Object.assign(ART_MAP,{
+ e_blood:['drop',0,1.05],e_alpha:['wolf',0,1.1],e_hex:['hat',1],e_prog:['wolf',1,1.15],e_tri:['hybrid',0,1.15],e_fledge:['claw',0,.9],e_familiar:['hooded',1,.95],e_veilw:['hat',0,1.05],e_thrall:['dagger',1],e_matri:['crown',0,1.1],
+ e_oath:['dagger'],e_circle:['rune'],e_fate:['eye'],e_reveal:['book',1],e_siphon:['drop',1],e_mirror:['mirror'],e_evo:['arrowup'],e_pact:['horn'],e_total:['eclipse',0,1.15],
+ e_trap:['chain'],e_rev:['arrows',1],e_seal:['sigil'],e_inst:['gem'],e_omen:['skull'],e_mirrorB:['mirror',1],
+ e_ecl:['orbs'],e_ward:['drop'],e_veil:['book'],e_conv:['vortex'],e_moon:['moon']
+});
 let artSeq=0;
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function rng(seed){let x=seed||1;return function(){x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296;};}
@@ -1188,6 +1299,11 @@ function artScene(cls,R){
   h+='<circle cx="'+(30+R()*60).toFixed(0)+'" cy="20" r="16" fill="'+P.glow+'" fill-opacity=".25"/>';
   h+='<path d="M0 80V58l14-12 10 8 16-18 14 14 12-10 18 16 12-12 24 18v26Z" fill="#000" fill-opacity=".45"/>';
   h+='<path d="M0 80V66l20-10 18 10 24-8 22 10 18-8 18 8v12Z" fill="#000" fill-opacity=".35"/>';
+ } else if(cls==='eclipse'){
+  h+='<circle cx="60" cy="30" r="30" fill="'+P.glow+'" fill-opacity=".16"/>';
+  for(let i=0;i<20;i++){const a=i*Math.PI/10+R()*.15,r2=24+R()*16;h+='<path d="M'+(60+Math.cos(a)*19).toFixed(1)+' '+(30+Math.sin(a)*19).toFixed(1)+'L'+(60+Math.cos(a)*r2).toFixed(1)+' '+(30+Math.sin(a)*r2).toFixed(1)+'" stroke="'+P.acc+'" stroke-opacity=".28" stroke-width="'+(0.6+R()*1.2).toFixed(1)+'"/>';}
+  h+='<circle cx="60" cy="30" r="18" fill="'+P.a+'" stroke="'+P.acc+'" stroke-opacity=".55" stroke-width="1.2"/>';
+  for(let i=0;i<4;i++){h+='<ellipse cx="'+(R()*120).toFixed(0)+'" cy="'+(64+R()*14).toFixed(0)+'" rx="'+(26+R()*20).toFixed(0)+'" ry="6" fill="'+P.glow+'" fill-opacity=".13"/>';}
  } else if(cls==='oathbound'){
   for(let i=0;i<7;i++){const x=(i-3)*22;h+='<path d="M60 -6L'+(60+x-8)+' 82L'+(60+x+8)+' 82Z" fill="'+P.acc+'" fill-opacity="'+(.05+R()*.05).toFixed(3)+'"/>';}
   h+='<path d="M36 80V40a24 24 0 0 1 48 0v40" fill="none" stroke="'+P.acc+'" stroke-opacity=".3" stroke-width="2"/>';
@@ -1225,13 +1341,14 @@ function cardArt(id,cls){
 
 /* ---------- card faces ---------- */
 Object.keys(DEFS).forEach(function(k){DEFS[k].id=k;});
-function cardNo(d){const ids=Object.keys(DEFS).filter(function(k){return DEFS[k].cls===d.cls;});return {hunter:'AH',arcanist:'AR',dragonkin:'DK',demon:'DM',oathbound:'OB'}[d.cls]+'-'+String(ids.indexOf(d.id)+1).padStart(3,'0');}
+function cardNo(d){const ids=Object.keys(DEFS).filter(function(k){return DEFS[k].cls===d.cls;});return {hunter:'AH',arcanist:'AR',dragonkin:'DK',demon:'DM',oathbound:'OB',eclipse:'EC'}[d.cls]+'-'+String(ids.indexOf(d.id)+1).padStart(3,'0');}
 function typeLine(d){return d.type==='summon'?'Summon':d.type==='skill'?(d.sub==='aura'?'Aura Skill':'Skill'):(d.sub==='aura'?'Aura Counter':'Counter');}
 function lvTag(cls,lv,max){
  if(cls==='hunter') return lv===max?'S':['E','D','C','B'][lv-1];
  if(cls==='arcanist') return ['I','II','III','IV','V'][lv-1];
  if(cls==='dragonkin') return ['Young','Adult','Ancient'][lv-1]||String(lv);
  if(cls==='oathbound') return ['Squire','Knight','Paladin'][lv-1]||String(lv);
+ if(cls==='eclipse') return ['Dormant','Stirring','Ascended'][lv-1]||String(lv);
  let s='';for(let i=1;i<=max;i++) s+=(i<=lv?'●':'○');return s;
 }
 function hasAbilAny(d,a){return Object.keys(d.abil||{}).some(function(lv){return d.abil[lv].indexOf(a)>=0;});}
@@ -1241,6 +1358,7 @@ function kwList(d){
  if(d.echo) k.push('Echo');
  if(d.pact&&k.indexOf('Pact')<0) k.push('Pact');
  if(d.oath) k.push('Oath '+d.oath);
+ if(d.anom) k.push('Anomaly '+d.anom);
  if(d.vowText) k.push('Vow');
  if(d.tag) k.unshift(d.tag);
  return k;
@@ -1251,10 +1369,10 @@ function cardFace(d,o){
   body='<div class="cf-lv hd"><b></b><span>ATK</span><span>HP</span></div>'+d.levels.map(function(st,i){
    const lv=i+1,ab=(d.abil[lv]||[]).filter(function(a){return a!=='taunt'&&a!=='swift';}).map(function(a){return ABIL[a];}).join(' ');
    return '<div class="cf-lv'+(o.level===lv?' cur':'')+(lv===d.levels.length?' top':'')+'"><b>'+lvTag(d.cls,lv,d.levels.length)+'</b><span>'+st[0]+'</span><span>'+st[1]+'</span>'+(ab?'<em>'+ab+'</em>':'')+'</div>';
-  }).join('')+(d.vowText?'<p class="cf-text cf-vow">'+d.vowText+'</p>':'');
+  }).join('')+(d.vowText?'<p class="cf-text cf-vow">'+d.vowText+'</p>':'')+(d.topName?'<p class="cf-text cf-vow">At '+lvTag(d.cls,d.levels.length,d.levels.length)+' it becomes <b>'+d.topName+'</b>.</p>':'');
  } else if(d.type==='skill') body='<p class="cf-text">'+d.text.replace(/^Aura\. /,'')+'</p>';
  else body='<p class="cf-text"><b>Trigger:</b> '+d.triggerText+'</p><p class="cf-text"><b>Effect:</b> '+d.effectText+'</p>';
- return '<div class="cf cf-'+(o.size||'m')+'"'+lpAttr+' style="--c:'+colorVar(d.cls)+'"><div class="cf-top"><span class="cf-cost">'+costHtml(d.cost,d.pact)+'</span><span class="cf-name">'+d.name+'</span></div>'+
+ return '<div class="cf cf-'+(o.size||'m')+' cf-'+d.cls+' cf-t-'+(d.sub==='aura'?'aura':d.type)+'"'+lpAttr+' style="--c:'+colorVar(d.cls)+'"><div class="cf-top"><span class="cf-cost">'+costHtml(d.cost,d.pact)+'</span><span class="cf-name">'+d.name+'</span></div>'+
   '<div class="cf-art">'+cardArt(d.id)+'</div><div class="cf-type"><span>'+typeLine(d)+'</span><span>'+kwList(d).map(function(x){return '<i data-lp="kw:'+x+'">'+x+'</i>';}).join('')+'</span></div>'+
   '<div class="cf-body">'+body+'</div><div class="cf-foot"><span>'+CLASSES[d.cls].name+'</span><span>'+cardNo(d)+'</span></div></div>';
 }
@@ -1265,8 +1383,10 @@ function kwHelp(d){
  if(d.echo) out.push(KW.echo);
  if(d.pact&&(d.kw||[]).indexOf('pact')<0) out.push(KW.pact);
  if(d.oath) out.push(KW.oath);
+ if(d.anom) out.push(KW.anomaly);
  if(d.vowText) out.push(KW.vow);
  if(d.cls==='oathbound') out.push(OATH_RULES);
+ if(d.cls==='eclipse') out.push(ANOM_RULES);
  if(d.type==='summon'){if(hasAbilAny(d,'taunt')) out.push(ABIL.taunt);if(hasAbilAny(d,'swift')) out.push(ABIL.swift);
   out.push('Summons: pay the cost to place it in an empty Summon slot. It can attack from your next turn. Pay 1 Rise to level it up (once per turn); levelling fully heals it and its abilities stack.');}
  else if(d.type==='skill') out.push(d.sub==='aura'?'Aura Skill: stays face-up in your back row and keeps working.':'Skill: cast it during your Play phase, then it goes to the death pile.');
@@ -1426,6 +1546,7 @@ function postFx(){
  if(q('.fx-hit').length) buzz(18);
  if(q('.ghostcard').length) buzz(40);
  q('.fx-summon').forEach(function(el){const d=DEFS[el.dataset.cid];if(d&&(d.cost.R||0)>=3) setTimeout(function(){cutIn(d);},120);});
+ q('.fx-transcend').forEach(function(el){const d=DEFS[el.dataset.cid];if(d){setTimeout(function(){cutIn(d,'Transcendence',d.name,true);},200);const c=ctr(el);ringAt(c.x,c.y,'#d81b60',Math.max(c.w,c.h)*1.4,900);particles(c.x,c.y,'#f0b3ff',26,c.w*.8,6,1000,true);}});
  q('.die.tumble').forEach(function(el){const keep=el.innerHTML,f=['R','A','S','W'];let n=0;const iv=setInterval(function(){n++;if(n>6||!el.isConnected){clearInterval(iv);if(el.isConnected) el.innerHTML=keep;return;}const k=f[Math.floor(Math.random()*4)];el.innerHTML=icon(k,22)+'<span>'+CREST[k]+'</span>';},80);});
  q('.fx-summon').forEach(function(el){const c=ctr(el),col=cssC(el);setTimeout(function(){ringAt(c.x,c.y,col,Math.max(c.w,c.h)*.9,700);particles(c.x,c.y,col,16,c.w*.55,6,750);},260);sfx('summon');});
  q('.fx-hit').forEach(function(el){const c=ctr(el);particles(c.x,c.y,'#ffffff',8,50,5,420);particles(c.x,c.y,cssC(el),6,60,5,500);sfx('hit');});
@@ -1437,8 +1558,8 @@ function postFx(){
  if(q('.hcard.drawn').length) sfx('draw');
  if(q('.die.tumble').length) sfx('dice');
  if(q('.pip.gainfx').length) sfx('crest');
- if(S.splash&&!S.splash.snd){S.splash.snd=1;sfx(S.splash.t==='Battle!'?'battle':S.splash.t==='Counter!'?'counter':S.splash.t==='The Last Oath'?'victory':'turn');}
- if(S.oathFx!==null&&S.oathFx!==undefined){const op=document.querySelector('.strip[data-pi="'+S.oathFx+'"] .oathpips');if(op){const c=ctr(op);particles(c.x,c.y,'#f5c84c',10,40,5,600,true);sfx('heal');}}
+ if(S.splash&&!S.splash.snd){S.splash.snd=1;sfx(S.splash.t==='Battle!'?'battle':S.splash.t==='Counter!'?'counter':(S.splash.t==='The Last Oath'||S.splash.t==='Transcendence')?'victory':S.splash.t==='The Tribrid'?'cutin':'turn');}
+ if(S.oathFx!==null&&S.oathFx!==undefined){const op=document.querySelector('.strip[data-pi="'+S.oathFx+'"] .oathpips');if(op){const c=ctr(op);particles(c.x,c.y,op.classList.contains('anompips')?'#d36bff':'#f5c84c',10,40,5,600,true);sfx('heal');}}
  if(S.over&&!S.over.snd){
   S.over.snd=1;const w=S.over.draw?null:S.players[S.over.winner];
   const lost=(S.mode==='ai'||S.mode==='online')&&w&&w!==VIEW();
@@ -1452,7 +1573,7 @@ function postFx(){
  Storage: lobby/<code> (who is in the game), gview/<code> (the guest's view),
  gintent/<code> (the guest's latest move). The room is only a fast nudge. */
 const NET={role:null,code:null,seat:0,ver:0,lastJson:'',writing:false,dirty:false,ack:0,lastSeq:0,seq:0,pending:0,pendAt:0,pend:null,anims:[],usel:null,unsub:[],rm:null,roomOk:false,oppOnline:true,lobby:[],typed:'',err:'',splashKey:'',overSeen:false,info:''};
-function emptyPend(){return {fx:[],ghosts:[],heartFx:{},rollFx:false,rollIdx:null,dialFx:null,drawFx:[],deckFx:null,oathFx:null,anims:[]};}
+function emptyPend(){return {fx:[],ghosts:[],heartFx:{},rollFx:false,rollIdx:null,dialFx:null,drawFx:[],deckFx:null,oathFx:null,anims:[],reveals:[]};}
 NET.pend=emptyPend();
 const IO={tried:false,busy:null,ok:false,db:null,room:null,user:null,me:{id:null,name:''},mock:null};
 function ioInit(){
@@ -1626,6 +1747,7 @@ function netCapture(){
  if(S.drawFx&&S.drawFx.length) P0.drawFx=P0.drawFx.concat(S.drawFx);
  if(S.deckFx!==null&&S.deckFx!==undefined) P0.deckFx=S.deckFx;
  if(S.oathFx!==null&&S.oathFx!==undefined) P0.oathFx=S.oathFx;
+ if(S.reveals&&S.reveals.length) P0.reveals=(P0.reveals||[]).concat(S.reveals);
  netSchedule();
 }
 function guestView(pend){
@@ -1636,14 +1758,14 @@ function guestView(pend){
   q.deck=hide(p.deck);q.hearts=hide(p.hearts);
   if(i===G){q.deckTypes={};p.deck.forEach(function(c){const t=D(c).type;q.deckTypes[t]=(q.deckTypes[t]||0)+1;});}
   if(i!==G){q.hand=hide(p.hand);q.back=p.back.map(function(sl){return sl&&!sl.faceUp?Object.assign({},sl,{card:{uid:sl.card.uid,id:null}}):sl;});}
-  q.remote=i!==G;q.ai=false;delete q.oathStamp;
+  q.remote=i!==G;q.ai=false;delete q.oathStamp;delete q.anomStamp;
   return q;
  });
  let modal=null;
  if(S.modal&&S.modal.pi===G) modal={title:S.modal.title,body:S.modal.body,who:S.modal.who||'',wide:!!S.modal.wide,pi:G,seq:S.modal.seq,options:S.modal.options.map(function(o){return {label:o.label,disabled:!!o.disabled,cancel:!!o.cancel,cid:o.card?o.card.id:null,level:o.level||null};})};
  const sp=S.splash?{t:S.splash.t,s:S.splash.s,cls:S.splash.cls,age:Date.now()-S.splash.at,key:S.splash.at}:null;
  return {ack:NET.ack,s:{mode:'online',players:pl,active:S.active,turnNo:S.turnNo,phase:S.phase,log:S.log.slice(0,70),over:S.over?{winner:S.over.winner,draw:!!S.over.draw}:null,modal:modal,pick:S.pick||null,rules:S.rules,splash:sp,
-  fx:pend.fx,ghosts:pend.ghosts,heartFx:pend.heartFx,rollFx:pend.rollFx,rollIdx:pend.rollIdx,dialFx:pend.dialFx,drawFx:pend.drawFx,deckFx:pend.deckFx,oathFx:pend.oathFx,drawWait:!!drawResolve&&P()===S.players[G],stats:S.stats||null},anims:pend.anims};
+  fx:pend.fx,ghosts:pend.ghosts,heartFx:pend.heartFx,rollFx:pend.rollFx,rollIdx:pend.rollIdx,dialFx:pend.dialFx,drawFx:pend.drawFx,deckFx:pend.deckFx,oathFx:pend.oathFx,reveals:(pend.reveals||[]).slice(-6),waiting:!!(S.modal&&S.modal.pi!==G),drawWait:!!drawResolve&&P()===S.players[G],stats:S.stats||null},anims:pend.anims};
 }
 function netSchedule(){
  if(NET.role!=='host'||!S) return;
@@ -1680,7 +1802,7 @@ function remoteAct(a,ds,ms){
  }
  if(S.over||P()!==g) return;
  if(a==='drawcard'){if(drawResolve&&!S.modal){const r=drawResolve;drawResolve=null;r();}return;}
- const allowed=['wild','die','reroll','confirm','battle','end','attackall','hand','pickcancel','castnow','lanepick','slotpick','tgt','atk','atkpick','lvl','emp','rush','death'];
+ const allowed=['wild','die','reroll','confirm','battle','end','attackall','hand','pickcancel','castnow','lanepick','slotpick','tgt','atk','atkpick','lvl','emp','rush','death','transcend','discardup'];
  if(allowed.indexOf(a)<0) return;
  if(a==='death') ds.side='op';
  gameAct(a,ds,true);
@@ -1722,6 +1844,7 @@ function guestApply(d){
  if(n.modal){n.modal.title=cleanHtml(n.modal.title);n.modal.body=cleanHtml(n.modal.body);n.modal.who=cleanHtml(n.modal.who);n.modal.options.forEach(function(o){o.label=cleanHtml(o.label);if(o.cid&&DEFS[o.cid]) o.card=DEFS[o.cid];});}
  if(n.splash){n.splash.t=cleanHtml(n.splash.t);n.splash.s=cleanHtml(n.splash.s);n.splash.at=Date.now()-(+n.splash.age||0);if(n.splash.key===NET.splashKey) n.splash.snd=1;NET.splashKey=n.splash.key;}
  if(n.over){if(NET.overSeen){n.over.snd=1;n.over.resShown=true;}NET.overSeen=true;}
+ n.reveals=(n.reveals||[]).filter(function(r){return r&&REVEAL_VERB[r.v]&&(r.id===null||DEFS[r.id]);}).map(function(r){return {pi:+r.pi,id:r.id,v:r.v};});
  n.usel=NET.usel!==null&&n.players[1].lanes[NET.usel]?NET.usel:null;
  const firstView=!S;
  S=n;
@@ -1748,6 +1871,7 @@ function guestAct(a,ds){
  if(LM) return;
  const mine=P()===VIEW()&&!S.over;
  if(a==='udetail'||a==='slot'||a==='pickdetail'||a==='ophand'||(a==='death'&&!(mine&&S.phase==='main'&&ds.side==='me'))){infoAct(a,ds);return;}
+ if(a==='hand'&&!(mine&&(S.phase==='main'||S.phase==='battle')&&!S.modal)){const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
  if(!mine) return;
  if(a==='atk'||a==='atkpick'||a==='hand'){NET.usel=null;S.usel=null;}
  if(a==='drawcard'){S.drawWait=false;render();}
@@ -1865,11 +1989,11 @@ function maybeShowResults(){
   LM={title:(LASTREC&&LASTREC.up?'Rank up! ':'')+(!w?'A draw':S.mode==='local'?w.name+' wins!':w===VIEW()?'Victory!':'Defeated'),body:resultsHtml(),options:[{label:'Close',value:null,cancel:true}],wide:true};LMres=null;render();},1600);
 }
 /* ---------- big-Summon cut-ins ---------- */
-function cutIn(d){
+function cutIn(d,tag,nm,top){
  const L=document.getElementById('fxl');if(!L||!animOK()) return;
- const lv=d.levels[0];
+ const lv=d.levels[top?d.levels.length-1:0];
  const el=document.createElement('div');el.className='cutin';el.style.setProperty('--c',colorVar(d.cls));
- el.innerHTML='<div class="cutbar"><div class="cutart">'+cardArt(d.id)+'</div><div class="cuttext"><span>'+(d.cls==='oathbound'?'Arise':'Summon')+'</span><b>'+d.name+'</b><em>'+icon('S',16)+lv[0]+' &nbsp; '+heartIcon(15)+lv[1]+'</em></div></div>';
+ el.innerHTML='<div class="cutbar"><div class="cutart">'+cardArt(d.id)+'</div><div class="cuttext"><span>'+(tag||(d.cls==='oathbound'?'Arise':d.cls==='eclipse'?'Manifest':'Summon'))+'</span><b>'+(nm||d.name)+'</b><em>'+icon('S',16)+lv[0]+' &nbsp; '+heartIcon(15)+lv[1]+'</em></div></div>';
  L.appendChild(el);
  const an=el.animate([{opacity:0,transform:'translateX(-60%) skewX(-12deg)'},{opacity:1,transform:'translateX(0) skewX(-12deg)',offset:.18},{opacity:1,transform:'translateX(3%) skewX(-12deg)',offset:.78},{opacity:0,transform:'translateX(60%) skewX(-12deg)'}],{duration:1700,easing:'cubic-bezier(.2,.8,.2,1)'});
  an.onfinish=function(){el.remove();};
@@ -1889,7 +2013,8 @@ const MSCORE={
  arcanist:{bpm:72,root:50,prog:[0,2,-2,5],scale:[0,2,3,5,7,9,10],wave:'sine'},
  dragonkin:{bpm:84,root:52,prog:[0,1,-2,1],scale:[0,1,4,5,7,8,10],wave:'sawtooth'},
  demon:{bpm:78,root:48,prog:[0,-4,-5,-1],scale:[0,2,3,5,7,8,11],wave:'sawtooth'},
- oathbound:{bpm:88,root:55,prog:[0,5,-3,-5],scale:[0,2,4,5,7,9,11],wave:'triangle'}
+ oathbound:{bpm:88,root:55,prog:[0,5,-3,-5],scale:[0,2,4,5,7,9,11],wave:'triangle'},
+ eclipse:{bpm:74,root:49,prog:[0,1,-4,-2],scale:[0,1,3,5,6,8,10],wave:'triangle'}
 };
 const MUS={gain:null,next:0,beat:0,timer:null,cls:null};
 function mf(n){return 440*Math.pow(2,(n-69)/12);}
@@ -1897,16 +2022,25 @@ function musicVoice(f,t,d,wave,vol,att){const c=SND.ctx,o=c.createOscillator(),g
 function musicKick(t,vol){const c=SND.ctx,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(40,t+.18);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.25);o.connect(g);g.connect(MUS.gain);o.start(t);o.stop(t+.3);}
 function musicTick(){
  if(!SND.ctx||!MUS.cls) return;
- const sc=MSCORE[MUS.cls]||MSCORE.hunter,bd=60/sc.bpm,c=SND.ctx;
- const battle=S&&S.phase==='battle';
+ const sc=MSCORE[MUS.cls]||MSCORE.hunter,c=SND.ctx;
+ const battle=S&&S.phase==='battle',bd=60/(sc.bpm*(battle?1.4:1));
  while(MUS.next<c.currentTime+.35){
   const t=Math.max(MUS.next,c.currentTime+.02),b=MUS.beat,bar=Math.floor(b/4)%sc.prog.length,root=sc.root+sc.prog[bar];
   if(b%4===0){[0,sc.scale[2]||4,7].forEach(function(iv){musicVoice(mf(root+iv),t,bd*4.2,sc.wave==='sawtooth'?'triangle':sc.wave,.022,.6);});musicVoice(mf(root-12),t,bd*4,'sine',.03,.2);}
   const deg=sc.scale[(b*3+bar)%sc.scale.length];
   if(b%2===0||battle) musicVoice(mf(root+12+deg),t,bd*(battle?.7:1.6),'sine',battle?.02:.014,.03);
-  if(battle){musicKick(t,b%2===0?.16:.08);}
+  if(battle){musicKick(t,b%2===0?.17:.09);musicHat(t+bd/2,.05);if(b%4===2) musicHat(t,.035);
+   musicVoice(mf(root-12),t,bd*.42,'square',.018,.01);musicVoice(mf(root-12+(b%2?7:0)),t+bd/2,bd*.38,'square',.014,.01);
+   if(b%8===7) musicVoice(mf(root+24+sc.scale[4%sc.scale.length]),t,bd*.9,'triangle',.016,.02);}
   MUS.beat++;MUS.next=t+bd;
  }
+}
+let HATBUF=null;
+function musicHat(t,vol){
+ const c=SND.ctx;if(!c||!MUS.gain) return;
+ if(!HATBUF){HATBUF=c.createBuffer(1,Math.floor(c.sampleRate*.08),c.sampleRate);const ch=HATBUF.getChannelData(0);for(let i=0;i<ch.length;i++) ch[i]=(Math.random()*2-1)*Math.pow(1-i/ch.length,3);}
+ const src=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();src.buffer=HATBUF;f.type='highpass';f.frequency.value=7000;g.gain.value=vol;
+ src.connect(f);f.connect(g);g.connect(MUS.gain);src.start(t);
 }
 function musicSync(){
  const want=!!(setup.rules.music&&S&&!S.over&&SND.ctx&&SND.ctx.state==='running'&&animOK());
@@ -2149,7 +2283,8 @@ const EMBLEM={
  arcanist:'<circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="15"/><path d="M32 15l14 25H18z"/>',
  dragonkin:'<path d="M6 32c8-12 18-18 26-18s18 6 26 18c-8 12-18 18-26 18S14 44 6 32z"/><path d="M32 20c-4 6-4 18 0 24c4-6 4-18 0-24z"/>',
  demon:'<path d="M12 8c0 16 8 24 20 24s20-8 20-24"/><path d="M20 20c4 6 8 8 12 8s8-2 12-8"/><path d="M32 32v22"/><path d="M24 46h16"/>',
- oathbound:'<ellipse cx="32" cy="12" rx="12" ry="4.5"/><path d="M32 21v37"/><path d="M20 32h24"/><path d="M28 58h8"/><path d="M32 21l-4 5v26l4 6 4-6V26z"/>'
+ oathbound:'<ellipse cx="32" cy="12" rx="12" ry="4.5"/><path d="M32 21v37"/><path d="M20 32h24"/><path d="M28 58h8"/><path d="M32 21l-4 5v26l4 6 4-6V26z"/>',
+ eclipse:'<circle cx="32" cy="32" r="14"/><path d="M32 6v7M32 51v7M6 32h7M51 32h7M14 14l5 5M45 45l5 5M14 50l5-5M45 19l5-5"/><path d="M37 21a12 12 0 0 1 0 22a15 15 0 0 0 0-22z"/>'
 };
 function emblem(cls,size){return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+EMBLEM[cls]+'</svg>';}
 function lvBadge(s){
@@ -2158,7 +2293,25 @@ function lvBadge(s){
  if(cls==='arcanist') return ['I','II','III','IV','V'][lv-1];
  if(cls==='dragonkin') return ['Young','Adult','Ancient'][lv-1]||String(lv);
  if(cls==='oathbound') return ['Squire','Knight','Paladin'][lv-1]||String(lv);
+ if(cls==='eclipse') return ['Dormant','Stirring','Ascended'][lv-1]||String(lv);
  let d='';for(let i=1;i<=max;i++) d+=(i<=lv?'●':'○');return d;
+}
+const REVEAL_VERB={cast:'casts',echo:'echoes',copy:'copies',aura:'places',summon:'summons',spring:'springs',set:'sets a Counter',find:'searches out',discard:'discards'};
+function reveal(p,id,v){if(!S||!p) return;if(id&&!DEFS[id]) return;(S.reveals=S.reveals||[]).push({pi:S.players.indexOf(p),id:id||null,v:v});}
+let REVQ=null;
+function showReveals(){
+ const list=(S&&S.reveals)||[];if(!list.length||S.mode==='local') return;
+ const vi=S.players.indexOf(VIEW());
+ list.filter(function(r){return r.pi!==vi&&REVEAL_VERB[r.v];}).slice(-3).forEach(function(r,k){
+  if(!REVQ||!REVQ.isConnected){REVQ=document.createElement('div');REVQ.className='revq';REVQ.setAttribute('aria-live','polite');document.body.appendChild(REVQ);}
+  const pl=S.players[r.pi],d=r.id?DEFS[r.id]:null,who=S.mode==='ai'?'Opponent':escHtml(pl?pl.name:'Opponent');
+  const el=document.createElement('div');el.className='rvl';el.style.setProperty('--c',colorVar(d?d.cls:(pl?pl.cls:'hunter')));
+  el.innerHTML='<div class="rvh"><b>'+who+'</b> '+REVEAL_VERB[r.v]+(d?'':'')+'</div>'+(d?cardFace(d,{size:'s'}):'<div class="rvback">'+BACKSVG+'</div>');
+  while(REVQ.children.length>=3) REVQ.firstChild.remove();
+  REVQ.appendChild(el);
+  if(animOK()&&el.animate) el.animate([{opacity:0,transform:'translateY(-14px) scale(.96)'},{opacity:1,transform:'none'}],{duration:260,delay:k*120,fill:'backwards',easing:'cubic-bezier(.2,.8,.2,1)'});
+  setTimeout(function(){if(!el.isConnected) return;if(animOK()&&el.animate){const a=el.animate([{opacity:1},{opacity:0,transform:'translateY(-8px)'}],{duration:300});a.onfinish=function(){el.remove();};}else el.remove();},2600+k*300);
+ });
 }
 function fx(uid,type,text){if(!S) return;(S.fx=S.fx||[]).push({uid:uid,type:type,text:text||''});}
 function ghost(owner,lane,s){if(!S) return;(S.ghosts=S.ghosts||[]).push({pi:S.players.indexOf(owner),lane:lane,name:D(s.card).name,cls:D(s.card).cls});}
@@ -2174,6 +2327,47 @@ function gainOath(p,why,stamp){
  if((p.oath||0)>=3) return;
  p.oath=(p.oath||0)+1;S.oathFx=S.players.indexOf(p);
  log(p.name+' gains 1 Oath ('+why+'). '+p.oath+' of 3.');
+}
+/* ---------- the Eclipse: Anomaly, Transcendence ---------- */
+function gainAnom(p,why,stamp){
+ if(!p||p.cls!=='eclipse'||!S||S.over) return;
+ if(stamp&&p.anomStamp===stamp) return;
+ if(stamp) p.anomStamp=stamp;
+ if((p.anom||0)>=3) return;
+ p.anom=(p.anom||0)+1;S.oathFx=S.players.indexOf(p);
+ log(p.name+' gains 1 Anomaly ('+why+'). '+p.anom+' of 3.');
+}
+async function anomOffer(p,d){
+ if(!d.anom||(p.anom||0)<d.anom) return false;
+ const yes=await choose(p,'Spend Anomaly?',detailHtml(d,'<p>You have <b>'+p.anom+' Anomaly</b>. Spend '+d.anom+' to empower <b>'+d.name+'</b>?</p>'+(p.lanes.some(function(x){return x&&has(x,'transcend');})?'<p class="muted">Transcendence needs 2.</p>':'')),[{label:'Spend '+d.anom+' Anomaly',value:true},{label:'Not this time',value:false,cancel:true}],function(){return !(p.lanes.some(function(x){return x&&has(x,'transcend');})&&p.anom<=2);},true);
+ if(yes){p.anom-=d.anom;log(p.name+' spends '+d.anom+' Anomaly on '+d.name+'.');}
+ return !!yes;
+}
+function uName(s){const d=D(s.card);return d.topName&&s.level===maxLv(s)?d.topName:d.name;}
+/* null: no Transcendence here. '': ready. Otherwise the reason it can't be used. */
+function transcendBlock(p,s){
+ if(!s||!has(s,'transcend')) return null;
+ if(S.phase!=='main') return 'Only in your Play phase';
+ if(p.transTurn===S.turnNo) return 'Already used this turn';
+ if((p.anom||0)<2) return 'Needs 2 Anomaly';
+ const o=otherOf(p),id=o.lastSkillId;
+ if(!id||!DEFS[id]) return 'Your opponent hasn’t cast a Skill yet';
+ const r=skillPlayable(p,DEFS[id],true);
+ return r?DEFS[id].name+': '+r:'';
+}
+async function humanTranscend(lane){
+ const p=P(),s=p.lanes[lane];if(!s||transcendBlock(p,s)!=='') return;
+ const d=DEFS[O().lastSkillId];
+ if(!await confirmAct('Transcend?',detailHtml(d,'<p><b>The Tribrid</b> transcends. Spend <b>2 Anomaly</b> to cast a free copy of <b>'+d.name+'</b>, the last Skill '+O().name+' cast.</p>'+(d.target?'<p>You choose its target next.</p>':'')),'Transcend')) return;
+ const card={uid:nid(),id:d.id};
+ if(d.target){S.pick={mode:'target',card:card,kind:d.target,copy:true};return;}
+ await castSkill(card,false,null,null,true);
+}
+async function aiTranscend(p,o){
+ const s=p.lanes.find(function(x){return x&&transcendBlock(p,x)==='';});if(!s) return;
+ const d=DEFS[o.lastSkillId],r=aiSkillTarget(p,o,d);if(!r) return;
+ await aiStep('Transcending: '+d.name,AI_DELAY*.5);
+ await castSkill({uid:nid(),id:d.id},false,r.tgt||null,null,true);
 }
 function aegisBlocks(pl,lane){return pl.lanes.some(function(x,i){return x&&i!==lane&&has(x,'aegis');});}
 function reduceDmg(owner,s,amt,kind){
@@ -2207,16 +2401,21 @@ function hasKw(s,k){return (D(s.card).kw||[]).indexOf(k)>=0;}
 function hpMax(s){return D(s.card).levels[s.level-1][1];}
 function hpNow(s){return hpMax(s)-s.dmg;}
 function dialTotal(p){return p.dial.R+p.dial.A+p.dial.S;}
-function atkOf(p,s,vs){
- let a=D(s.card).levels[s.level-1][0]+s.boost+(s.perm||0);
- if(hasKw(s,'hoard')) a+=Math.min(S.rules.hoardCap||300,100*dialTotal(p));
- if(vs&&has(s,'vsHigher300')&&vs.level>s.level) a+=300;
- p.lanes.forEach(function(o){if(o&&o!==s&&has(o,'allyBoost')) a+=300;});
- if(p.back.some(function(sl){return sl&&sl.faceUp&&D(sl.card).effect==='auraAtk300';})) a+=300;
- if(has(s,'oathStrike')) a+=200*(p.oath||0);
- if(p.cls==='oathbound'){if(lastOath(p)) a+=500;if(s.level===maxLv(s)&&auraOn(p,'auraHall')) a+=500;}
- return a;
+function atkParts(p,s,vs){
+ const r=[[lvName(s)+' base',D(s.card).levels[s.level-1][0]]];
+ const add=function(l,v){if(v) r.push([l,v]);};
+ add('Boost this turn',s.boost);add('Permanent boost',s.perm||0);
+ if(hasKw(s,'hoard')) add('Hoard ('+dialTotal(p)+' crests)',Math.min(S.rules.hoardCap||300,100*dialTotal(p)));
+ if(vs&&has(s,'vsHigher300')&&vs.level>s.level) add('Against a higher level',300);
+ p.lanes.forEach(function(o){if(o&&o!==s&&has(o,'allyBoost')) add(D(o.card).name,300);});
+ const au=p.back.find(function(sl){return sl&&sl.faceUp&&D(sl.card).effect==='auraAtk300';});if(au) add(D(au.card).name,300);
+ if(has(s,'oathStrike')) add('Oath ×'+(p.oath||0),200*(p.oath||0));
+ if(has(s,'anomStrike')) add('Anomaly ×'+(p.anom||0),200*(p.anom||0));
+ if(p.cls==='eclipse'&&auraOn(p,'auraConv')) add('Dark Magic ×'+(p.anom||0),300*(p.anom||0));
+ if(p.cls==='oathbound'){if(lastOath(p)) add('The Last Oath',400);if(s.level===maxLv(s)&&auraOn(p,'auraHall')) add('Hall of Paladins',300);}
+ return r;
 }
+function atkOf(p,s,vs){const r=atkParts(p,s,vs);let a=0;for(let k=0;k<r.length;k++) a+=r[k][1];return a;}
 function gainHeart(p,why){
  if(p.hearts.length>=S.rules.hearts||!p.deck.length) return;
  p.hearts.push(p.deck.shift());log(p.name+' gains a heart ('+why+'). '+p.hearts.length+' now.');
@@ -2225,6 +2424,7 @@ function raiseLevel(s,why){
  const hurt=s.dmg>0;s.level++;s.dmg=0;stInc(ownerOf(s),'levels');fx(s.uid,'level',lvBadge(s));
  log((why?why+': ':'')+D(s.card).name+' levels up to '+lvName(s)+(hurt?' and is fully healed':'')+'.');
  if(has(s,'onLevelDraw')){const o=ownerOf(s);if(o) draw(o,1);}
+ if(has(s,'transcend')&&s.level===maxLv(s)){fx(s.uid,'transcend');log('Transcendence! '+D(s.card).name+' ascends and can now copy Skills.');splash('Transcendence',D(s.card).name+' ascends',D(s.card).cls);}
 }
 function lvName(s){return ladder(D(s.card).cls,s.level,maxLv(s));}
 function ownerOf(s){return S.players.find(function(p){return p.lanes.indexOf(s)>=0;});}
@@ -2259,7 +2459,7 @@ function loseHearts(p,n,why){
  stInc(p,'heartsLost',n);
  log(p.name+' loses '+n+' heart'+(n>1?'s':'')+' ('+why+'). '+p.hearts.length+' left.');
  checkWin();
- if(!S.over&&lastOath(p)&&!p.lastOathShown){p.lastOathShown=true;log('Awakening: The Last Oath! '+p.name+'’s Summons get +500 ATK.');splash('The Last Oath','Awakening: +500 ATK, and one enemy effect each turn can’t destroy your Summons','oathbound');}
+ if(!S.over&&lastOath(p)&&!p.lastOathShown){p.lastOathShown=true;log('Awakening: The Last Oath! '+p.name+'’s Summons get +400 ATK.');splash('The Last Oath','Awakening: +400 ATK, and one enemy effect each turn can’t destroy your Summons','oathbound');}
 }
 function draw(p,n){
  for(let i=0;i<n;i++){
@@ -2304,8 +2504,10 @@ async function tryCounter(owner,triggers,text){
   if(yes){
    owner.counterUsedTurn=S.turnNo;stInc(owner,'counters');
    log(owner.name+' activates '+d.name+'.');
-   splash('Counter!',d.name,d.cls);
+   splash('Counter!',d.name,d.cls);reveal(owner,d.id,'spring');
    gainOath(owner,'sprang '+d.name,S.evt);
+   gainAnom(owner,'sprang '+d.name,S.evt);
+   if(auraOn(owner,'auraVeil')){log('Grimoire: '+owner.name+' draws 1 card.');draw(owner,1);}
    if(d.sub==='aura') sl.faceUp=true; else {owner.back[i]=null;owner.death.push(sl.card);}
    return {def:d,slot:sl};
   }
@@ -2323,6 +2525,8 @@ function destroyNow(owner,lane){
  owner.lanes.forEach(function(o){if(o&&has(o,'feast')){o.perm=(o.perm||0)+300;log(D(o.card).name+' feasts: +300 ATK.');}});
  if(owner.back.some(function(sl){return sl&&sl.faceUp&&D(sl.card).effect==='auraAltar';})) addCrest(owner,'R',1,'Altar of Blood');
  if(auraOn(owner,'auraMartyr')) gainOath(owner,'Martyr’s Oath');
+ if(has(s,'deathAnom')) gainAnom(owner,D(s.card).name+' fell');
+ if(auraOn(owner,'auraBloodline')&&!S.over){log('Bloodline: '+owner.name+' draws 1 card.');draw(owner,1);}
 }
 async function destroyCheck(owner,lane){
  const s=owner.lanes[lane];
@@ -2330,7 +2534,7 @@ async function destroyCheck(owner,lane){
  const c=await tryCounter(owner,['ownWouldDestroy'],D(s.card).name+' is about to be destroyed.');
  if(c){
   if(c.def.effect==='paySurvive'){loseHearts(owner,1,c.def.name);s.dmg=0;fx(s.uid,'heal','Saved');log(D(s.card).name+' survives and is fully healed.');return false;}
-  if(c.def.effect==='surviveHeal'){s.dmg=0;fx(s.uid,'heal','Saved');log(D(s.card).name+' survives and is fully healed.');return false;}
+  if(c.def.effect==='surviveHeal'){s.dmg=hpMax(s)-100;fx(s.uid,'heal','Saved');log(D(s.card).name+' survives with 100 HP.');return false;}
   if(s.level<maxLv(s)) raiseLevel(s,'Last Stand');
   else {s.dmg=hpMax(s)-100;log(D(s.card).name+' survives with 100 HP.');}
   return false;
@@ -2385,7 +2589,7 @@ async function beginTurn(){
  splash(S.mode==='ai'?(p.ai?'Opponent’s turn':'Your turn'):p.name+'’s turn','Turn '+S.turnNo,p.cls);
  if(S.turnNo>1){
   if(!p.ai){S.phase='draw';if(S.rules.tapDraw&&p.deck.length){await new Promise(function(r){drawResolve=r;render();});}}
-  const before=p.hand.length;draw(p,S.rules.draw);
+  const before=p.hand.length;draw(p,S.rules.draw);if(p.hand.length>before) log(p.name+' draws '+(p.hand.length-before===1?'a card':(p.hand.length-before)+' cards')+'.');
   S.drawFx=p.hand.slice(before).map(function(c){return c.uid;});S.deckFx=S.players.indexOf(p);
   render();if(!p.ai) await sleep(Math.min(650,AI_DELAY));
  }
@@ -2407,6 +2611,8 @@ async function beginTurn(){
  p.back.forEach(function(sl){if(sl&&sl.faceUp&&D(sl.card).effect==='auraArcane') addCrest(p,'A',1,'Ley Line');});
  if(auraOn(p,'auraHeal400')&&p.lanes.some(function(x){return x&&x.dmg>0;})){p.lanes.forEach(function(x){if(x&&x.dmg>0){x.dmg=Math.max(0,x.dmg-400);fx(x.uid,'heal','+400');}});log('Sanctuary heals '+p.name+'’s Summons by 400.');}
  if(auraOn(p,'auraChapel')&&(p.oath||0)>0) addCrest(p,'R',1,'Chapel of Vows');
+ if(auraOn(p,'auraConv')&&(p.anom||0)>0){p.anom--;log('Dark Magic: '+p.name+' loses 1 Anomaly. '+p.anom+' of 3.');}
+ if(auraOn(p,'auraAnom')) gainAnom(p,'Coven Circle');
  for(let i=0;i<3;i++){const s=p.lanes[i];if(s&&has(s,'startCrest')) await chooseCrests(p,1,D(s.card).name);}
  if(p.lanes.some(function(s){return s&&has(s,'startHealAll');})){p.lanes.forEach(function(s){if(s&&s.dmg>0){s.dmg=Math.max(0,s.dmg-500);}});log(p.name+"'s healer restores 500 HP to each Summon.");}
  p.dice=Array.from({length:Math.max(1,(S.rules.dice||3)-(S.turnNo===1?1:0))},rollFace);p.wild={};S.rollFx=true;p.rerolled=false;p.sel=[];
@@ -2467,9 +2673,10 @@ async function doSummonInner(card,lane){
  p.hand.splice(p.hand.indexOf(card),1);
  const s={uid:nid(),card:card,level:1,dmg:0,boost:0,perm:0,summonedTurn:S.turnNo,leveledTurn:0,attacked:false};
  p.lanes[lane]=s;fx(s.uid,'summon');stInc(p,'summons');
- log(p.name+' summons '+d.name+' to '+LANES[lane]+'.');
+ log(p.name+' summons '+d.name+' to '+LANES[lane]+'.');reveal(p,d.id,'summon');
  if(has(s,'onSummonDraw')) draw(p,1);
  if(has(s,'onSummonArcane')) addCrest(p,'A',1,d.name);
+ if(has(s,'onSummonAnom')) gainAnom(p,d.name+' arrived');
  if(has(s,'heartGain')&&p.hearts.length<=3) gainHeart(p,d.name);
  if(has(s,'bloodPrice')) await bloodPrice(p,s);
  if(S.over) return;
@@ -2485,6 +2692,8 @@ async function doSummonInner(card,lane){
  if(c&&c.def.effect==='dmg800'&&p.lanes[lane]===s) await damageSummon(p,lane,800,'counter');
  if(c&&c.def.effect==='bounce'&&p.lanes[lane]===s){p.lanes[lane]=null;p.hand.push(card);log(d.name+' is sent back to '+p.name+"'s hand.");}
  if(c&&c.def.effect==='dmg500freeze'&&p.lanes[lane]===s){await damageSummon(p,lane,500,'counter');if(p.lanes[lane]===s){s.frozenUntil=S.turnNo+2;log(d.name+' is caught and can’t attack until after its next turn.');}}
+ if(c&&c.def.effect==='dmg700anom'&&p.lanes[lane]===s){const gone=await damageSummon(p,lane,700,'counter');if(gone) gainAnom(O(),c.def.name);}
+ if(c&&c.def.effect==='omen'){if(p.hand.length){const c2=p.hand.splice(Math.floor(Math.random()*p.hand.length),1)[0];p.death.push(c2);log(p.name+' discards '+D(c2).name+' at random ('+c.def.name+').');}else log(p.name+' has no cards to discard.');}
  if(c&&c.def.effect==='freezeSummon'&&p.lanes[lane]===s){s.frozenUntil=S.turnNo+2;log(d.name+' is frozen until after its next turn.');}
 }
 function attackTargets(o){
@@ -2501,12 +2710,17 @@ function validTarget(kind,side,lane){
  if(kind==='enemyLeveled') return side==='op'&&!!o.lanes[lane]&&o.lanes[lane].level>1;
  if(kind==='ownSummon') return side==='me'&&!!p.lanes[lane];
  if(kind==='ownBelowMax') return side==='me'&&!!p.lanes[lane]&&p.lanes[lane].level<maxLv(p.lanes[lane]);
- if(kind==='ownFresh') return side==='me'&&!!p.lanes[lane]&&S.turnNo>1&&p.lanes[lane].summonedTurn>=S.turnNo&&!p.lanes[lane].rushed&&!has(p.lanes[lane],'swift');
+ if(kind==='ownFresh') return side==='me'&&!!p.lanes[lane]&&S.turnNo>1&&canRush(p.lanes[lane]);
  return false;
 }
 function hasTarget(kind){return [0,1,2].some(function(l){return validTarget(kind,'me',l)||validTarget(kind,'op',l);});}
-function skillPlayable(p,d){
- if(!canPay(p,d)) return 'Not enough crests';
+function skillPlayable(p,d,free){
+ if(!free&&!canPay(p,d)) return 'Not enough crests';
+ const foe=otherOf(p);
+ if(d.effect==='borrowFate'&&!foe.hand.length) return 'Their hand is empty';
+ if(d.effect==='revelation'&&!foe.back.some(function(sl){return sl&&!sl.faceUp;})) return 'They have no face-down Counters';
+ if(d.effect==='revelation'&&auraOn(foe,'auraVeil')) return 'Grimoire hides their Counters';
+ if(d.effect==='mirrorHex'&&foe.lanes.filter(function(x){return x;}).length<2) return 'They need at least 2 Summons';
  if(d.target&&!hasTarget(d.target)) return 'No valid target';
  if(d.sub==='aura'&&!emptySlots(p).length) return 'Back row is full';
  if(d.effect==='revive'&&(!emptyLanes(p).length||!p.death.some(function(c){return D(c).type==='summon';}))) return 'No Summon in your death pile or no empty slot';
@@ -2523,17 +2737,26 @@ function playBlock(card){
  if(d.type==='skill') return skillPlayable(p,d);
  return !canPay(p,d)?'Not enough crests':!emptySlots(p).length?'Back row is full':'';
 }
-async function castSkill(card,fromEcho,tgt,slot){const pe=S.evt;S.evt='k'+(++EVT);try{return await castSkillInner(card,fromEcho,tgt,slot);}finally{S.evt=pe;}}
-async function castSkillInner(card,fromEcho,tgt,slot){
+async function castSkill(card,fromEcho,tgt,slot,copy){const pe=S.evt;S.evt='k'+(++EVT);try{return await castSkillInner(card,fromEcho,tgt,slot,copy);}finally{S.evt=pe;}}
+async function castSkillInner(card,fromEcho,tgt,slot,copy){
  const p=P(),o=O(),d=D(card);
- pay(p,d);if(S.over) return;
- if(fromEcho) p.death.splice(p.death.indexOf(card),1); else p.hand.splice(p.hand.indexOf(card),1);
+ if(copy){
+  if((p.anom||0)<2||p.transTurn===S.turnNo) return;
+  p.anom-=2;p.transTurn=S.turnNo;
+  log('Transcendence: '+p.name+' spends 2 Anomaly and The Tribrid casts a copy of '+d.name+'.');
+  splash('The Tribrid','Copies '+d.name,'eclipse');
+ } else {
+  pay(p,d);if(S.over) return;
+  if(fromEcho) p.death.splice(p.death.indexOf(card),1); else p.hand.splice(p.hand.indexOf(card),1);
+  if(d.sub!=='aura') p.lastSkillId=d.id;
+ }
  const tname=tgt?D((tgt.side==='op'?o:p).lanes[tgt.lane].card).name:'';
- log(p.name+(fromEcho?' echoes ':' casts ')+d.name+(tgt?' on '+tname:'')+'.');stInc(p,'skills');
+ log(p.name+(copy?' casts the copy of ':fromEcho?' echoes ':' casts ')+d.name+(tgt?' on '+tname:'')+'.');stInc(p,'skills');
+ reveal(p,d.id,copy?'copy':fromEcho?'echo':d.sub==='aura'?'aura':'cast');
  p.lanes.forEach(function(s){if(s&&has(s,'skillBoost')){s.boost+=300;log(D(s.card).name+' gets +300 ATK.');}});
  const trig=['enemySkill'];if(tgt&&tgt.side==='op') trig.push('enemySkillTargets');
  const c=await tryCounter(o,trig,p.name+' casts '+d.name+(tgt?' on '+tname:'')+'.');
- const finish=function(){if(fromEcho) p.deck.push(card); else p.death.push(card);};
+ const finish=function(){if(copy) return;if(fromEcho) p.deck.push(card); else p.death.push(card);};
  if(c){
   log(d.name+' is cancelled.');
   if(c.def.effect==='cancelPlusArcane') addCrest(o,'A',1,'Mirror Ward');
@@ -2575,7 +2798,7 @@ async function castSkillInner(card,fromEcho,tgt,slot){
   case 'resetLevel':if(T){T.level=1;if(hpNow(T)<=0) T.dmg=hpMax(T)-100;fx(T.uid,'hit','Lv 1');log(D(T.card).name+' is returned to its first level.');}break;
   case 'stealCrest':{let n=2,took=0;while(n>0&&dialTotal(o)>0){const k=['R','A','S'].sort(function(a,b){return o.dial[b]-o.dial[a];})[0];o.dial[k]--;n--;took++;}log(o.name+' loses '+took+' crest'+(took===1?'':'s')+'.');addCrest(p,'A',1,d.name);break;}
   case 'tutorSkill':{const seen={};const opts=[];p.deck.forEach(function(c){const dd=D(c);if(dd.type==='skill'&&!seen[c.id]){seen[c.id]=1;opts.push({label:'Take it',value:c.uid,card:dd});}});
-   const uid=await choose(p,d.name,'<p>Choose a Skill to add to your hand.</p>',opts,function(en){return en.slice().sort(function(a,b){return ((b.card.cost.A||0)-(a.card.cost.A||0));})[0].value;},true);const i=p.deck.findIndex(function(c){return c.uid===uid;});if(i>=0){p.hand.push(p.deck.splice(i,1)[0]);shuffle(p.deck);log(p.name+' finds '+D(p.hand[p.hand.length-1]).name+'.');}break;}
+   const uid=await choose(p,d.name,'<p>Choose a Skill to add to your hand.</p>',opts,function(en){return en.slice().sort(function(a,b){return ((b.card.cost.A||0)-(a.card.cost.A||0));})[0].value;},true);const i=p.deck.findIndex(function(c){return c.uid===uid;});if(i>=0){p.hand.push(p.deck.splice(i,1)[0]);shuffle(p.deck);log(p.name+' searches the deck and finds '+D(p.hand[p.hand.length-1]).name+'.');reveal(p,p.hand[p.hand.length-1].id,'find');}break;}
   case 'freezeAll':o.lanes.forEach(function(x){if(x) x.frozenTurn=S.turnNo+1;});log('Every enemy Summon is frozen.');break;
   case 'buffPerm500':if(T){T.perm=(T.perm||0)+500;fx(T.uid,'level','+500');log(D(T.card).name+' gets +500 ATK for the rest of the game.');}break;
   case 'dmgByHoard':{const x=Math.min(1200,200*dialTotal(p));if(x>0) await damageSummon(o,tgt.lane,x,'skill'); else log('Your dial is empty, so the breath fizzles.');break;}
@@ -2586,7 +2809,35 @@ async function castSkillInner(card,fromEcho,tgt,slot){
   case 'roar400':for(let i=0;i<3;i++){if(o.lanes[i]) await damageSummon(o,i,400,'skill');}break;
   case 'offering':if(p.lanes[tgt.lane]) destroyNow(p,tgt.lane);await chooseCrests(p,2,'Blood Offering');break;
   case 'tutorSummon':{const seen={};const opts=[];p.deck.forEach(function(c){const dd=D(c);if(dd.type==='summon'&&!seen[c.id]){seen[c.id]=1;opts.push({label:'Take it',value:c.uid,card:dd});}});
-   const uid=await choose(p,d.name,'<p>Choose a Summon to add to your hand.</p>',opts,function(en){return en.slice().sort(function(a,b){return cardVal(b.card)-cardVal(a.card);})[0].value;},true);const i=p.deck.findIndex(function(c){return c.uid===uid;});if(i>=0){p.hand.push(p.deck.splice(i,1)[0]);shuffle(p.deck);log(p.name+' finds '+D(p.hand[p.hand.length-1]).name+'.');}break;}
+   const uid=await choose(p,d.name,'<p>Choose a Summon to add to your hand.</p>',opts,function(en){return en.slice().sort(function(a,b){return cardVal(b.card)-cardVal(a.card);})[0].value;},true);const i=p.deck.findIndex(function(c){return c.uid===uid;});if(i>=0){p.hand.push(p.deck.splice(i,1)[0]);shuffle(p.deck);log(p.name+' searches the deck and finds '+D(p.hand[p.hand.length-1]).name+'.');reveal(p,p.hand[p.hand.length-1].id,'find');}break;}
+
+  case 'bloodOath':if(T) await damageSummon(p,tgt.lane,500,'skill');if(!S.over){draw(p,2);gainAnom(p,d.name);}break;
+  case 'bindCircle':if(T){T.frozenUntil=S.turnNo+1;T.noLevelUntil=S.turnNo+1;fx(T.uid,'hit','Bound');log(D(T.card).name+' is held in the Binding Circle: it can’t attack or level up on '+o.name+'’s next turn.');}break;
+  case 'borrowFate':{
+   const opts=o.hand.filter(function(c){return D(c).type!=='summon';}).map(function(c){return {label:'Discard it',value:c.uid,card:D(c)};});
+   const body='<p><b>'+o.name+'’s hand</b> ('+o.hand.length+'):</p><div class="minigrid">'+o.hand.map(function(c){return miniCard(D(c));}).join('')+'</div>'+(opts.length?'<p>Choose a Skill or Counter to discard.</p>':'<p>No Skills or Counters to take.</p>');
+   log(p.name+' looks at '+o.name+'’s hand.');
+   if(!opts.length){await choose(p,d.name,body,[{label:'Close',value:null,cancel:true}],null,true);break;}
+   const uid=await choose(p,d.name,body,opts,function(en){return en.slice().sort(function(a,b){return ((b.card.cost.A||0)+(b.card.type==='counter'?.5:0))-((a.card.cost.A||0)+(a.card.type==='counter'?.5:0));})[0].value;},true);
+   const i=o.hand.findIndex(function(c){return c.uid===uid;});if(i>=0){const c=o.hand.splice(i,1)[0];o.death.push(c);log(o.name+' discards '+D(c).name+' (Borrowed Fate).');}
+   break;}
+  case 'revelation':{
+   const idx=[0,1,2].filter(function(i){return o.back[i]&&!o.back[i].faceUp;});
+   if(!idx.length) break;
+   if(auraOn(o,'auraVeil')){log('Grimoire protects '+o.name+'’s Counters.');break;}
+   const i=idx.length===1?idx[0]:await choose(p,d.name,'<p>Choose a face-down Counter to destroy.</p>',idx.map(function(i){return {label:'Back row slot '+(i+1),value:i};}),null,true);
+   const sl=o.back[i];if(sl){o.back[i]=null;o.death.push(sl.card);log(d.name+' exposes and destroys '+D(sl.card).name+'.');}
+   break;}
+  case 'siphon':{const up=await anomOffer(p,d);await damageSummon(o,tgt.lane,up?1300:800,'skill');break;}
+  case 'mirrorHex':{
+   if(!T) break;
+   const vs=[0,1,2].filter(function(i){return i!==tgt.lane&&o.lanes[i];});
+   if(!vs.length){log(d.name+' finds no other target.');break;}
+   const v=vs.length===1?vs[0]:await choose(p,d.name,'<p>'+D(T.card).name+' ('+atkOf(o,T,null)+' ATK) strikes which of '+o.name+'’s Summons?</p>',vs.map(function(i){return {label:hpNow(o.lanes[i])+' HP left',value:i,card:D(o.lanes[i].card),level:o.lanes[i].level};}),function(en){const k=en.filter(function(e){return atkOf(o,T,o.lanes[e.value])>=hpNow(o.lanes[e.value]);});return (k.length?k:en).slice().sort(function(a,b){return atkOf(o,o.lanes[b.value],null)-atkOf(o,o.lanes[a.value],null);})[0].value;},true);
+   const amt=atkOf(o,T,o.lanes[v]);log(D(T.card).name+' is hexed and strikes '+D(o.lanes[v].card).name+'.');
+   await damageSummon(o,v,amt,'skill');break;}
+  case 'darkEvo':if(T&&T.level<maxLv(T)) raiseLevel(T,d.name);if(await anomOffer(p,d)) draw(p,1);break;
+  case 'totalEclipse':{const up=await anomOffer(p,d);for(let i=0;i<3&&!S.over;i++){if(o.lanes[i]){const gone=await damageSummon(o,i,up?900:600,'skill');if(gone) gainAnom(p,d.name);}}break;}
   case 'revive':{const seen={};const opts=[];p.death.forEach(function(c){const dd=D(c);if(dd.type==='summon'&&!seen[c.id]){seen[c.id]=1;opts.push({label:'Revive',value:c.uid,card:dd});}});
    const uid=await choose(p,d.name,'<p>Choose a Summon to bring back.</p>',opts,function(en){return en.slice().sort(function(a,b){return cardVal(b.card)-cardVal(a.card);})[0].value;},true);const i=p.death.findIndex(function(c){return c.uid===uid;});const lane=emptyLanes(p)[0];
    if(i>=0&&lane!==undefined){const rc=p.death.splice(i,1)[0];p.lanes[lane]={uid:nid(),card:rc,level:1,dmg:0,boost:0,perm:0,summonedTurn:S.turnNo,leveledTurn:0,attacked:false};log(D(rc).name+' rises from the death pile.');}break;}
@@ -2595,13 +2846,35 @@ async function castSkillInner(card,fromEcho,tgt,slot){
  else finish();
  for(let i=0;i<3&&!S.over;i++){const s=p.lanes[i];if(s&&has(s,'skillPing')){const t=await pickEnemy(p,D(s.card).name);if(t!==null){log(D(s.card).name+' adds a spark of damage.');await damageSummon(O(),t,300,'ability');}}}
 }
+function canDiscardUp(p){return !!S&&p===P()&&p===VIEW()&&canAct()&&S.phase==='main'&&p.upDiscardTurn!==S.turnNo&&!S.pick;}
+function discardUp(p,i){
+ const sl=p.back[i];if(!sl||!sl.faceUp||p.upDiscardTurn===S.turnNo||S.phase!=='main') return;
+ p.back[i]=null;p.death.push(sl.card);p.upDiscardTurn=S.turnNo;
+ log(p.name+' discards '+D(sl.card).name+' from the back row.');reveal(p,sl.card.id,'discard');
+}
+async function humanDiscardUp(i){
+ const p=P(),sl=p.back[i];if(!sl||!sl.faceUp||!canDiscardUp(p)) return;
+ if(!await confirmAct('Discard '+D(sl.card).name+'?',detailHtml(D(sl.card),'<p>Send it to your death pile to free up the slot.</p><p class="muted">You can discard one face-up card a turn, in your Play phase. Hidden Counters can’t be discarded.</p>'),'Discard')) return;
+ discardUp(p,i);
+}
+function aiDiscardUp(p){
+ if(aiLv(p)<2||emptySlots(p).length||p.upDiscardTurn===S.turnNo) return;
+ const want=p.hand.some(function(c){const d=D(c);return (d.type==='counter'||d.sub==='aura')&&shortage(p,d.cost)===0;});
+ if(!want) return;
+ const idx=[0,1,2].filter(function(i){return p.back[i]&&p.back[i].faceUp;});if(!idx.length) return;
+ const pick=idx.find(function(i){return D(p.back[i].card).effect==='bind';});
+ discardUp(p,pick!==undefined?pick:idx[0]);
+}
 function setCounter(card,slot){
  const p=P(),d=D(card);
  pay(p,d);if(S.over) return;
  p.hand.splice(p.hand.indexOf(card),1);
  p.back[slot]={card:card,faceUp:false,setTurn:S.turnNo};
- log(p.name+' sets a Counter face-down.');
+ log(p.name+' sets a Counter face-down.');reveal(p,null,'set');
 }
+function isFrozen(s){return s.frozenTurn===S.turnNo||(s.frozenUntil&&s.frozenUntil>=S.turnNo);}
+function canRush(s){return S.turnNo>1&&s.summonedTurn>=S.turnNo&&!s.rushed&&!has(s,'swift')&&!isFrozen(s)&&!isBound(s)&&!s.attacked;}
+function canEmpower(s){return !attackBlock(s);}
 function isBound(s){return O().back.some(function(sl){return sl&&sl.faceUp&&sl.boundUid===s.uid;});}
 function attackBlock(s){
  if(S.phase!=='main'&&S.phase!=='battle') return 'Not now';
@@ -2618,6 +2891,7 @@ async function onKill(p,s,lane,victim,o){
  if(hasKw(s,'hunt')&&s.level<maxLv(s)) raiseLevel(s,'Hunt');
  if(has(s,'onKillCrest')) await chooseCrests(p,1,D(s.card).name);
  if(has(s,'onKillOath')) gainOath(p,D(s.card).name+' struck true');
+ if(has(s,'killAnom')) gainAnom(p,D(s.card).name+' made a kill');
  if(has(s,'killToHeart')&&p.hearts.length<S.rules.hearts){const i=o.death.indexOf(victim.card);if(i>=0){o.death.splice(i,1);p.hearts.push(victim.card);log(D(s.card).name+' claims '+D(victim.card).name+' as a heart.');}}
 }
 function enterBattle(){if(S.phase==='main'){S.phase='battle';S.pick=null;log(P().name+' goes to battle.');splash('Battle!',P().ai?'':'Cards are locked until your next turn',P().cls);}}
@@ -2641,6 +2915,17 @@ async function attack(lane,tlane){
   if(eff==='bind'){c.slot.boundUid=s.uid;log(sn+" is bound and can't attack while Binding Sigil stays face-up.");return;}
   if(eff==='zapStop'){log('The attack is stopped.');await damageSummon(p,lane,1000,'counter');return;}
   if(eff==='bounceAttacker'){p.lanes[lane]=null;p.hand.push(s.card);log(sn+' is blown back to '+p.name+'’s hand.');return;}
+  if(eff==='redirect'){
+   const vs=[0,1,2].filter(function(i){return i!==lane&&p.lanes[i];});
+   if(!vs.length){log(c.def.name+': '+sn+' has nowhere to turn, so the attack stops.');return;}
+   const v=vs.length===1?vs[0]:await choose(o,c.def.name,'<p>'+sn+' ('+atkOf(p,s,null)+' ATK) turns on which of '+p.name+'’s Summons?</p>',vs.map(function(i){return {label:hpNow(p.lanes[i])+' HP left',value:i,card:D(p.lanes[i].card),level:p.lanes[i].level};}),function(en){const k=en.filter(function(e){return atkOf(p,s,p.lanes[e.value])>=hpNow(p.lanes[e.value]);});return (k.length?k:en).slice().sort(function(a,b){return atkOf(p,p.lanes[b.value],null)-atkOf(p,p.lanes[a.value],null);})[0].value;},true);
+   const vic=p.lanes[v];if(!vic) return;
+   await animAttack(s,vic.uid);
+   if(S.over||p.lanes[v]!==vic) return;
+   log(sn+' is turned against '+D(vic.card).name+'.');
+   await damageSummon(p,v,atkOf(p,s,vic),'counter');
+   return;
+  }
   if(eff==='resolve'){def.dmg=0;def.boost+=500;fx(def.uid,'heal','Resolve');log(dn+' is fully healed and gets +500 ATK.');}
   if(eff==='reflect600'){const rf=reduceDmg(p,s,600,'counter');s.dmg+=rf;fx(s.uid,'hit','-'+rf);log(sn+' takes 600 damage from Molten Scales.');if(await destroyCheck(p,lane)) return;}
   if(eff==='reverse'){
@@ -2702,6 +2987,7 @@ function levelBlock(s){
  if(S.phase!=='main') return 'Only in your Play phase';
  if(s.level>=maxLv(s)) return 'At max level';
  if(s.leveledTurn===S.turnNo) return 'Already levelled';
+ if(s.noLevelUntil&&s.noLevelUntil>=S.turnNo) return 'Held by Binding Circle';
  if(P().dial.R<1) return 'Needs 1 Rise';
  return '';
 }
@@ -2722,7 +3008,82 @@ function cardInfo(d){
  }
  return h;
 }
-async function showDetails(d,extra,level){await ask(d.name,detailHtml(d,(extra||'')+kwHelp(d),level),[{label:'Close',value:null,cancel:true}],null,true);}
+const TARGET_TEXT={enemySummon:'an enemy Summon',enemyWeak:'an enemy Summon with 1000 ATK or less',enemyDamaged:'an enemy Summon that has taken damage',enemyLeveled:'an enemy Summon above its first level',ownSummon:'one of your Summons',ownBelowMax:'one of your Summons that isn’t at its top level',ownFresh:'one of your Summons that was summoned this turn'};
+const CLASS_RULE={oathbound:function(){return OATH_RULES;},eclipse:function(){return ANOM_RULES;},hunter:function(){return KW.hunt;},dragonkin:function(){return KW.hoard;},demon:function(){return KW.pact;},arcanist:function(){return KW.echo;}};
+function dsec(title,body,cls){return body?'<section class="dsec'+(cls?' '+cls:'')+'"><h3>'+title+'</h3>'+body+'</section>':'';}
+function dRows(rows){return '<dl class="drows">'+rows.filter(function(r){return r&&r[1]!==''&&r[1]!==null&&r[1]!==undefined;}).map(function(r){return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>';}).join('')+'</dl>';}
+function unitStatus(owner,s){
+ const st=[],mineTurn=S&&owner===P();
+ if(s.summonedTurn>=S.turnNo&&mineTurn&&!s.rushed&&!has(s,'swift')) st.push(['wait','Just summoned: it can attack from your next turn (or Rush it with 1 Strike).']);
+ if(s.rushed&&s.summonedTurn>=S.turnNo) st.push(['ok','Rushed: it can attack this turn.']);
+ if(s.attacked) st.push(['wait','Already attacked this turn.']);
+ if(isFrozen(s)||s.frozenTurn===S.turnNo+1) st.push(['bad','Frozen: it can’t attack'+(s.frozenUntil?' until after turn '+s.frozenUntil:' on its owner’s next turn')+'.']);
+ if(S.players.some(function(pl){return pl.back.some(function(sl){return sl&&sl.faceUp&&sl.boundUid===s.uid;});})) st.push(['bad','Bound: it can’t attack while that Binding Sigil stays face-up.']);
+ if(s.noLevelUntil&&s.noLevelUntil>=S.turnNo) st.push(['bad','Held by Boundary Spell: it can’t level up until after turn '+s.noLevelUntil+'.']);
+ if(s.exposedTurn===S.turnNo) st.push(['bad','Outmanoeuvred: it can’t strike back this turn.']);
+ if(s.doomTurn===S.turnNo) st.push(['bad','Vow: it falls at the end of this turn.']);
+ if(s.dmg>0) st.push(['wait','Damaged: '+s.dmg+' damage taken. Levelling up fully heals it.']);
+ return st;
+}
+function abilityBlock(d,cur){
+ if(d.type!=='summon') return '';
+ let h='';
+ d.levels.forEach(function(stt,ix){
+  const lv=ix+1,ab=(d.abil[lv]||[]),on=cur?cur>=lv:lv===1,here=cur===lv;
+  h+='<div class="dlv'+(here?' here':'')+(on?' on':'')+'"><div class="dlvh"><b>'+ladder(d.cls,lv,d.levels.length)+'</b><span>'+icon('S',12)+stt[0]+' &nbsp;'+heartIcon(11)+stt[1]+'</span><em>'+(here?'Now':on?'Unlocked':lv===1?'On arrival':'Locked')+'</em></div>'+
+   (ab.length?'<ul>'+ab.map(function(a){return '<li>'+ABIL[a]+'</li>';}).join('')+'</ul>':'<p class="muted">No new ability, just bigger stats.</p>')+'</div>';
+ });
+ return h+'<p class="muted small">Abilities stack: each level keeps everything unlocked below it. Levelling costs 1 Rise, once per turn, and fully heals.</p>';
+}
+function detailSide(d,o){
+ o=o||{};const out=[];
+ const vp=S?VIEW():null;
+ if(o.extra) out.push(o.extra);
+ // live state on the field
+ if(o.unit){
+  const ow=o.unit.owner,su=o.unit.s,parts=atkParts(ow,su,null);
+  const st=unitStatus(ow,su);
+  let h=dRows([['Name',uName(su)],['Level',lvName(su)+' ('+su.level+' of '+maxLv(su)+')'],['Owner',escHtml(ow.name)],
+   ['ATK','<b>'+atkOf(ow,su,null)+'</b>'+(parts.length>1?'<span class="dparts">'+parts.map(function(x){return x[0]+' '+(x===parts[0]?'':'+')+x[1];}).join(' · ')+'</span>':'')],
+   ['HP','<b>'+hpNow(su)+'</b> / '+hpMax(su)]]);
+  if(st.length) h+='<ul class="dstatus">'+st.map(function(x){return '<li class="'+x[0]+'">'+x[1]+'</li>';}).join('')+'</ul>';
+  if(has(su,'transcend')){const ls=otherOf(ow).lastSkillId,tb=transcendBlock(ow,su);h+='<p class="dnote">Transcendence can copy: <b>'+(ls&&DEFS[ls]?DEFS[ls].name:'nothing yet')+'</b>'+(tb&&ow===P()?' ('+tb+')':'')+'.</p>';}
+  out.push(dsec('On the field',h,'dlive'));
+ }
+ if(o.slot){
+  const sl=o.slot;
+  out.push(dsec('On the field',dRows([['Where','Back row'],['State',sl.faceUp?(d.type==='counter'?'Face-up (sprung, stays out)':'Face-up, working now'):'Face-down'],['Ready',!sl.faceUp?(sl.setTurn>=S.turnNo?'From your opponent’s next turn':'Yes, it can spring now'):'']]),'dlive'));
+ }
+ // what the card does
+ const cost=costText(d.cost)||'Free';
+ const basics=dRows([['Type',typeLine(d)],['Class',CLASSES[d.cls].name],['Cost',costHtml(d.cost,d.pact)+' '+cost+(d.pact?' · Pact: hearts can pay for missing crests':'')],['Card',cardNo(d)+' · 2 copies in the deck']]);
+ if(d.type==='summon') out.push(dsec('Abilities by level',abilityBlock(d,o.unit?o.unit.s.level:0))+dsec('Card',basics));
+ else if(d.type==='skill'){
+  let h='<p class="deff">'+d.text.replace(/^Aura\. /,'')+'</p>';
+  h+=dRows([['Target',d.target?TARGET_TEXT[d.target]||d.target:'No target'],['Lasts',d.sub==='aura'?'Stays face-up in your back row until it’s discarded or removed':'Once, then it goes to your death pile'+(d.echo?' (Echo: can be cast again from there)':'')]]);
+  if(d.oath) h+='<p class="dnote">Oath '+d.oath+': spend '+d.oath+' Oath when you cast it for the stronger effect.'+(vp&&vp.cls==='oathbound'?' You have '+(vp.oath||0)+'.':'')+'</p>';
+  if(d.anom) h+='<p class="dnote">Anomaly '+d.anom+': spend '+d.anom+' Anomaly when you cast it for the stronger effect.'+(vp&&vp.cls==='eclipse'?' You have '+(vp.anom||0)+'.':'')+'</p>';
+  if(d.vowText) h+='<p class="dnote">'+d.vowText+'</p>';
+  out.push(dsec('What it does',h)+dsec('Card',basics));
+ } else {
+  const h='<p class="deff"><b>When:</b> '+d.triggerText+'</p><p class="deff"><b>Then:</b> '+d.effectText+'</p>'+dRows([['Speed','Set face-down. It can spring from your opponent’s next turn'],['Limit','One Counter per turn, and Counters can’t chain'],['After','Goes to your death pile'+(d.sub==='aura'?', unless it stays face-up as an Aura':'')]]);
+  out.push(dsec('What it does',h)+dsec('Card',basics));
+ }
+ // keywords on this card
+ const kws=[];
+ (d.kw||[]).forEach(function(k){if(KW[k]) kws.push(KW[k]);});
+ if(d.type==='summon'){if(hasAbilAny(d,'taunt')) kws.push(ABIL.taunt);if(hasAbilAny(d,'swift')) kws.push(ABIL.swift);}
+ if(d.echo) kws.push(KW.echo);
+ if(d.pact&&(d.kw||[]).indexOf('pact')<0) kws.push(KW.pact);
+ if(d.oath) kws.push(KW.oath);if(d.anom) kws.push(KW.anomaly);if(d.vowText) kws.push(KW.vow);
+ if(d.tag) kws.push(KWTIP[d.tag.toLowerCase()]||'');
+ out.push(dsec('Keywords',kws.filter(Boolean).map(function(t){return '<p>'+t+'</p>';}).join('')));
+ // the deck's own rule, kept apart from the card
+ const cr=CLASS_RULE[d.cls];
+ out.push('<section class="dsec dclass" style="--c:'+colorVar(d.cls)+'"><h3>'+emblem(d.cls,14)+' '+CLASSES[d.cls].name+' · deck rule</h3><p>'+CLASSES[d.cls].blurb+'</p>'+(cr?'<p class="muted">'+cr()+'</p>':'')+'</section>');
+ return out.join('');
+}
+async function showDetails(d,extra,level,ctx){ctx=ctx||{};ctx.extra=extra||'';await ask(d.name,'<div class="detail big">'+cardFace(d,{size:isPhone()?'m':'l',level:level})+'<div class="dside">'+detailSide(d,ctx)+'</div></div>',[{label:'Close',value:null,cancel:true}],null,true);}
 function pickCard(card,echo){
  const d=D(card);
  if(d.type==='summon') S.pick={mode:'summon',card:card};
@@ -2752,11 +3113,11 @@ async function slotDetails(side,i){
  if(!sl) return;
  if(!sl.faceUp&&side!=='me'){await ask('Face-down card','<p>A hidden Counter. It could spring on your turn.</p>',[{label:'Close',value:null,cancel:true}]);return;}
  const d=D(sl.card);
- await showDetails(d,sl.faceUp?'':'<p class="now">Face-down. '+(sl.setTurn>=S.turnNo?'It can trigger from your opponent’s next turn.':'Ready to trigger.')+'</p>');
+ await showDetails(d,'',null,{slot:sl});
 }
 async function unitDetails(side,lane){
  const owner=sideP(side),s=owner.lanes[lane];if(!s) return;
- await showDetails(D(s.card),'<p class="now">Now: <b>'+lvName(s)+'</b> · '+atkOf(owner,s,null)+' ATK · '+hpNow(s)+'/'+hpMax(s)+' HP</p>',s.level);
+ await showDetails(D(s.card),'',s.level,{unit:{owner:owner,s:s}});
 }
 async function resolvePick(where){
  const pk=S.pick;S.pick=null;if(!pk) return;
@@ -2767,13 +3128,14 @@ async function resolvePick(where){
  else if(pk.mode==='counter'){q='Set '+d.name+' face-down?';yes='Set Counter';}
  else if(pk.mode==='target'){const T=(where.side==='op'?O():p).lanes[where.lane];q='Cast '+d.name+' on '+D(T.card).name+'?';}
  else q='Cast '+d.name+(pk.echo?' again with Echo':'')+'?';
- const sh=shortage(p,d.cost),hc=Math.ceil(sh/pactRate());
- const side='<p>Cost: <b>'+(costText(d.cost)||'free')+'</b></p>'+(sh?'<p class="warn">You’re '+sh+' crest'+(sh>1?'s':'')+' short, so Pact will cost you '+hc+' heart'+(hc>1?'s':'')+'.</p>':'')+(pk.mode==='counter'?'<p>It can trigger from your opponent’s next turn.</p>':'');
+ const sh=pk.copy?0:shortage(p,d.cost),hc=Math.ceil(sh/pactRate());
+ if(pk.copy) q='Cast the copy of '+d.name+' on '+D((where.side==='op'?O():p).lanes[where.lane].card).name+'?';
+ const side='<p>Cost: <b>'+(pk.copy?'2 Anomaly (Transcendence)':(costText(d.cost)||'free'))+'</b></p>'+(sh?'<p class="warn">You’re '+sh+' crest'+(sh>1?'s':'')+' short, so Pact will cost you '+hc+' heart'+(hc>1?'s':'')+'.</p>':'')+(pk.mode==='counter'?'<p>It can trigger from your opponent’s next turn.</p>':'');
  if(!await confirmAct(q,detailHtml(d,side),yes)){if(pk.mode!=='cast') S.pick=pk;return;}
  if(pk.mode==='summon') await doSummon(pk.card,where.lane);
  else if(pk.mode==='counter') setCounter(pk.card,where.slot);
  else if(pk.mode==='aura') await castSkill(pk.card,pk.echo,null,where.slot);
- else if(pk.mode==='target') await castSkill(pk.card,pk.echo,{side:where.side,lane:where.lane},null);
+ else if(pk.mode==='target') await castSkill(pk.card,pk.echo,{side:where.side,lane:where.lane},null,!!pk.copy);
  else await castSkill(pk.card,pk.echo,null,null);
 }
 /* ---------- human actions with confirmations ---------- */
@@ -2796,12 +3158,12 @@ async function humanLevel(lane){
  levelUp(lane);
 }
 async function humanEmpower(lane){
- const p=P(),s=p.lanes[lane];if(!s||p.dial.S<1) return;
+ const p=P(),s=p.lanes[lane];if(!s||p.dial.S<1||!canEmpower(s)) return;
  if(!await confirmAct('Empower '+D(s.card).name+'?','<p>Spend <b>1 Strike</b> to give it <b>+500 ATK</b> until the end of this turn.</p>','Empower')) return;
  empower(lane);
 }
 async function humanRush(lane){
- const p=P(),s=p.lanes[lane];if(!s||p.dial.S<1||S.turnNo<=1||s.rushed) return;
+ const p=P(),s=p.lanes[lane];if(!s||p.dial.S<1||!canRush(s)) return;
  if(!await confirmAct('Rush '+D(s.card).name+'?','<p>Spend <b>1 Strike</b> so it can attack this turn, even though it was just summoned.</p>','Rush')) return;
  p.dial.S--;s.rushed=true;log(D(s.card).name+' is rushed and can attack this turn.');
 }
@@ -2887,6 +3249,17 @@ function aiSkillTarget(p,o,d){
   case 'roar700':return en.length>=2||en.some(function(i){return hpNow(o.lanes[i])<=700;})?{}:null;
   case 'gainHeartSac':{const c=own.filter(function(i){return atkOf(p,p.lanes[i],null)<1200;}).sort(function(a,b){return atkOf(p,p.lanes[a],null)-atkOf(p,p.lanes[b],null);});return p.hearts.length<=2&&c.length?{tgt:{side:'me',lane:c[0]}}:null;}
   case 'drain':{if(!en.length) return null;const k=en.filter(function(i){return hpNow(o.lanes[i])<=800;}).sort(byAtk);return {tgt:{side:'op',lane:(k.length?k:en.slice().sort(byAtk))[0]}};}
+
+  case 'bloodOath':{if(p.hand.length>4) return null;const c=own.filter(function(i){const x=p.lanes[i];return has(x,'deathAnom')||(hpNow(x)>700&&!has(x,'transcend'));}).sort(function(a,b){const A=p.lanes[a],B=p.lanes[b];return (has(B,'deathAnom')?1:0)-(has(A,'deathAnom')?1:0)||atkOf(p,A,null)-atkOf(p,B,null);});return c.length?{tgt:{side:'me',lane:c[0]}}:null;}
+  case 'bindCircle':{const c=en.slice().sort(byAtk);return c.length&&atkOf(o,o.lanes[c[0]],null)>=1500?{tgt:{side:'op',lane:c[0]}}:null;}
+  case 'borrowFate':return o.hand.length>=3?{}:null;
+  case 'revelation':return skillPlayable(p,d)===''?{}:null;
+  case 'siphon':{const x=(p.anom||0)>=1?1300:800;const kill=en.filter(function(i){return hpNow(o.lanes[i])<=x&&!has(o.lanes[i],'skillProof');}).sort(byAtk);if(kill.length) return {tgt:{side:'op',lane:kill[0]}};return null;}
+  case 'mirrorHex':{if(en.length<1||[0,1,2].filter(function(i){return o.lanes[i];}).length<2) return null;
+   for(const t of en.slice().sort(byAtk)){const T=o.lanes[t];if([0,1,2].some(function(i){return i!==t&&o.lanes[i]&&atkOf(o,T,o.lanes[i])>=hpNow(o.lanes[i]);})) return {tgt:{side:'op',lane:t}};}
+   return null;}
+  case 'darkEvo':{const c=own.filter(function(i){return validTarget('ownBelowMax','me',i);}).sort(function(a,b){return (has(p.lanes[b],'transcend')?5:0)+p.lanes[b].level-(has(p.lanes[a],'transcend')?5:0)-p.lanes[a].level;});return c.length?{tgt:{side:'me',lane:c[0]}}:null;}
+  case 'totalEclipse':return en.length>=2||en.some(function(i){return hpNow(o.lanes[i])<=((p.anom||0)>=1?900:600);})?{}:null;
   case 'sacDraw':{const c=own.filter(function(i){return atkOf(p,p.lanes[i],null)<900;});return p.hand.length<=2&&c.length?{tgt:{side:'me',lane:c[0]}}:null;}
   default:return null;
  }
@@ -2898,6 +3271,7 @@ async function aiTurn(){
  aiRoll(p);
  await confirmDice();
  await aiStep('Adding crests to its dial',AI_DELAY*.7);
+ aiDiscardUp(p);
  const maxPlays=L===0?1:L===1?2:12;
  const XF={kill:1,lvl:1};
  if(L>=4&&XF.lvl) await aiLevels(p,L);
@@ -2928,6 +3302,8 @@ async function aiTurn(){
   if(!done) break;
   render();await sleep(AI_DELAY);
  }
+ if(S.over) return;
+ if(L>=1) await aiTranscend(p,o);
  if(S.over) return;
  await aiLevels(p,L);
  if(S.over) return;
@@ -2963,13 +3339,13 @@ async function aiTurn(){
 }
 function aiRushes(p,o){
  p.lanes.forEach(function(s){
-  if(!s||p.dial.S<1||s.rushed||has(s,'swift')||s.summonedTurn<S.turnNo) return;
+  if(!s||p.dial.S<1||!canRush(s)) return;
   const a=atkOf(p,s,null);
   const good=boardEmpty(o)||attackTargets(o).some(function(t){return aiAttackScore(p,o,s,t)>=500;});
   if(a>=900&&good){p.dial.S--;s.rushed=true;log(D(s.card).name+' is rushed and can attack this turn.');}
  });
 }
-const AI_REMOVAL=['dmg800','dmg900','dmg1000','dmg1200','dmg1800','destroyWeak','destroyDamaged','dmgByHoard','drain','resetLevel','freeze','bounce'];
+const AI_REMOVAL=['siphon','totalEclipse','mirrorHex','dmg800','dmg900','dmg1000','dmg1200','dmg1800','destroyWeak','destroyDamaged','dmgByHoard','drain','resetLevel','freeze','bounce'];
 async function aiLevels(p,L){
  const order=[0,1,2].filter(function(i){return p.lanes[i];}).sort(function(a,b){return p.lanes[b].level-p.lanes[a].level;});
  for(const i of order){if(S.over) return;const s=p.lanes[i];if(L===0||(L===1&&Math.random()<.5)) continue;if(s&&!levelBlock(s)){levelUp(i);await aiStep('Levelling up '+D(s.card).name);}}
@@ -3038,8 +3414,9 @@ function unitHtml(s,owner,side,lane){
   const p=P();const b=[];
   if(S.phase==='battle'&&!attackBlock(s)){b.push(boardEmpty(O())?'<button class="act strong" data-act="atk" data-lane="'+lane+'">Attack directly</button>':'<button class="act strong" data-act="atkpick" data-lane="'+lane+'">Attack</button>');}
   if(!levelBlock(s)) b.push('<button class="act" data-act="lvl" data-lane="'+lane+'" aria-label="Level up for 1 Rise">'+icon('R',15)+' Level</button>');
-  if(p.dial.S>=1) b.push('<button class="act" data-act="emp" data-lane="'+lane+'" aria-label="Empower +500 ATK for 1 Strike">'+icon('S',15)+' +500</button>');
-  if(s.summonedTurn>=S.turnNo&&!s.rushed&&!has(s,'swift')&&S.turnNo>1&&p.dial.S>=1) b.push('<button class="act" data-act="rush" data-lane="'+lane+'" aria-label="Rush for 1 Strike: attack this turn">'+icon('S',15)+' Rush</button>');
+  if(p.dial.S>=1&&canEmpower(s)) b.push('<button class="act" data-act="emp" data-lane="'+lane+'" aria-label="Empower +500 ATK for 1 Strike">'+icon('S',15)+' +500</button>');
+  if(transcendBlock(p,s)==='') b.push('<button class="act strong trans" data-act="transcend" data-lane="'+lane+'" aria-label="Transcend: spend 2 Anomaly to copy their last Skill">'+emblem('eclipse',15)+' Transcend</button>');
+  if(canRush(s)&&p.dial.S>=1) b.push('<button class="act" data-act="rush" data-lane="'+lane+'" aria-label="Rush for 1 Strike: attack this turn">'+icon('S',15)+' Rush</button>');
   acts=b.join('');
  }
  const mine=(S.fx||[]).filter(function(f){return f.uid===s.uid;});
@@ -3059,13 +3436,13 @@ function unitHtml(s,owner,side,lane){
   if(s.boost) tt.push('+'+s.boost);
   return '<button data-cid="'+d.id+'" data-lp="unit:'+side+':'+lane+'" class="unit utile side-'+side+(selU?' selected':'')+(target?' targetable':'')+(awake?' awake':'')+fxc+'" style="--c:'+colorVar(d.cls)+'" data-uid="'+s.uid+'" data-act="'+act+'" data-side="'+side+'" data-lane="'+lane+'" aria-label="'+d.name+', '+lvName(s)+', '+atkOf(owner,s,null)+' attack, '+hpNow(s)+' health'+(target?'. Tap to target':'')+'">'+floats+
    '<span class="tart">'+cardArt(d.id)+'<span class="lvb">'+lvBadge(s)+'</span>'+(target?'<span class="tgo">'+(pk.mode==='attack'?'Attack':'Target')+'</span>':'')+'</span>'+
-   '<span class="tname">'+d.name+'</span>'+
+   '<span class="tname">'+uName(s)+'</span>'+
    '<span class="ustats"><span class="atk">'+icon('S',12)+atkOf(owner,s,null)+'</span><span class="hp'+(s.dmg>0?' hurt':'')+'">'+heartIcon(11)+hpNow(s)+'</span></span>'+
    '<span class="hpbar" aria-hidden="true"><i style="width:'+pct+'%"></i></span>'+
    (tt.length?'<span class="ttags">'+tt.slice(0,2).join(' · ')+'</span>':'')+'</button>';
  }
  return '<div data-cid="'+d.id+'" data-lp="unit:'+side+':'+lane+'" class="unit side-'+side+(sel?' selected':'')+(target?' targetable':'')+(awake?' awake':'')+fxc+'" style="--c:'+colorVar(d.cls)+'" data-uid="'+s.uid+'">'+floats+
-  '<button class="uhead" data-act="udetail" data-side="'+side+'" data-lane="'+lane+'" aria-label="'+d.name+', '+lvName(s)+'. Details"><span class="lvb">'+lvBadge(s)+'</span><span class="nm">'+d.name+'</span></button>'+
+  '<button class="uhead" data-act="udetail" data-side="'+side+'" data-lane="'+lane+'" aria-label="'+d.name+', '+lvName(s)+'. Details"><span class="lvb">'+lvBadge(s)+'</span><span class="nm">'+uName(s)+'</span></button>'+
   '<span class="uart">'+cardArt(d.id)+'</span>'+
   '<span class="ustats"><span class="atk" title="Attack">'+icon('S',14)+atkOf(owner,s,null)+'</span><span class="hp'+(s.dmg>0?' hurt':'')+'" title="Health">'+heartIcon(13)+hpNow(s)+'<small>/'+hpMax(s)+'</small></span></span>'+
   '<span class="hpbar" aria-hidden="true"><i style="width:'+pct+'%"></i></span>'+
@@ -3107,8 +3484,9 @@ function backHtml(p,side){
    return '<div class="slot"><span class="slotlabel">Back row</span></div>';
   }
   const d=D(sl.card);
+  const dis=side==='me'&&sl.faceUp&&canDiscardUp(p)?'<button class="updiscard" data-act="discardup" data-i="'+i+'" aria-label="Discard '+d.name+'">Discard</button>':'';
   if(!sl.faceUp) return '<div class="slot filled"><button data-lp="slot:'+side+':'+i+'" class="backcard down" data-act="slot" data-side="'+side+'" data-i="'+i+'">'+icon('W',22)+'<span>'+(side==='me'?d.name:'Hidden Counter')+'</span></button></div>';
-  return '<div class="slot filled"><button data-lp="slot:'+side+':'+i+'" class="backcard up" style="--c:'+colorVar(d.cls)+'" data-act="slot" data-side="'+side+'" data-i="'+i+'">'+emblem(d.cls,22)+'<span>'+d.name+(d.sub==='aura'?' · Aura':'')+'</span></button></div>';
+  return '<div class="slot filled"><button data-lp="slot:'+side+':'+i+'" class="backcard up" style="--c:'+colorVar(d.cls)+'" data-act="slot" data-side="'+side+'" data-i="'+i+'">'+emblem(d.cls,22)+'<span>'+d.name+(d.sub==='aura'?' · Aura':'')+'</span></button>'+dis+'</div>';
  }).join('')+deathPileHtml(p,side)+'</div>';
 }
 function stripHtml(p,side){
@@ -3123,6 +3501,7 @@ function stripHtml(p,side){
  return '<div class="strip'+(p.ai?' isai':'')+(active?' active':'')+(lastOath(p)?' lo':'')+'" data-pi="'+pi+'" style="--c:'+colorVar(p.cls)+'"><span class="crest">'+emblem(p.cls,26)+'</span><span class="whoblock"><span class="who"'+(p.ai?' data-ai="AI · '+AILEVELS[aiLv(p)]+'"':'')+'>'+(p.rank&&/^[EDCBAS]$/.test(p.rank)?rankBadge(p.rank,'sm'):'')+p.name+'</span><span class="cls">'+CLASSES[p.cls].name+'</span></span>'+
   '<span class="hearts" aria-label="'+p.hearts.length+' of '+max+' hearts">'+hearts+'</span>'+
   (p.cls==='oathbound'?'<span class="oathpips'+(S.oathFx===pi?' gain':'')+'" aria-label="Oath '+(p.oath||0)+' of 3" title="Oath '+(p.oath||0)+' of 3">'+[0,1,2].map(function(i){return '<i class="'+(i<(p.oath||0)?'on':'')+'">'+emblem('oathbound',14)+'</i>';}).join('')+'</span>'+(lastOath(p)?'<span class="lastoath">Last Oath</span>':''):'')+
+  (p.cls==='eclipse'?'<span class="oathpips anompips'+(S.oathFx===pi?' gain':'')+'" aria-label="Anomaly '+(p.anom||0)+' of 3" title="Anomaly '+(p.anom||0)+' of 3">'+[0,1,2].map(function(i){return '<i class="'+(i<(p.anom||0)?'on':'')+'">'+emblem('eclipse',14)+'</i>';}).join('')+'</span>':'')+
   '<span class="dial" aria-label="Crest dial">'+['R','A','S'].map(function(k){const g=S.dialFx&&S.dialFx.pi===pi&&S.dialFx.g[k];return '<span class="pip pip-'+k+(g?' gainfx':'')+'">'+icon(k,17)+'<b>'+p.dial[k]+'</b>'+(g?'<span class="pf c-'+k+'">+'+g+'</span>':'')+'</span>';}).join('')+'</span>'+
   '<span class="grow"></span>'+
   '<span class="stat">Deck '+p.deck.length+'</span>'+(side==='op'&&S.rules.revealHand?'<button class="ghost" data-act="ophand">See hand ('+p.hand.length+')</button>':'<span class="stat">Hand '+p.hand.length+'</span>')+
@@ -3133,11 +3512,12 @@ function trayHtml(){
  const ab=attackBlock(s);
  if(S.phase==='battle'&&!ab) b.push(boardEmpty(O())?'<button class="primary" data-act="atk" data-lane="'+l+'">Attack directly</button>':'<button class="primary" data-act="atkpick" data-lane="'+l+'">Attack</button>');
  if(!levelBlock(s)) b.push('<button class="ghost" data-act="lvl" data-lane="'+l+'">'+icon('R',15)+' Level up</button>');
- if(p.dial.S>=1) b.push('<button class="ghost" data-act="emp" data-lane="'+l+'">'+icon('S',15)+' +500</button>');
- if(s.summonedTurn>=S.turnNo&&!s.rushed&&!has(s,'swift')&&S.turnNo>1&&p.dial.S>=1) b.push('<button class="ghost" data-act="rush" data-lane="'+l+'">'+icon('S',15)+' Rush</button>');
+ if(p.dial.S>=1&&canEmpower(s)) b.push('<button class="ghost" data-act="emp" data-lane="'+l+'">'+icon('S',15)+' +500</button>');
+ if(canRush(s)&&p.dial.S>=1) b.push('<button class="ghost" data-act="rush" data-lane="'+l+'">'+icon('S',15)+' Rush</button>');
+ if(transcendBlock(p,s)==='') b.push('<button class="primary trans" data-act="transcend" data-lane="'+l+'">'+emblem('eclipse',15)+' Transcend</button>');
  b.push('<button class="ghost" data-act="udetail" data-side="me" data-lane="'+l+'">Details</button>');
  const note=S.phase==='main'&&S.turnNo>1?' · attacks happen in battle':(S.phase==='battle'&&ab?' · '+ab:'');
- return '<div class="centre tray" style="--c:'+colorVar(d.cls)+'"><div class="msg"><b>'+d.name+'</b> · '+lvName(s)+note+'</div><div class="traybtns">'+b.join('')+'<button class="ghost" data-act="uselx">Done</button></div></div>';
+ return '<div class="centre tray" style="--c:'+colorVar(d.cls)+'"><div class="msg"><b>'+uName(s)+'</b> · '+lvName(s)+note+'</div><div class="traybtns">'+b.join('')+'<button class="ghost" data-act="uselx">Done</button></div></div>';
 }
 function steps(cur){
  const order=['draw','roll','main','battle'],names={draw:'Draw',roll:'Roll',main:'Play',battle:'Battle'},ci=order.indexOf(cur);
@@ -3167,9 +3547,9 @@ function centreHtml(){
    (!p.rerolled?'<button class="ghost" data-act="reroll"'+(p.sel.length?'':' disabled')+'>Reroll'+(p.sel.length?' '+p.sel.length:'')+'</button>':'')+'<button class="primary" data-act="confirm"'+(unknown?' disabled':'')+'>Add to Crest Dial</button></div></div>';
  }
  if(S.pick){
-  const pk=S.pick,d=D(pk.card),cost=costText(d.cost);
+  const pk=S.pick,d=D(pk.card),cost=pk.copy?'free, 2 Anomaly':costText(d.cost);
   const ins={summon:'Tap an empty Summon slot ('+cost+').',counter:'Tap an empty back-row slot ('+cost+').',aura:'Tap an empty back-row slot ('+cost+').',target:'Tap a highlighted Summon ('+cost+').',cast:'Cast it for '+cost+'?',attack:'Tap the enemy Summon to attack.'}[pk.mode];
-  return '<div class="centre">'+steps(S.phase)+'<div class="msg"><b>'+(pk.mode==='attack'?D(P().lanes[pk.lane].card).name:d.name)+'</b>'+(pk.echo?' (Echo)':'')+': '+ins+'</div>'+
+  return '<div class="centre">'+steps(S.phase)+'<div class="msg"><b>'+(pk.mode==='attack'?D(P().lanes[pk.lane].card).name:d.name)+'</b>'+(pk.echo?' (Echo)':pk.copy?' (Transcendence copy)':'')+': '+ins+'</div>'+
    (pk.mode==='cast'?'<button class="primary" data-act="castnow">Cast '+d.name+'</button>':'')+
    (pk.mode!=='attack'?'<button class="ghost" data-act="pickdetail">Details</button>':'')+'<button class="ghost" data-act="pickcancel">Cancel</button></div>';
  }
@@ -3268,7 +3648,8 @@ const CLASS_LINES={
  arcanist:'Control the field with spells and traps.',
  dragonkin:'Hoard crests. Unleash giants.',
  demon:'Pay in blood. Hit like a nightmare.',
- oathbound:'Hold the line. Keep the Oath.'
+ oathbound:'Hold the line. Keep the Oath.',
+ eclipse:'Bend fate. Turn their strength against them.'
 };
 function screenWrap(title,body,back){
  return '<div class="screen"><div class="screentop">'+(back!==false?'<button class="ghost" data-act="go" data-to="title">Back to title</button>':'')+'</div><h1 class="display screenh">'+title+'</h1>'+body+'</div>';
@@ -3328,6 +3709,7 @@ function howtoHtml(){
   sec('Combat','<p>Attack any enemy Summon. The attacker strikes first; if the defender survives, it strikes back. Damage stays until the Summon levels up or is destroyed. You can only hit hearts once their side is empty, and each direct hit takes 1 heart.</p>')+
   sec('Levelling','<p>Pay 1 Rise to level a Summon once per turn. Levelling fully heals it, raises its stats, and unlocks abilities that stack. Reaching the top level is an Awakening.</p>')+
   sec('Counters','<p>Set face-down in your back row. From your opponent’s next turn they spring when their trigger happens: one per turn, and no chains.</p>')+
+  sec('Back row','<p>Auras and Counters share your 3 back-row slots. Once per turn, in your Play phase, you can discard one of your <b>face-up</b> back-row cards to free its slot. Hidden Counters can’t be discarded.</p>')+
   sec('Classes','<p>'+Object.keys(CLASSES).map(function(k){return '<span class="clsline" style="--c:'+colorVar(k)+'"><b>'+CLASSES[k].name+':</b> '+CLASS_LINES[k]+'</span>';}).join('')+'</p>')+
   '</div>');
 }
@@ -3375,9 +3757,24 @@ function startVs(){
  clearTimeout(vsTimer);vsTimer=setTimeout(finishVs,reduce?500:2400);
 }
 function finishVs(){clearTimeout(vsTimer);if(setup.screen!=='vs') return;setup.screen='title';newGame();}
+const SCROLLERS=['.hand','.log ol','.log','.board2','.game2','.gamewrap','.modal .body','.modal','.overlay','.cardgrid','.screen'];
+let HANDSX=null;
+document.addEventListener('scroll',function(e){const t=e.target;if(t&&t.classList&&t.classList.contains('hand')) HANDSX=[t.scrollLeft,t.scrollTop];},true);
+function scrollSave(){
+ const o={x:window.scrollX,y:window.scrollY,els:{},mt:''};
+ const h=document.querySelector('#app .modal h2');o.mt=h?h.textContent:'';
+ SCROLLERS.forEach(function(sel){const e=document.querySelector('#app '+sel);if(e&&(e.scrollTop||e.scrollLeft)) o.els[sel]=[e.scrollLeft,e.scrollTop];});
+ return o;
+}
+function scrollRestore(o){
+ const h=document.querySelector('#app .modal h2'),mt=h?h.textContent:'';
+ Object.keys(o.els).forEach(function(sel){if(sel.indexOf('modal')>=0||sel==='.overlay'){if(mt!==o.mt) return;}const e=document.querySelector('#app '+sel);if(e){e.scrollLeft=o.els[sel][0];e.scrollTop=o.els[sel][1];}});
+ if(window.scrollX!==o.x||window.scrollY!==o.y) window.scrollTo(o.x,o.y);
+}
 function render(){
  const app=document.getElementById('app');
- if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;return;}
+ const SV=scrollSave();
+ if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr===LASTSCR) scrollRestore(SV);if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;return;}
  const enterGame=LASTSCR!=='game';LASTSCR='game';
  try{if(S.tutorial) tutTick();}catch(e){console.error(e);}
  const me=VIEW(),op=OTHER(),act=P();
@@ -3395,16 +3792,25 @@ function render(){
    centreHtml()+
    lanesHtml(me,'me')+backHtml(me,'me')+stripHtml(me,'me')+
    '<div class="handrow">'+(hidden?'<p class="rowlabel">Hand hidden until the turn starts.</p>':handHtml(me)+handNote)+'</div>'+
-  '</div><aside class="log" aria-label="Game log"><button class="ghost logclose" data-act="togglelog">Close</button><h2 class="display">Game log</h2><ol>'+S.log.map(function(e){const ap=S.players[e.a];return '<li'+(ap?' style="--c:'+colorVar(ap.cls)+'" class="by'+(ap===me?' mine':'')+'"':'')+'><span>T'+e.t+'</span>'+logRich(e.m)+'</li>';}).join('')+'</ol></aside></div></div>'+(LM?modalHtml(LM,'lmodal'):(S.modal&&(S.mode!=='online'||S.modal.pi===S.mySeat)?modalHtml(S.modal,'modal'):''))+netToastHtml()+(S.tutorial?coachHtml():'')+splashHtml();
+  '</div><aside class="log" aria-label="Game log"><button class="ghost logclose" data-act="togglelog">Close</button><h2 class="display">Game log</h2><ol>'+S.log.map(function(e){const ap=S.players[e.a];return '<li'+(ap?' style="--c:'+colorVar(ap.cls)+'" class="by'+(ap===me?' mine':'')+'"':'')+'><span>T'+e.t+'</span>'+logRich(e.m)+'</li>';}).join('')+'</ol></aside></div></div>'+(LM?modalHtml(LM,'lmodal'):(S.modal&&(S.mode!=='online'||S.modal.pi===S.mySeat)?modalHtml(S.modal,'modal'):''))+(S.mode==='online'&&!S.over&&((S.modal&&S.modal.pi!==S.mySeat)||S.waiting)?'<div class="waitchip" role="status">'+escHtml(OTHER().name)+' is making a choice…</div>':'')+netToastHtml()+(S.tutorial?coachHtml():'')+splashHtml();
  if(hidePick){S.pick=svPick;S.usel=svUsel;}
- const first=document.querySelector('.modal .opts button:not([disabled]):not(.cancel), .modal .choice:not([disabled]), .modal .opts button:not([disabled])');if(first) first.focus();
+ if(!enterGame) scrollRestore(SV);
+ const hd=document.querySelector('#app .hand');
+ if(hd){
+  if(enterGame) HANDSX=null;
+  else if(HANDSX&&!SV.els['.hand']){hd.scrollLeft=HANDSX[0];hd.scrollTop=HANDSX[1];}
+  const nd=(S.drawFx||[]).length?hd.querySelector('.hcard.drawn'):null;
+  if(nd){const r=nd.getBoundingClientRect(),hr=hd.getBoundingClientRect();if(r.right>hr.right||r.bottom>hr.bottom){const tl=hd.scrollWidth>hd.clientWidth?hd.scrollWidth:0;try{hd.scrollTo({left:tl,top:hd.scrollHeight,behavior:animOK()?'smooth':'auto'});}catch(e){hd.scrollLeft=tl;}}}
+ }
+ const first=document.querySelector('.modal .opts button:not([disabled]):not(.cancel), .modal .choice:not([disabled]), .modal .opts button:not([disabled])');if(first&&document.activeElement!==first){try{first.focus({preventScroll:true});}catch(e){}}
  if(enterGame&&animOK()){const g=document.querySelector('.gamewrap');if(g&&g.animate) g.animate([{opacity:0,transform:'scale(.985)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'});}
  try{postFx();}catch(e){}
+ try{showReveals();}catch(e){console.error(e);}
  try{maybeShowResults();musicSync();puzzleCheck();}catch(e){}
  try{if(S&&S.tutorial) coachHighlight();}catch(e){console.error(e);}
  if(NET.role==='host'&&S.mode==='online') netCapture();
  if(NET.role==='guest'&&NET.anims&&NET.anims.length){const an=NET.anims;NET.anims=[];guestAnims(an);}
- S.fx=[];S.ghosts=[];S.heartFx={};S.rollFx=false;S.rollIdx=null;S.dialFx=null;S.drawFx=null;S.deckFx=null;S.oathFx=null;
+ S.fx=[];S.ghosts=[];S.heartFx={};S.rollFx=false;S.rollIdx=null;S.dialFx=null;S.drawFx=null;S.deckFx=null;S.oathFx=null;S.reveals=[];
 }
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
@@ -3457,7 +3863,8 @@ function gameAct(a,ds,remote){
  if((a==='quit'||a==='newgame')&&S.mode==='online'){if(remote) return;netLeave();setup.optsOpen=false;setup.screen='online';netRefresh();render();return;}
  if(a==='quit'||a==='newgame'){if(S.busy&&!S.over&&!drawResolve) return;setup.optsOpen=false;drawResolve=null;const wasPz=S&&S.puzzle;if(S&&S.tutorial) lsSet('nimgir-tutorial','1');S=null;setup.screen=wasPz?'puzzles':a==='newgame'?'select':'title';render();return;}
  if(a==='drawcard'){if(drawResolve&&!S.modal){const r=drawResolve;drawResolve=null;r();}return;}
- if(S.mode==='online'&&!remote&&(a==='udetail'||a==='slot'||a==='pickdetail'||(a==='death'&&!(canAct()&&ds.side==='me')))){if(LM) return;infoAct(a,ds);return;}
+ if(!remote&&(a==='udetail'||a==='slot'||a==='pickdetail'||(a==='death'&&!(canAct()&&ds.side==='me')))&&(S.mode==='online'||S.busy||!canAct())){if(LM) return;infoAct(a,ds);return;}
+ if(!remote&&a==='hand'&&(S.busy||!canAct()||VIEW()!==P())){if(LM||S.modal) return;const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
  if(S.busy||S.modal) return;
  if(a==='death'){run(function(){return deathMenu(ds.side);});return;}
  if(a==='ophand'){const o=OTHER();run(function(){return ask(o.name+'’s hand','<p class="muted">Testing option: the opponent’s hand is revealed.</p>'+(o.hand.length?'<div class="minigrid">'+o.hand.map(function(c){return miniCard(D(c));}).join('')+'</div>':'<p>Empty.</p>'),[{label:'Close',value:null,cancel:true}],null,true);});return;}
@@ -3489,6 +3896,8 @@ function gameAct(a,ds,remote){
  if(a==='lvl'){run(function(){return humanLevel(+ds.lane);});return;}
  if(a==='emp'){run(function(){return humanEmpower(+ds.lane);});return;}
  if(a==='rush'){run(function(){return humanRush(+ds.lane);});return;}
+ if(a==='transcend'){S.usel=null;run(function(){return humanTranscend(+ds.lane);});return;}
+ if(a==='discardup'){run(function(){return humanDiscardUp(+ds.i);});return;}
 }
 document.addEventListener('keydown',function(e){
  if(e.key==='Escape'&&!S&&setup.screen&&setup.screen!=='title'){if(setup.screen==='vs'){finishVs();return;}setup.screen='title';render();return;}
