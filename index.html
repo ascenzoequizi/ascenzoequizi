@@ -12,6 +12,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
+<script src="config.js"></script>
+<script>if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
@@ -885,6 +887,70 @@ button.deckpile{cursor:pointer}
 .dlv ul{margin:4px 0 0;padding-left:18px;font-size:13.5px;line-height:1.4}
 .dlv .muted{font-size:12.5px;margin:4px 0 0}
 @media (max-width:640px){.detail.big .dside{min-width:0;max-width:none}.dsec{padding:8px 10px}}
+
+/* ---------- accounts ---------- */
+.pickcol h2 .linkbtn{font-size:13px;font-family:Barlow,system-ui,sans-serif;margin-left:8px;vertical-align:3px}
+.acccard .accform{display:flex;flex-direction:column;gap:6px;max-width:420px}
+.acccard input[type=text],.acccard input[type=email],.acccard input[type=password]{font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
+.acccard .primary{margin-top:8px;align-self:flex-start}
+.acctabs{margin-bottom:10px}
+.accmsg{margin:6px 0 0;padding:8px 10px;border-radius:8px;font-size:14px}
+.accmsg.bad{background:color-mix(in srgb,#d0455e 14%,transparent);color:var(--text)}
+.accmsg.ok{background:color-mix(in srgb,#3aa86b 14%,transparent)}
+.acccheck{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:6px}
+.accrow{display:flex;align-items:center;gap:12px}
+.accrow>div{display:flex;flex-direction:column}
+.accav{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;background:var(--focus,#A98BF0);color:#fff}
+.accsync{font-size:12px;font-weight:700;color:#3aa86b}.accsync.bad{color:#d0455e}
+.profuser{font-family:Cinzel,Georgia,serif;font-size:24px;font-weight:700;margin:0 0 4px}
+.lb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.lb li{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;background:var(--panel2)}
+.lb li.me{outline:2px solid var(--focus,#A98BF0)}
+.lbn{width:22px;text-align:right;font-weight:800;color:var(--muted)}
+.lbrp{font-weight:800;min-width:48px;text-align:right}
+/* ---------- puzzles ---------- */
+.pzhead{margin-bottom:14px}
+.pzprog{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pzprog .rbar{flex:1;min-width:120px;max-width:320px}
+.pzgroup{margin-top:18px}
+.pzgroup h2{font-size:20px;margin:0 0 8px}
+.pzgroup h2 small{font-size:14px;color:var(--muted);font-family:Barlow,system-ui,sans-serif}
+.pzintro{display:flex;gap:14px;align-items:flex-start}
+.pzintro>svg{color:var(--c);flex:none}
+.pzchips{display:flex;gap:6px;flex-wrap:wrap}
+.pzchips span{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--c) 16%,transparent)}
+/* ---------- story ---------- */
+.storybtn{position:relative}
+.wipchip{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:999px;background:var(--focus,#A98BF0);color:#fff;margin-left:6px;vertical-align:2px}
+.sthero{padding:22px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--focus,#A98BF0) 14%,var(--panel)),var(--panel));margin-bottom:16px}
+.sthero h2{margin:8px 0 6px;font-size:clamp(26px,5vw,40px)}
+.sthero p{max-width:62ch}
+.wip{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px dashed var(--focus,#A98BF0);color:var(--focus,#A98BF0)}
+.stlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.stch{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:2px solid color-mix(in srgb,var(--c) 45%,var(--line));background:var(--panel);opacity:0;animation:stIn .5s cubic-bezier(.2,.8,.2,1) var(--d) forwards}
+.stem{color:var(--c);filter:grayscale(.5)}
+.stt{display:flex;flex-direction:column;flex:1}.stt small{color:var(--muted);font-weight:700}.stt b{font-family:Cinzel,Georgia,serif;font-size:17px}.stt span{font-size:13px;color:var(--c)}
+.stlock{color:var(--muted)}
+@keyframes stIn{from{opacity:0;transform:translateY(8px)}to{opacity:.8;transform:none}}
+/* ---------- graphics ---------- */
+#ambient{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;transition:opacity .6s;mix-blend-mode:screen}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) #ambient{mix-blend-mode:normal;opacity:.7}}
+#fxl .streak{position:absolute;height:6px;margin-top:-3px;transform-origin:0 50%;border-radius:6px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--c) 70%,#fff) 70%,#fff);box-shadow:0 0 14px var(--c),0 0 4px #fff;will-change:clip-path,opacity}
+#fxl .impact{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff 0,color-mix(in srgb,var(--c) 80%,#fff) 25%,color-mix(in srgb,var(--c) 40%,transparent) 50%,transparent 70%);will-change:transform,opacity}
+.float.f-hit{animation:hitPop 1.2s cubic-bezier(.2,.8,.2,1) forwards;font-size:32px;color:#fff;-webkit-text-stroke:1.5px var(--strike);text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 12px color-mix(in srgb,var(--strike) 70%,transparent)}
+@keyframes hitPop{0%{opacity:0;transform:translate(-50%,6px) scale(.4)}12%{opacity:1;transform:translate(-50%,-6px) scale(1.35)}24%{transform:translate(-50%,-10px) scale(1)}80%{opacity:1;transform:translate(-50%,-34px) scale(1)}100%{opacity:0;transform:translate(-50%,-46px) scale(.9)}}
+.unit.awake .uart,.unit.awake .tart{position:relative;overflow:hidden}
+.unit.awake .uart::after,.unit.awake .tart::after{content:'';position:absolute;inset:-40% -60%;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.28) 50%,transparent 58%);animation:sheen 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%,55%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
+.title{position:relative}
+.orbit{position:relative;width:min(340px,80vw);height:0;margin:0 auto}
+.orbit span{position:absolute;left:50%;top:0;color:var(--c);opacity:.55;transform:rotate(var(--a)) translateX(min(160px,38vw)) rotate(calc(-1 * var(--a)));animation:orbit 40s linear infinite;filter:drop-shadow(0 0 8px var(--c))}
+.orbit{top:clamp(40px,8vw,70px)}
+@keyframes orbit{from{transform:rotate(var(--a)) translateX(min(160px,38vw)) rotate(calc(-1 * var(--a)))}to{transform:rotate(calc(var(--a) + 360deg)) translateX(min(160px,38vw)) rotate(calc(-1 * var(--a) - 360deg))}}
+.logo{text-shadow:0 0 30px color-mix(in srgb,var(--focus,#A98BF0) 45%,transparent);background:linear-gradient(100deg,var(--text) 40%,#fff 50%,var(--text) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:logoIn .7s cubic-bezier(.2,.8,.2,1) .75s forwards,logoSheen 6s ease-in-out 1.6s infinite}
+@keyframes logoSheen{0%,60%{background-position:100% 0}100%{background-position:-50% 0}}
+.tpath{transition:transform .25s}.tpath:hover{transform:translateY(-4px)}
+@media (prefers-reduced-motion: reduce){.orbit span,.unit.awake .uart::after,.unit.awake .tart::after,.stch{animation:none;opacity:.8}}
 </style>
 </head>
 <body>
@@ -1323,10 +1389,12 @@ function cardArt(id,cls){
  const u='ga'+(++artSeq);
  let h='<svg class="art" viewBox="0 0 120 80" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>'+
   '<linearGradient id="'+u+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+P.b+'"/><stop offset="1" stop-color="'+P.a+'"/></linearGradient>'+
-  '<radialGradient id="'+u+'g"><stop offset="0" stop-color="'+P.glow+'" stop-opacity=".75"/><stop offset="1" stop-color="'+P.glow+'" stop-opacity="0"/></radialGradient></defs>'+
+  '<radialGradient id="'+u+'g"><stop offset="0" stop-color="'+P.glow+'" stop-opacity=".75"/><stop offset="1" stop-color="'+P.glow+'" stop-opacity="0"/></radialGradient>'+
+  '<radialGradient id="'+u+'v" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>'+
+  '<linearGradient id="'+u+'r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="'+P.glow+'" stop-opacity="0"/><stop offset="1" stop-color="'+P.glow+'" stop-opacity=".18"/></linearGradient></defs>'+
   '<rect width="120" height="80" fill="url(#'+u+'b)"/>'+artScene(cls,R);
  if(d&&d.type==='skill'){for(let i=0;i<14;i++){const a=i*Math.PI/7+R()*.2;h+='<path d="M60 42L'+(60+Math.cos(a)*90).toFixed(0)+' '+(42+Math.sin(a)*90).toFixed(0)+'" stroke="'+P.acc+'" stroke-opacity=".12" stroke-width="'+(2+R()*3).toFixed(1)+'"/>';}}
- h+='<circle cx="60" cy="42" r="30" fill="url(#'+u+'g)"/>';
+ h+='<circle cx="60" cy="42" r="30" fill="url(#'+u+'g)"/><ellipse cx="60" cy="'+(44+20*sc).toFixed(1)+'" rx="'+(17*sc).toFixed(1)+'" ry="3.2" fill="#000" fill-opacity=".45"/>';
  const tx=60-20*sc,ty=44-20*sc;
  const tr=flip?'translate('+(60+20*sc)+' '+ty+') scale('+(-sc)+' '+sc+')':'translate('+tx+' '+ty+') scale('+sc+')';
  h+='<g transform="'+tr+'" stroke-linejoin="round" stroke-linecap="round">';
@@ -1335,6 +1403,7 @@ function cardArt(id,cls){
  (sub.e||[]).forEach(function(p){h+='<path d="'+p+'" fill="'+P.acc+'" fill-opacity=".9" stroke="'+P.acc+'" stroke-width=".9" stroke-opacity=".9"/>';});
  h+='</g>';
  for(let i=0;i<9;i++){h+='<circle cx="'+(R()*120).toFixed(1)+'" cy="'+(R()*80).toFixed(1)+'" r="'+(R()*1.1+.3).toFixed(2)+'" fill="'+P.acc+'" fill-opacity="'+(R()*.5+.3).toFixed(2)+'"/>';}
+ h+='<rect width="120" height="80" fill="url(#'+u+'v)"/><rect width="120" height="80" fill="url(#'+u+'r)"/>';
  if(d&&d.type==='counter') h+='<path d="M4 16V4h12M104 4h12v12M4 64v12h12M116 64v12h-12" fill="none" stroke="'+P.acc+'" stroke-width="2.2" stroke-opacity=".8"/>';
  return h+'</svg>';
 }
@@ -1531,14 +1600,32 @@ async function animAttack(s,tuid,opi){
  a.style.position='relative';a.style.zIndex='30';
  sfx('attack');
  const an=a.animate([{transform:'none'},{transform:'translate('+(-dx*.05)+'px,'+(-dy*.05)+'px) scale(1.05)',offset:.22},{transform:'translate('+dx*k+'px,'+dy*k+'px) scale(1.1)',offset:.55},{transform:'translate('+dx*k*.92+'px,'+dy*k*.92+'px) scale(1.06)',offset:.66},{transform:'none'}],{duration:640,easing:'ease-in-out'});
- await wait(340);
+ await wait(250);
  const col=cssC(a);
+ streakAt(A.x,A.y,T.x,T.y,col);
+ await wait(90);
+ impactAt(T.x,T.y,col,tuid?1:1.3);
  slashAt(T.x,T.y,Math.min(140,Math.max(70,T.w*.8)));
  ringAt(T.x,T.y,col,tuid?90:120,500);
  particles(T.x,T.y,col,12,70,6,520);
  if(tuid) shake(t,7,320);
  await wait(300);
  a.style.zIndex='';
+}
+function streakAt(x1,y1,x2,y2,col){
+ const L=document.getElementById('fxl');if(!L) return;
+ const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;
+ const el=document.createElement('div');el.className='streak';el.style.cssText='left:'+x1+'px;top:'+y1+'px;width:'+len+'px;transform:rotate('+ang+'deg);--c:'+col;
+ L.appendChild(el);
+ const an=el.animate([{clipPath:'inset(0 100% 0 0)',opacity:1},{clipPath:'inset(0 0 0 0)',opacity:1,offset:.45},{clipPath:'inset(0 0 0 100%)',opacity:0}],{duration:360,easing:'cubic-bezier(.3,.7,.2,1)'});
+ an.onfinish=function(){el.remove();};
+}
+function impactAt(x,y,col,k){
+ const L=document.getElementById('fxl');if(!L) return;
+ const f=document.createElement('div');f.className='impact';f.style.cssText='left:'+x+'px;top:'+y+'px;--c:'+col;L.appendChild(f);
+ const an=f.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(-50%,-50%) scale('+(1.6*k)+')',opacity:0}],{duration:520,easing:'cubic-bezier(.1,.8,.2,1)'});an.onfinish=function(){f.remove();};
+ particles(x,y,'#ffffff',8,90*k,4,380);particles(x,y,col,14,110*k,5,620);
+ ringAt(x,y,'#ffffff',60*k,320);
 }
 function postFx(){
  if(!S||!animOK()) return;
@@ -1566,6 +1653,50 @@ function postFx(){
   if(lost){sfx('defeat');buzz(220);} else {sfx('victory');buzz([30,50,30,50,140]);const b=document.querySelector('.banner');confetti([b?cssC(b):'#E8B64C','#E8B64C','#ffffff']);}
  }
 }
+
+
+/* ---------- ambient particles behind the action (class-themed) ---------- */
+const AMBSTYLE={
+ hunter:{c:['#8fd0ff','#4fa3d9'],vy:-.08,vx:.18,sz:[1,2.4],tw:0},
+ arcanist:{c:['#7ff0de','#3fbfae','#ffffff'],vy:-.05,vx:0,sz:[.8,2],tw:1},
+ dragonkin:{c:['#ffc070','#ff8a3a','#ffdf9e'],vy:-.45,vx:.05,sz:[1,2.8],tw:.5},
+ demon:{c:['#ff8aa6','#e0405f','#4a1020'],vy:.22,vx:-.04,sz:[1,2.6],tw:0},
+ oathbound:{c:['#ffe7a3','#f5c84c'],vy:-.18,vx:0,sz:[1,2.2],tw:.6},
+ eclipse:{c:['#f0b3ff','#d81b60','#b77be0'],vy:-.1,vx:.08,sz:[1,2.6],tw:.8}
+};
+const AMB={cv:null,g:null,ps:[],raf:0,top:'hunter',bot:'hunter',t0:0,w:0,h:0};
+function ambWant(){return !!(setup.rules.ambient!==false&&animOK()&&!document.hidden&&(S||setup.screen==='title'||setup.screen==='story'));}
+function ambSync(){
+ if(!ambWant()){if(AMB.raf){cancelAnimationFrame(AMB.raf);AMB.raf=0;}if(AMB.cv) AMB.cv.style.opacity='0';return;}
+ if(S){AMB.top=OTHER().cls;AMB.bot=VIEW().cls;}else{AMB.top='title';AMB.bot='title';}
+ if(!AMB.cv){AMB.cv=document.createElement('canvas');AMB.cv.id='ambient';AMB.cv.setAttribute('aria-hidden','true');document.body.insertBefore(AMB.cv,document.body.firstChild);AMB.g=AMB.cv.getContext('2d');window.addEventListener('resize',ambSize);ambSize();}
+ AMB.cv.style.opacity='1';
+ if(!AMB.raf){AMB.t0=0;AMB.raf=requestAnimationFrame(ambTick);}
+}
+function ambSize(){if(!AMB.cv) return;const d=Math.min(2,window.devicePixelRatio||1);AMB.w=window.innerWidth;AMB.h=window.innerHeight;AMB.cv.width=AMB.w*d;AMB.cv.height=AMB.h*d;AMB.g.setTransform(d,0,0,d,0,0);}
+function ambSpawn(y0){
+ const top=Math.random()<.5,cls=top?AMB.top:AMB.bot,keys=Object.keys(AMBSTYLE);
+ const st=AMBSTYLE[cls==='title'?keys[Math.floor(Math.random()*keys.length)]:cls]||AMBSTYLE.hunter;
+ const y=y0!==undefined?y0:(st.vy<0?AMB.h+10:-10);
+ return {x:Math.random()*AMB.w,y:y0!==undefined?(top?Math.random()*AMB.h*.5:AMB.h*.5+Math.random()*AMB.h*.5):y,vx:st.vx*(0.5+Math.random())+(Math.random()-.5)*.12,vy:st.vy*(0.6+Math.random()*.8)+(Math.random()-.5)*.05,r:st.sz[0]+Math.random()*(st.sz[1]-st.sz[0]),c:st.c[Math.floor(Math.random()*st.c.length)],a:.18+Math.random()*.32,ph:Math.random()*6.28,tw:st.tw,top:top};
+}
+function ambTick(t){
+ AMB.raf=0;if(!ambWant()){if(AMB.cv) AMB.cv.style.opacity='0';return;}
+ AMB.raf=requestAnimationFrame(ambTick);
+ if(t-AMB.t0<33) return;const dt=Math.min(3,(t-(AMB.t0||t))/16.7);AMB.t0=t;
+ const want=window.innerWidth<640?22:42;
+ while(AMB.ps.length<want) AMB.ps.push(ambSpawn(AMB.ps.length<want?0:undefined));
+ const g=AMB.g;g.clearRect(0,0,AMB.w,AMB.h);
+ for(let i=0;i<AMB.ps.length;i++){
+  const q=AMB.ps[i];q.x+=q.vx*dt;q.y+=q.vy*dt;q.ph+=.04*dt;
+  if(q.y<-20||q.y>AMB.h+20||q.x<-20||q.x>AMB.w+20){AMB.ps[i]=ambSpawn();AMB.ps[i].y=AMB.ps[i].vy<0?AMB.h+8:-8;if(AMB.ps[i].top&&AMB.ps[i].vy<0) AMB.ps[i].y=AMB.h*.5+8;continue;}
+  const al=q.a*(q.tw?(.55+.45*Math.sin(q.ph*2)):1);
+  g.globalAlpha=al;g.fillStyle=q.c;g.beginPath();g.arc(q.x,q.y,q.r,0,6.283);g.fill();
+  g.globalAlpha=al*.25;g.beginPath();g.arc(q.x,q.y,q.r*3.2,0,6.283);g.fill();
+ }
+ g.globalAlpha=1;
+}
+document.addEventListener('visibilitychange',function(){try{ambSync();}catch(e){}});
 
 /* ---------- online play ----------
  One device hosts and runs the game engine. The other device (the guest)
@@ -1911,7 +2042,8 @@ function onlineHtml(){
  if(NET.err) h+='<p class="neterr" role="alert">'+NET.err+'</p>';
  return screenWrap('Online duel',h);
 }
-document.addEventListener('input',function(e){if(e.target&&e.target.id==='joincode') NET.typed=e.target.value.toUpperCase();if(e.target&&(e.target.id==='netname'||e.target.id==='profname')){const v=e.target.value.slice(0,24);IO.me.name=v;lsSet('nimgir-name',v);if(IO.mock) IO.mock.name=v;}});
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='joincode') NET.typed=e.target.value.toUpperCase();if(e.target&&/^acc(user|email|pass)$/.test(e.target.id)){const k={accuser:'u',accemail:'e',accpass:'p'}[e.target.id];ACCF[k]=e.target.value.slice(0,k==='p'?72:k==='e'?120:16);return;}
+ if(e.target&&(e.target.id==='netname'||e.target.id==='profname')){if(ACC) return;const v=e.target.value.slice(0,24);lsSet('nimgir-guestname',v);IO.me.name=v;lsSet('nimgir-name',v);if(IO.mock) IO.mock.name=v;}});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='joincode'){e.preventDefault();guestJoin(NET.typed);}});
 
 /* ---------- plainer game log: card names become chips, crests become icons ---------- */
@@ -2055,14 +2187,140 @@ function musicSync(){
  Kept on this device. Online wins count fully, wins against Medium AI and
  up count a little, local games, puzzles, the tutorial and custom rules don't count. */
 const RANKS=[['E',0],['D',100],['C',250],['B',450],['A',700],['S',1000]];
+
+/* ---------- player accounts (Supabase) ----------
+ Turned on when NIMGIR_CLOUD = {url, key} is set (the website loads it from config.js).
+ Signed in: rank, stats and solved puzzles live in your account and sync to every device.
+ Not set up, or signed out: everything is saved on this device, as before. */
+const CLOUD=Object.assign({url:'',key:''},(typeof window!=='undefined'&&window.NIMGIR_CLOUD)||{});
+CLOUD.url=String(CLOUD.url||'').replace(/\/+$/,'');
+function cloudOn(){return !!(CLOUD.url&&CLOUD.key&&/^https:\/\//.test(CLOUD.url));}
+let ACC=null;try{ACC=JSON.parse(lsGet('nimgir-account')||'null');if(ACC&&!ACC.id) ACC=null;}catch(e){ACC=null;}
+if(!cloudOn()) ACC=null;
+const SYNC={state:'',err:'',timer:null,lb:null,lbAt:0,lbErr:''};
+function accSave(){if(ACC) lsSet('nimgir-account',JSON.stringify(ACC));else{try{localStorage.removeItem('nimgir-account');}catch(e){}}}
+function sbErr(j,status){
+ const m=(j&&(j.error_description||j.msg||j.message||j.error))||('Error '+status);
+ if(/Invalid login/i.test(m)) return 'That email and password don’t match an account.';
+ if(/already registered|already been registered|User already/i.test(m)) return 'There’s already an account with that email. Try signing in.';
+ if(/Password should be/i.test(m)) return 'Your password needs at least 6 characters.';
+ if(/duplicate key|profiles_username|unique/i.test(m)) return 'That username is taken.';
+ if(/Email not confirmed/i.test(m)) return 'Confirm your email first (check your inbox), then sign in.';
+ return String(m).slice(0,160);
+}
+async function sb(path,opt,anon){
+ opt=opt||{};
+ const h={'apikey':CLOUD.key,'Content-Type':'application/json'};
+ if(!anon&&ACC){await accFresh();h['Authorization']='Bearer '+ACC.access;}else h['Authorization']='Bearer '+CLOUD.key;
+ if(opt.prefer) h['Prefer']=opt.prefer;
+ let r;
+ try{r=await fetch(CLOUD.url+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined});}
+ catch(e){throw 'Can’t reach the account server. Check your internet connection.';}
+ let j=null;try{const t=await r.text();j=t?JSON.parse(t):null;}catch(e){}
+ if(!r.ok) throw sbErr(j,r.status);
+ return j;
+}
+function accSession(r,username){
+ const u=r.user||{};
+ ACC={id:u.id,email:u.email||'',username:username||(u.user_metadata&&u.user_metadata.username)||'',access:r.access_token,refresh:r.refresh_token,exp:Date.now()+((+r.expires_in||3600)*1000)};
+ accSave();
+}
+async function accFresh(){
+ if(!ACC||Date.now()<ACC.exp-60000) return;
+ const r=await fetch(CLOUD.url+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'apikey':CLOUD.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:ACC.refresh})});
+ let j=null;try{j=await r.json();}catch(e){}
+ if(!r.ok||!j||!j.access_token){const was=ACC.username;ACC=null;accSave();SYNC.err='You were signed out'+(was?' ('+was+')':'')+'. Sign in again to keep syncing.';render();throw SYNC.err;}
+ ACC.access=j.access_token;ACC.refresh=j.refresh_token||ACC.refresh;ACC.exp=Date.now()+((+j.expires_in||3600)*1000);accSave();
+}
+function guestProfileRaw(){try{return JSON.parse(lsGet('nimgir-profile')||'null')||{rp:0,games:[],byCls:{}};}catch(e){return {rp:0,games:[],byCls:{}};}}
+function guestPuzzles(){try{return JSON.parse(lsGet('nimgir-puzzles')||'{}')||{};}catch(e){return {};}}
+function accCacheRow(row){
+ if(!row) return;
+ lsSet('nimgir-acc-profile',JSON.stringify({rp:+row.rp||0,games:Array.isArray(row.games)?row.games.slice(0,30):[],byCls:row.by_cls&&typeof row.by_cls==='object'?row.by_cls:{}}));
+ lsSet('nimgir-acc-puzzles',JSON.stringify(row.puzzles&&typeof row.puzzles==='object'?row.puzzles:{}));
+ if(row.username&&ACC){ACC.username=row.username;accSave();lsSet('nimgir-name',row.username);if(typeof IO!=='undefined'&&IO.me) IO.me.name=row.username;}
+}
+async function accPull(){
+ if(!ACC) return null;
+ const rows=await sb('/rest/v1/profiles?select=*&id=eq.'+encodeURIComponent(ACC.id));
+ const row=rows&&rows[0];if(row) accCacheRow(row);
+ return row||null;
+}
+async function accCreateProfile(username,bring){
+ const g=guestProfileRaw();
+ const body={id:ACC.id,username:username,rp:bring?(+g.rp||0):0,by_cls:bring?(g.byCls||{}):{},games:bring?(g.games||[]).slice(0,30):[],puzzles:bring?guestPuzzles():{}};
+ const rows=await sb('/rest/v1/profiles',{method:'POST',body:body,prefer:'return=representation'});
+ accCacheRow(rows&&rows[0]?rows[0]:body);
+}
+function cloudPush(){
+ if(!ACC) return;
+ clearTimeout(SYNC.timer);SYNC.state='saving';
+ SYNC.timer=setTimeout(async function(){
+  try{
+   const pr=profile(),pz=puzzleDone();
+   await sb('/rest/v1/profiles?id=eq.'+encodeURIComponent(ACC.id),{method:'PATCH',body:{rp:pr.rp,by_cls:pr.byCls,games:pr.games.slice(0,30),puzzles:pz,updated_at:new Date().toISOString()}});
+   SYNC.state='saved';SYNC.err='';
+  }catch(e){SYNC.state='error';SYNC.err=String(e);}
+  if(!S) render();
+ },400);
+}
+const ACCF={mode:'signin',u:'',e:'',p:'',bring:true,msg:'',busy:false,ok:''};
+function accValidName(u){return /^[A-Za-z0-9_]{3,16}$/.test(u);}
+async function accSubmit(){
+ const f=ACCF;if(f.busy) return;f.msg='';f.ok='';
+ const email=f.e.trim(),pass=f.p,user=f.u.trim();
+ if(f.mode==='name'){if(!accValidName(user)){f.msg='Usernames are 3 to 16 letters, numbers or _.';render();return;}}
+ else{
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){f.msg='Enter a valid email address.';render();return;}
+  if(pass.length<6){f.msg='Your password needs at least 6 characters.';render();return;}
+  if(f.mode==='signup'&&!accValidName(user)){f.msg='Usernames are 3 to 16 letters, numbers or _.';render();return;}
+ }
+ f.busy=true;render();
+ try{
+  if(f.mode==='signup'){
+   const taken=await sb('/rest/v1/profiles?select=id&username=ilike.'+encodeURIComponent(user.replace(/[_%\\]/g,'\\$&')),{},true);
+   if(taken&&taken.length) throw 'That username is taken.';
+   const r=await sb('/auth/v1/signup',{method:'POST',body:{email:email,password:pass,data:{username:user}}},true);
+   if(!r||!r.access_token){f.mode='signin';f.p='';f.ok='Account created. Check your email to confirm it, then sign in here.';return;}
+   accSession(r,user);f.p='';
+   try{await accCreateProfile(user,f.bring);f.ok='Welcome, '+user+'! Your account is ready.';}
+   catch(e){f.mode='name';f.u='';f.msg=String(e)+' Pick another username to finish.';}
+  } else if(f.mode==='signin'){
+   const r=await sb('/auth/v1/token?grant_type=password',{method:'POST',body:{email:email,password:pass}},true);
+   accSession(r);
+   const row=await accPull();
+   f.p='';
+   if(!row){
+    const want=ACC.username;
+    if(want&&accValidName(want)){try{await accCreateProfile(want,f.bring);f.ok='Signed in as '+want+'.';}catch(e){f.mode='name';f.u='';f.msg=String(e)+' Pick another username.';}}
+    else{f.mode='name';f.u='';f.ok='One more step: pick a username.';}
+   } else f.ok='Signed in as '+ACC.username+'.';
+  } else if(f.mode==='name'){
+   await accCreateProfile(user,f.bring);f.mode='signin';f.ok='Signed in as '+user+'.';
+  }
+  SYNC.lbAt=0;
+ }catch(e){f.msg=String(e);}
+ finally{f.busy=false;render();}
+}
+function accSignOut(){ACC=null;accSave();ACCF.mode='signin';ACCF.ok='Signed out. This device is back to its guest profile.';ACCF.msg='';lsSet('nimgir-name',lsGet('nimgir-guestname')||'');SYNC.lbAt=0;render();}
+async function lbLoad(force){
+ if(!cloudOn()) return;
+ if(!force&&SYNC.lb&&Date.now()-SYNC.lbAt<60000) return;
+ SYNC.lbAt=Date.now();
+ try{SYNC.lb=await sb('/rest/v1/profiles?select=username,rp,by_cls&order=rp.desc,updated_at.asc&limit=25',{},true);SYNC.lbErr='';}catch(e){SYNC.lbErr=String(e);}
+ if(!S&&setup.screen==='profile') render();
+}
+// on load: refresh the session and pull the latest progress
+setTimeout(function(){if(ACC){accPull().then(function(){if(!S) render();}).catch(function(){});}},50);
+
 function profile(){
- let pr=null;try{pr=JSON.parse(lsGet('nimgir-profile')||'null');}catch(e){}
+ let pr=null;try{pr=JSON.parse(lsGet(ACC?'nimgir-acc-profile':'nimgir-profile')||'null');}catch(e){}
  if(!pr||typeof pr!=='object') pr={rp:0,games:[],byCls:{}};
  pr.rp=Math.max(0,+pr.rp||0);pr.games=Array.isArray(pr.games)?pr.games.slice(0,30):[];pr.byCls=pr.byCls&&typeof pr.byCls==='object'?pr.byCls:{};
- pr.name=lsGet('nimgir-name')||'';
+ pr.name=ACC?ACC.username:(lsGet('nimgir-name')||'');
  return pr;
 }
-function saveProfile(pr){lsSet('nimgir-profile',JSON.stringify({rp:pr.rp,games:pr.games.slice(0,30),byCls:pr.byCls}));}
+function saveProfile(pr){lsSet(ACC?'nimgir-acc-profile':'nimgir-profile',JSON.stringify({rp:pr.rp,games:pr.games.slice(0,30),byCls:pr.byCls}));if(ACC) cloudPush();}
 function rankOf(rp){let i=0;for(let k=0;k<RANKS.length;k++) if(rp>=RANKS[k][1]) i=k;const next=RANKS[i+1];return {i:i,letter:RANKS[i][0],floor:RANKS[i][1],next:next?next[1]:null,pct:next?Math.round((rp-RANKS[i][1])/(next[1]-RANKS[i][1])*100):100};}
 function rankBadge(letter,size){return '<span class="rkb rk-'+letter+(size?' '+size:'')+'" title="'+letter+'-Rank">'+letter+'</span>';}
 function standardRules(r){return Object.keys(RULE_DEFAULTS).every(function(k){return r[k]===RULE_DEFAULTS[k];});}
@@ -2094,16 +2352,43 @@ function rankResultHtml(){
  return '<div class="rankres'+(r.up?' up':'')+'">'+rankBadge(r.after.letter,'rb-l')+'<div><b>'+(r.up?'Rank up! You’re now '+r.after.letter+'-Rank':r.after.letter+'-Rank')+'</b>'+
   '<span class="muted">'+(r.why?r.why:(r.delta>0?'+':'')+r.delta+' rank points')+' · '+r.rp+(r.after.next!==null?' / '+r.after.next:'')+'</span>'+bar+'</div></div>';
 }
+function accountHtml(){
+ const f=ACCF,msg=(f.msg?'<p class="accmsg bad" role="alert">'+escHtml(f.msg)+'</p>':'')+(f.ok?'<p class="accmsg ok" role="status">'+escHtml(f.ok)+'</p>':'');
+ if(!cloudOn()) return '<div class="pickcol rules acccard"><h2 class="display">Account</h2><p>Online accounts aren’t switched on for this copy of Nim-Gir yet, so your rank and stats are saved on this device only.</p><p class="muted small">When the game’s account server is set up, you can create an account here and play with the same rank on your phone, tablet and computer.</p></div>';
+ if(ACC&&f.mode!=='name'){
+  const st=SYNC.state==='saving'?'Saving…':SYNC.state==='error'?'Couldn’t sync: '+escHtml(SYNC.err):'Synced';
+  return '<div class="pickcol rules acccard on"><h2 class="display">Account</h2><div class="accrow"><span class="accav">'+escHtml((ACC.username||'?').slice(0,1).toUpperCase())+'</span><div><b>'+escHtml(ACC.username||'')+'</b><span class="muted">'+escHtml(ACC.email)+'</span><span class="accsync'+(SYNC.state==='error'?' bad':'')+'">'+st+'</span></div><span class="grow"></span><button class="ghost" data-act="accout">Sign out</button></div>'+msg+'<p class="muted small">Your rank, stats and solved puzzles follow you to any device where you sign in: iPhone, Android, PC or a console browser.</p></div>';
+ }
+ const tabs='<div class="seg acctabs" role="tablist">'+[['signin','Sign in'],['signup','Create account']].map(function(t){return '<button role="tab" data-act="acctab" data-m="'+t[0]+'" aria-pressed="'+(f.mode===t[0])+'">'+t[1]+'</button>';}).join('')+'</div>';
+ const inp=function(id,label,type,val,ac,ph){return '<label class="netlabel" for="'+id+'">'+label+'</label><input id="'+id+'" type="'+type+'" autocomplete="'+ac+'" placeholder="'+ph+'" value="'+escHtml(val)+'"'+(f.busy?' disabled':'')+'>';};
+ let body='';
+ if(f.mode==='name') body='<p>Signed in. Pick the username other players will see.</p>'+inp('accuser','Username','text',f.u,'username','3–16 letters, numbers or _');
+ else body=(f.mode==='signup'?inp('accuser','Username','text',f.u,'username','3–16 letters, numbers or _'):'')+inp('accemail','Email','email',f.e,'email','you@example.com')+inp('accpass','Password','password',f.p,f.mode==='signup'?'new-password':'current-password','At least 6 characters');
+ const g=guestProfileRaw();
+ const bring=(f.mode==='signup'||f.mode==='name')&&(+g.rp||0)+(g.games||[]).length>0?'<label class="acccheck"><input type="checkbox" data-act="accbring"'+(f.bring?' checked':'')+'> Bring this device’s progress into my account ('+(+g.rp||0)+' rank points)</label>':'';
+ return '<div class="pickcol rules acccard"><h2 class="display">Account</h2>'+(f.mode==='name'?'':tabs)+'<div class="accform">'+body+bring+msg+'<button class="primary" data-act="accgo"'+(f.busy?' disabled':'')+'>'+(f.busy?'Please wait…':f.mode==='signup'?'Create account':f.mode==='name'?'Save username':'Sign in')+'</button></div><p class="muted small">An account keeps your rank on every device. Without one, progress stays on this device.</p></div>';
+}
+function leaderboardHtml(){
+ if(!cloudOn()) return '';
+ lbLoad(false);
+ const rows=SYNC.lb;
+ let h='';
+ if(SYNC.lbErr&&!rows) h='<p class="muted">'+escHtml(SYNC.lbErr)+'</p>';
+ else if(!rows) h='<p class="muted">Loading…</p>';
+ else if(!rows.length) h='<p class="muted">No ranked players yet. Be the first.</p>';
+ else h='<ol class="lb">'+rows.map(function(r,i){const rk=rankOf(+r.rp||0),bc=r.by_cls||{},w=Object.keys(bc).reduce(function(t,k){return t+(+bc[k].w||0);},0),l=Object.keys(bc).reduce(function(t,k){return t+(+bc[k].l||0);},0);const me=ACC&&r.username===ACC.username;return '<li class="'+(me?'me':'')+'"><span class="lbn">'+(i+1)+'</span>'+rankBadge(rk.letter,'sm')+'<b>'+escHtml(r.username)+'</b><span class="grow"></span><span class="muted">'+w+'–'+l+'</span><span class="lbrp">'+(+r.rp||0)+'</span></li>';}).join('')+'</ol>';
+ return '<div class="pickcol rules"><h2 class="display">Leaderboard <button class="linkbtn" data-act="lbrefresh">Refresh</button></h2>'+h+'</div>';
+}
 function profileHtml(){
  const pr=profile(),rk=rankOf(pr.rp);
  const tot=Object.keys(pr.byCls).reduce(function(t,k){t.w+=pr.byCls[k].w||0;t.l+=pr.byCls[k].l||0;return t;},{w:0,l:0});
  const ladder='<div class="ladder">'+RANKS.map(function(r,i){return '<span class="lstep'+(i<rk.i?' done':i===rk.i?' on':'')+'">'+rankBadge(r[0])+'<small>'+r[1]+'</small></span>';}).join('<i></i>')+'</div>';
  const cls=Object.keys(CLASSES).map(function(k){const c=pr.byCls[k]||{w:0,l:0},n=c.w+c.l;return '<div class="pcls" style="--c:'+colorVar(k)+'">'+emblem(k,24)+'<span>'+CLASSES[k].name+'</span><span class="grow"></span><b>'+c.w+'–'+c.l+'</b><span class="muted">'+(n?Math.round(c.w/n*100)+'%':'')+'</span></div>';}).join('');
  const games=pr.games.slice(0,10).map(function(g){const when=new Date(g.d);return '<li class="pg '+g.res+'"><span class="pres">'+(g.res==='win'?'W':g.res==='loss'?'L':'D')+'</span><span style="color:'+colorVar(g.cls)+'">'+emblem(g.cls,18)+'</span><span>vs '+escHtml(g.on||'?')+' <span class="muted">('+(CLASSES[g.oc]?CLASSES[g.oc].name:'')+(g.mode==='ai'?', AI '+AILEVELS[g.lv]:g.mode==='online'?', online':'')+')</span></span><span class="grow"></span><span class="pdp">'+(g.dp>0?'+':'')+(g.dp||0)+'</span><span class="muted">'+when.toLocaleDateString()+'</span></li>';}).join('');
- return screenWrap('Your profile',
-  '<div class="pickcol rules profhead">'+rankBadge(rk.letter,'rb-xl')+'<div class="profinfo"><label class="netlabel" for="profname">Your name</label><input id="profname" maxlength="24" autocomplete="nickname" placeholder="Pick a name" value="'+escHtml(pr.name)+'">'+
+ return screenWrap(ACC?'Player · '+escHtml(ACC.username):'Player',
+  accountHtml()+'<div class="pickcol rules profhead">'+rankBadge(rk.letter,'rb-xl')+'<div class="profinfo">'+(ACC?'<p class="profuser">'+escHtml(ACC.username)+'</p>':'<label class="netlabel" for="profname">Your name</label><input id="profname" maxlength="24" autocomplete="nickname" placeholder="Pick a name" value="'+escHtml(pr.name)+'">')+
   '<p><b>'+rk.letter+'-Rank</b> · '+pr.rp+' rank points'+(rk.next!==null?' · '+(rk.next-pr.rp)+' to '+RANKS[rk.i+1][0]+'-Rank':' · top rank')+'</p><span class="rbar rbar-l"><i style="width:'+rk.pct+'%"></i></span><p class="muted">'+tot.w+' wins, '+tot.l+' losses</p></div></div>'+
-  '<div class="pickcol rules"><h2 class="display">The ladder</h2>'+ladder+'<p class="muted">Win online duels (+30, −15 for a loss) or beat the AI on Medium and up to climb. You can’t drop below a rank once you’ve reached it. Games with custom rules, local games, puzzles and the tutorial don’t count. Your rank is saved on this device.</p></div>'+
+  '<div class="pickcol rules"><h2 class="display">The ladder</h2>'+ladder+'<p class="muted">Win online duels (+30, −15 for a loss) or beat the AI on Medium and up to climb. You can’t drop below a rank once you’ve reached it. Games with custom rules, local games, puzzles and the tutorial don’t count. '+(ACC?'Your rank is saved to your account.':'Your rank is saved on this device.')+'</p></div>'+leaderboardHtml()+
   '<div class="pickcol rules"><h2 class="display">By class</h2>'+cls+'</div>'+
   '<div class="pickcol rules"><h2 class="display">Recent duels</h2>'+(games?'<ul class="pgames">'+games+'</ul>':'<p class="muted">No ranked duels yet.</p>')+'</div>');
 }
@@ -2118,6 +2403,12 @@ const PUZZLES=[
   brief:'A Taunt Summon guards your opponent’s last heart. You have exactly enough attacks, if you spend your crests well.',
   me:{cls:'hunter',hearts:4,dial:{R:0,A:0,S:1},hand:[],lanes:[['h_breaker',1],['h_scout',1],['h_e',1]]},
   op:{cls:'dragonkin',hearts:1,lanes:[['d_warden',2],['d_hatch',1],null]}},
+{id:'p7',title:'Lone Wolf',diff:'Easy',goal:'hearts',brief:'One wall, one heart. Your Lone Wolf is Swift: it can attack the turn it arrives.',
+  me:{cls:'eclipse',hearts:4,dial:{R:1,A:0,S:0},hand:['e_fledge'],lanes:[['e_alpha',1],null,null]},
+  op:{cls:'dragonkin',hearts:1,lanes:[['d_warden',1],null,null]}},
+ {id:'p8',title:'Rush Order',diff:'Easy',goal:'hearts',brief:'You have one Strike crest. A new Summon can’t attack yet… unless you Rush it.',
+  me:{cls:'hunter',hearts:3,dial:{R:2,A:0,S:1},hand:['h_breaker'],lanes:[['h_e',2],null,null]},
+  op:{cls:'demon',hearts:1,lanes:[['m_imp',1],null,null]}},
  {id:'p3',title:'The Last Oath',diff:'Medium',goal:'hearts',
   brief:'Down to 2 hearts, Marcus’s knights fight hardest. The Abyss Lord is too tough for a plain attack.',
   me:{cls:'oathbound',hearts:2,oath:2,dial:{R:1,A:1,S:0},hand:['o_bash','o_squire'],lanes:[['o_blade',1],['o_squire',1],null]},
@@ -2130,12 +2421,43 @@ const PUZZLES=[
   brief:'You don’t have the crests for what you need. Demons have another way to pay.',
   me:{cls:'demon',hearts:3,dial:{R:0,A:1,S:0},hand:['m_hound','m_frenzy'],lanes:[['m_imp',1],['m_leech',1],null]},
   op:{cls:'arcanist',hearts:1,lanes:[['a_glyph',1],['a_owl',2],null]}},
+ {id:'p9',title:'Echo Chamber',diff:'Medium',goal:'hearts',brief:'A Taunt wall soaks up everything. Some Arcanist spells can be cast twice.',
+  me:{cls:'arcanist',hearts:3,dial:{R:0,A:2,S:0},hand:['a_bolt'],lanes:[['a_owl',1],['a_apprentice',1],null]},
+  op:{cls:'hunter',hearts:1,lanes:[['h_tank',1],['h_scout',1],null]}},
+ {id:'p10',title:'Compulsion',diff:'Medium',goal:'hearts',brief:'Their Hunter Captain hits harder than anything you have. Make it work for you.',
+  me:{cls:'eclipse',hearts:3,dial:{R:0,A:1,S:0},hand:['e_mirror'],lanes:[['e_fledge',1],['e_blood',1],['e_alpha',1]]},
+  op:{cls:'hunter',hearts:1,lanes:[['h_captain',1],['h_tank',1],null]}},
+ {id:'p11',title:'Spend or Save',diff:'Medium',goal:'hearts',brief:'Your Heretic grows with Anomaly. Siphon wants it too. Only one of them can have it.',
+  me:{cls:'eclipse',hearts:3,anom:1,dial:{R:1,A:1,S:0},hand:['e_siphon','e_fledge'],lanes:[['e_veilw',1],null,null]},
+  op:{cls:'oathbound',hearts:1,lanes:[['o_shield',2],null,null]}},
+ {id:'p12',title:'Knighthood',diff:'Medium',goal:'hearts',brief:'The Abyss Lord is too big for a Knight. It isn’t too big for a Paladin.',
+  me:{cls:'oathbound',hearts:4,oath:1,dial:{R:1,A:1,S:0},hand:['o_knight'],lanes:[['o_blade',1],['o_squire',1],null]},
+  op:{cls:'demon',hearts:1,lanes:[['m_lord',1],null,null]}},
+ {id:'p15',title:'Sky Dive',diff:'Medium',goal:'hearts',brief:'Your Stormwing burns something as it lands. Pick the right target, then send it diving.',
+  me:{cls:'dragonkin',hearts:3,dial:{R:2,A:1,S:0},hand:['d_storm','d_dive'],lanes:[['d_drake',1],null,null]},
+  op:{cls:'hunter',hearts:1,lanes:[['h_scout',2],['h_archer',1],null]}},
+ {id:'p17',title:'Doom',diff:'Medium',goal:'hearts',brief:'An Iron Shield Tank is hard to kill… but it isn’t very strong.',
+  me:{cls:'demon',hearts:3,dial:{R:0,A:2,S:0},hand:['m_frenzy','m_doom'],lanes:[['m_imp',1],['m_leech',1],null]},
+  op:{cls:'hunter',hearts:1,lanes:[['h_tank',1],['h_rookie',2],null]}},
  {id:'p6',title:'Scorched Earth',diff:'Hard',goal:'clear',
   brief:'Destroy every enemy Summon this turn. You only get one spell, so pick the right one.',
   me:{cls:'dragonkin',hearts:5,dial:{R:0,A:3,S:0},hand:['d_roar','d_inferno','d_breath'],lanes:[['d_tyrant',2],null,null]},
-  op:{cls:'hunter',hearts:5,lanes:[['h_scout',1],['h_archer',1],['h_tank',1]]}}
+  op:{cls:'hunter',hearts:5,lanes:[['h_scout',1],['h_archer',1],['h_tank',1]]}},
+ {id:'p13',title:'Tribrid Rising',diff:'Hard',goal:'hearts',brief:'Last turn they burned your board with Inferno. The Tribrid remembers.',
+  me:{cls:'eclipse',hearts:2,anom:2,dial:{R:1,A:0,S:0},hand:[],lanes:[['e_tri',2],['e_fledge',1],null]},
+  op:{cls:'dragonkin',hearts:1,lastSkill:'d_inferno',lanes:[['h_scout',1],['h_archer',1],['h_tank',1]]}},
+ {id:'p14',title:'Clean Sweep',diff:'Hard',goal:'clear',brief:'Destroy every enemy Summon. Total Eclipse alone won’t do it, but it can do more.',
+  me:{cls:'eclipse',hearts:3,anom:1,dial:{R:0,A:2,S:0},hand:['e_total'],lanes:[['e_alpha',1],null,null]},
+  op:{cls:'hunter',hearts:4,lanes:[['h_scout',2],['h_rookie',2],['h_tank',1]]}},
+ {id:'p16',title:'Regression',diff:'Hard',goal:'hearts',brief:'Their Monarch has climbed too high. Knock it back down to size.',
+  me:{cls:'arcanist',hearts:3,dial:{R:1,A:1,S:0},hand:['a_regress'],lanes:[['a_blade',2],['a_owl',1],null]},
+  op:{cls:'hunter',hearts:1,lanes:[['h_monarch',3],null,null]}},
+ {id:'p18',title:'Pack Hunt',diff:'Expert',goal:'hearts',brief:'Three wolves, three walls, one heart. Every crest and every attack counts.',
+  me:{cls:'eclipse',hearts:3,anom:0,dial:{R:2,A:1,S:0},hand:['e_evo','e_fledge'],lanes:[['e_alpha',1],['e_thrall',1],null]},
+  op:{cls:'arcanist',hearts:1,lanes:[['a_golem',1],['a_witch',1],null]}}
 ];
-function puzzleDone(){try{return JSON.parse(lsGet('nimgir-puzzles')||'{}')||{};}catch(e){return {};}}
+function puzzleDone(){try{return JSON.parse(lsGet(ACC?'nimgir-acc-puzzles':'nimgir-puzzles')||'{}')||{};}catch(e){return {};}}
+function puzzleSave(d){lsSet(ACC?'nimgir-acc-puzzles':'nimgir-puzzles',JSON.stringify(d));if(ACC) cloudPush();}
 function puzzleOfDay(){const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5))%PUZZLES.length;}
 function startPuzzle(i){
  const pz=PUZZLES[i];if(!pz) return;
@@ -2144,8 +2466,8 @@ function startPuzzle(i){
  const mk=function(name,sd){
   const pl=makePlayer(name,sd.cls,rules);
   pl.hearts=pl.hearts.slice(0,sd.hearts);pl.hand=(sd.hand||[]).map(function(id){return {uid:nid(),id:id};});
-  pl.dial=Object.assign({R:0,A:0,S:0},sd.dial||{});pl.oath=sd.oath||0;
-  pl.lanes=(sd.lanes||[null,null,null]).map(function(x){return x?{uid:nid(),card:{uid:nid(),id:x[0]},level:x[1],dmg:x[2]||0,boost:0,perm:0,summonedTurn:0,leveledTurn:0,attacked:false}:null;});
+  pl.dial=Object.assign({R:0,A:0,S:0},sd.dial||{});pl.oath=sd.oath||0;pl.anom=sd.anom||0;if(sd.lastSkill) pl.lastSkillId=sd.lastSkill;
+  pl.lanes=(sd.lanes||[null,null,null]).map(function(x){return x?Object.assign({uid:nid(),card:{uid:nid(),id:x[0]},level:x[1],dmg:x[2]||0,boost:0,perm:0,summonedTurn:0,leveledTurn:0,attacked:false},x[3]||{}):null;});
   pl.back=(sd.back||[null,null,null]).map(function(x){return x?{card:{uid:nid(),id:x[0]},faceUp:!!x[1],setTurn:0}:null;});
   return pl;
  };
@@ -2157,10 +2479,10 @@ function startPuzzle(i){
 function puzzleResult(ok){
  if(!S||!S.puzzle||S.puzzle.done) return;
  S.puzzle.done=true;const i=S.puzzle.i,pz=PUZZLES[i];
- if(ok){const d=puzzleDone();d[pz.id]=1;lsSet('nimgir-puzzles',JSON.stringify(d));sfx('victory');buzz([30,50,30,50,140]);}
+ if(ok){const d=puzzleDone();d[pz.id]=1;puzzleSave(d);sfx('victory');buzz([30,50,30,50,140]);}
  else{sfx('defeat');buzz(200);}
  const opts=ok?(i+1<PUZZLES.length?[{label:'Next puzzle',value:'next'},{label:'All puzzles',value:'list',cancel:true}]:[{label:'All puzzles',value:'list',cancel:true}]):[{label:'Try again',value:'retry'},{label:'All puzzles',value:'list',cancel:true}];
- LM={title:ok?'Solved!':'Not this time',body:'<p>'+(ok?'<b>'+pz.title+'</b> solved. '+(i+1<PUZZLES.length?'Ready for the next one?':'That’s every puzzle. New ones are coming.'):'The turn is over and the goal wasn’t met. Every puzzle has a solution: look at the crests, the order of attacks and anything face-down.')+'</p>',options:opts,wide:false};
+ LM={title:ok?'Solved!':'Not this time',body:'<p>'+(ok?'<b>'+pz.title+'</b> solved. '+PUZZLES.filter(function(q){return puzzleDone()[q.id];}).length+' of '+PUZZLES.length+' done. '+(i+1<PUZZLES.length?'Ready for the next one?':'That’s every puzzle. New ones are coming.'):'The turn is over and the goal wasn’t met. Every puzzle has a solution: look at the crests, the order of attacks and anything face-down.')+'</p>',options:opts,wide:false};
  LMres=function(v){setTimeout(function(){if(v==='next') startPuzzle(i+1);else if(v==='retry') startPuzzle(i);else{S=null;setup.screen='puzzles';render();}},0);};
  render();
 }
@@ -2170,11 +2492,25 @@ function puzzleCheck(){
  else if(S.puzzle.goal==='clear'&&boardEmpty(S.players[1])&&S.turnNo===5) puzzleResult(true);
  else if(S.puzzle.goal==='clear'&&S.over) puzzleResult(false);
 }
+function puzzleIntro(i){
+ const pz=PUZZLES[i];if(!pz) return;
+ const goal=pz.goal==='clear'?'Destroy every enemy Summon this turn.':'Win this turn: take their last heart'+(pz.op.hearts>1?'s':'')+'.';
+ const hidden=(pz.op.back||[]).filter(function(x){return x&&!x[1];}).length;
+ LM={title:pz.title,body:'<div class="pzintro" style="--c:'+colorVar(pz.me.cls)+'">'+emblem(pz.me.cls,40)+'<div><p class="pzchips"><span>'+pz.diff+'</span><span>'+CLASSES[pz.me.cls].name+'</span><span>vs '+CLASSES[pz.op.cls].name+'</span></p><p>'+pz.brief+'</p><p><b>Goal:</b> '+goal+'</p>'+(hidden?'<p class="muted">They have '+hidden+' face-down card'+(hidden>1?'s':'')+'.</p>':'')+'<p class="muted small">You get one turn, with the crests already on your dial. No dice.</p></div></div>',options:[{label:'Start puzzle',value:'go'},{label:'Back',value:null,cancel:true}],wide:false};
+ LMres=function(v){if(v==='go') setTimeout(function(){startPuzzle(i);},0);};
+ render();
+}
 function puzzlesHtml(){
  const done=puzzleDone(),day=puzzleOfDay(),dz=PUZZLES[day];
- const card=function(pz,i,big){return '<button class="pzcard'+(big?' today':'')+(done[pz.id]?' solved':'')+'" style="--c:'+colorVar(pz.me.cls)+'" data-act="puzzle" data-i="'+i+'">'+emblem(pz.me.cls,big?40:28)+'<span class="pzt"><small>'+(big?'Puzzle of the day · ':'')+pz.diff+'</small><b>'+pz.title+'</b><span>'+pz.brief+'</span></span>'+(done[pz.id]?'<span class="pztick" aria-label="Solved">✓</span>':'')+'</button>';};
+ const card=function(pz,i,big){return '<button class="pzcard'+(big?' today':'')+(done[pz.id]?' solved':'')+'" style="--c:'+colorVar(pz.me.cls)+'" data-act="puzzle" data-i="'+i+'">'+emblem(pz.me.cls,big?40:28)+'<span class="pzt"><small>'+(big?'Puzzle of the day · ':'')+pz.diff+' · '+(pz.goal==='clear'?'Clear the board':'Win this turn')+'</small><b>'+pz.title+'</b><span>'+pz.brief+'</span></span>'+(done[pz.id]?'<span class="pztick" aria-label="Solved">✓</span>':'')+'</button>';};
  const n=PUZZLES.filter(function(pz){return done[pz.id];}).length;
- return screenWrap('Puzzles','<p class="lead">Each puzzle is one turn. Find the winning line before you end your turn. '+n+' of '+PUZZLES.length+' solved.</p>'+card(dz,day,true)+'<div class="pzlist">'+PUZZLES.map(function(pz,i){return card(pz,i,false);}).join('')+'</div>');
+ const next=PUZZLES.findIndex(function(pz){return !done[pz.id];});
+ const groups=['Easy','Medium','Hard','Expert'].map(function(df){
+  const list=PUZZLES.map(function(pz,i){return [pz,i];}).filter(function(x){return x[0].diff===df;});if(!list.length) return '';
+  const k=list.filter(function(x){return done[x[0].id];}).length;
+  return '<section class="pzgroup"><h2 class="display">'+df+' <small>'+k+' / '+list.length+'</small></h2><div class="pzlist">'+list.map(function(x){return card(x[0],x[1],false);}).join('')+'</div></section>';
+ }).join('');
+ return screenWrap('Puzzles','<div class="pzhead"><p class="lead">Each puzzle is one turn. Find the winning line before you end your turn.</p><div class="pzprog"><span class="rbar rbar-l"><i style="width:'+Math.round(n/PUZZLES.length*100)+'%"></i></span><b>'+n+' of '+PUZZLES.length+' solved</b>'+(next>=0?'<button class="primary" data-act="puzzle" data-i="'+next+'">'+(n?'Next unsolved':'Start')+': '+PUZZLES[next].title+'</button>':'<span class="muted">All solved!</span>')+'</div></div>'+card(dz,day,true)+groups);
 }
 
 /* ---------- tutorial: a guided first game ---------- */
@@ -2264,7 +2600,7 @@ async function tutAiTurn(){
 
 /* ---------- state ---------- */
 let S=null, uidc=0, modalResolve=null, drawResolve=null, LASTSCR=null;
-const setup={mode:'ai',p:[{cls:'hunter'},{cls:'dragonkin'}],rules:{startCrests:true,heartPer:0,hearts:5,draw:1,pass:true,confirm:true,tapDraw:true,sound:true,music:true,haptics:true,aiLevel:2,startHand:5,handLimit:7,dice:3,dialCap:6,deckSize:60,pactRate:2,hoardCap:300,aiSpeed:650,revealHand:false,fullDial:false,freeReroll:false}};
+const setup={mode:'ai',p:[{cls:'hunter'},{cls:'dragonkin'}],rules:{startCrests:true,heartPer:0,hearts:5,draw:1,pass:true,confirm:true,tapDraw:true,sound:true,music:true,haptics:true,ambient:true,aiLevel:2,startHand:5,handLimit:7,dice:3,dialCap:6,deckSize:60,pactRate:2,hoardCap:300,aiSpeed:650,revealHand:false,fullDial:false,freeReroll:false}};
 const nid=function(){return ++uidc;};
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function makePlayer(name,cls,rules){
@@ -3555,9 +3891,10 @@ function centreHtml(){
  }
  const any=boardEmpty(O())&&attackersLeft(p)>0;
  if(isPhone()&&S.usel!==null&&S.usel!==undefined&&p.lanes[S.usel]&&(S.phase==='main'||S.phase==='battle')) return trayHtml();
- if(S.phase==='main') return '<div class="centre">'+steps('main')+'<div class="msg">'+(S.turnNo===1?msg2('<b>Play phase.</b> No attacks on turn 1: play your cards, then end your turn.','<b>Turn 1:</b> play cards, then end your turn.'):msg2('<b>Play phase.</b> Play cards and level up first. Once you go to battle, cards lock.','<b>Play</b> cards, then go to battle. Tap a Summon for actions.'))+'</div>'+
+ const pzr=S.puzzle&&!S.puzzle.done?'<button class="ghost" data-act="pzrestart">Restart</button>':'';
+ if(S.phase==='main') return '<div class="centre">'+steps('main')+pzr+'<div class="msg">'+(S.turnNo===1?msg2('<b>Play phase.</b> No attacks on turn 1: play your cards, then end your turn.','<b>Turn 1:</b> play cards, then end your turn.'):msg2('<b>Play phase.</b> Play cards and level up first. Once you go to battle, cards lock.','<b>Play</b> cards, then go to battle. Tap a Summon for actions.'))+'</div>'+
   (S.turnNo>1?'<button class="primary battlebtn" data-act="battle">'+icon('S',16)+' Go to battle</button><button class="ghost" data-act="end">End turn</button>':'<button class="primary" data-act="end">End turn</button>')+'</div>';
- if(S.phase==='battle') return '<div class="centre battle">'+steps('battle')+'<div class="msg">'+msg2('<b>Battle phase.</b> Tap Attack on your Summons. Cards are locked until next turn.','<b>Battle!</b> Tap a Summon to attack.')+'</div>'+(any?'<button class="ghost" data-act="attackall">Attack with all</button>':'')+'<button class="primary" data-act="end">End turn</button></div>';
+ if(S.phase==='battle') return '<div class="centre battle">'+steps('battle')+pzr+'<div class="msg">'+msg2('<b>Battle phase.</b> Tap Attack on your Summons. Cards are locked until next turn.','<b>Battle!</b> Tap a Summon to attack.')+'</div>'+(any?'<button class="ghost" data-act="attackall">Attack with all</button>':'')+'<button class="primary" data-act="end">End turn</button></div>';
  return '<div class="centre"><div class="msg">Waiting…</div></div>';
 }
 function handHtml(p){
@@ -3612,6 +3949,7 @@ const GAMEOPTS=[
  {k:'sound',label:'Sound effects',opts:[[true,'On'],[false,'Off']]},
  {k:'music',label:'Music',opts:[[true,'On'],[false,'Off']]},
  {k:'haptics',label:'Phone vibration',opts:[[true,'On'],[false,'Off']]},
+ {k:'ambient',label:'Background effects',opts:[[true,'On'],[false,'Off']]},
  {k:'aiSpeed',label:'AI speed',opts:[[1100,'Slow'],[650,'Normal'],[300,'Fast'],[60,'Instant']]},
  {k:'pass',label:'Pass-the-device screen (local 2 player)',opts:[[true,'On'],[false,'Off']]}
 ];
@@ -3651,6 +3989,13 @@ const CLASS_LINES={
  oathbound:'Hold the line. Keep the Oath.',
  eclipse:'Bend fate. Turn their strength against them.'
 };
+const STORY=[
+ {t:'Chapter 1',n:'The Gate Opens',c:'hunter'},{t:'Chapter 2',n:'Circles of Ash',c:'arcanist'},{t:'Chapter 3',n:'The Hoard Wakes',c:'dragonkin'},
+ {t:'Chapter 4',n:'Contracts in Blood',c:'demon'},{t:'Chapter 5',n:'The Last Oath',c:'oathbound'},{t:'Chapter 6',n:'Under the Eclipse',c:'eclipse'}];
+function storyHtml(){
+ const ch=STORY.map(function(x,i){return '<div class="stch" style="--c:'+colorVar(x.c)+';--d:'+(i*90)+'ms"><span class="stem">'+emblem(x.c,34)+'</span><span class="stt"><small>'+x.t+'</small><b>'+x.n+'</b><span>'+CLASSES[x.c].name+'</span></span><span class="stlock" aria-label="Locked">'+'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span></div>';}).join('');
+ return screenWrap('Story mode','<div class="sthero"><span class="wip">Work in progress</span><h2 class="display">The road to S-Rank</h2><p>Battle your way through the characters of Nim-Gir, one chapter at a time. Each chapter is a run of story duels against hand-built opponents, with their own decks, rules and a boss at the end.</p><p class="muted">Story mode is being built. Chapter titles here are placeholders.</p></div><div class="stlist">'+ch+'</div>');
+}
 function screenWrap(title,body,back){
  return '<div class="screen"><div class="screentop">'+(back!==false?'<button class="ghost" data-act="go" data-to="title">Back to title</button>':'')+'</div><h1 class="display screenh">'+title+'</h1>'+body+'</div>';
 }
@@ -3660,10 +4005,10 @@ function titleHtml(){
  const paths=Object.keys(CLASSES).map(function(k){return '<span class="tpath" style="--c:'+colorVar(k)+'">'+emblem(k,34)+'<b>'+CLASSES[k].name+'</b></span>';}).join('');
  return '<div class="title"><div class="ranks" aria-hidden="true">'+ranks+'</div>'+
   '<h1 class="logo display">Nim-Gir</h1><p class="tagline">A crest-dice card duel. Everyone starts at the bottom.</p>'+
-  '<nav class="menu" aria-label="Main menu"><button class="primary big" data-act="go" data-to="mode">Play</button>'+(lsGet('nimgir-tutorial')?'':'<button class="ghost big tutnudge" data-act="tutorial">New? Start the tutorial</button>')+
+  '<nav class="menu" aria-label="Main menu"><button class="primary big" data-act="go" data-to="mode">Play</button><button class="ghost big storybtn" data-act="story">Story mode <span class="wipchip">Coming soon</span></button>'+(lsGet('nimgir-tutorial')?'':'<button class="ghost big tutnudge" data-act="tutorial">New? Start the tutorial</button>')+
   '<button class="ghost big" data-act="go" data-to="howto">How to play</button>'+
   '<button class="ghost big" data-act="go" data-to="cards">Card gallery</button>'+
-  '<button class="ghost big" data-act="go" data-to="profile">Profile</button>'+
+  '<button class="ghost big" data-act="go" data-to="profile">Player'+(ACC?' · '+escHtml(ACC.username):'')+'</button>'+
   '<button class="ghost big" data-act="go" data-to="settings">Settings</button></nav>'+
   '<div class="tpaths">'+paths+'</div><p class="ver">Playtest build · '+Object.keys(CLASSES).length+' classes · '+Object.keys(DECKS).reduce(function(t,k){return t+DECKS[k].reduce(function(a,e){return a+e[1];},0);},0)+' cards</p></div>';
 }
@@ -3748,6 +4093,7 @@ function setupScreenHtml(){
  if(sc==='online') return onlineHtml();
  if(sc==='profile') return profileHtml();
  if(sc==='puzzles') return puzzlesHtml();
+ if(sc==='story') return storyHtml();
  return titleHtml();
 }
 let vsTimer=null;
@@ -3774,7 +4120,7 @@ function scrollRestore(o){
 function render(){
  const app=document.getElementById('app');
  const SV=scrollSave();
- if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr===LASTSCR) scrollRestore(SV);if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;return;}
+ if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr===LASTSCR) scrollRestore(SV);if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;try{ambSync();}catch(e){}return;}
  const enterGame=LASTSCR!=='game';LASTSCR='game';
  try{if(S.tutorial) tutTick();}catch(e){console.error(e);}
  const me=VIEW(),op=OTHER(),act=P();
@@ -3807,6 +4153,7 @@ function render(){
  try{postFx();}catch(e){}
  try{showReveals();}catch(e){console.error(e);}
  try{maybeShowResults();musicSync();puzzleCheck();}catch(e){}
+ try{ambSync();}catch(e){}
  try{if(S&&S.tutorial) coachHighlight();}catch(e){console.error(e);}
  if(NET.role==='host'&&S.mode==='online') netCapture();
  if(NET.role==='guest'&&NET.anims&&NET.anims.length){const an=NET.anims;NET.anims=[];guestAnims(an);}
@@ -3829,7 +4176,13 @@ document.addEventListener('click',function(e){
  if(a==='pick'){setup.p[+b.dataset.p].cls=b.dataset.cls;render();return;}
  if(a==='mode'&&b.dataset.mode==='online'){setup.screen='online';NET.err='';render();ioInit().then(function(){netRefresh();});return;}
  if(a==='pzrestart'){if(S&&S.puzzle&&!S.busy){setup.optsOpen=false;startPuzzle(S.puzzle.i);}return;}
- if(a==='puzzle'){startPuzzle(+b.dataset.i);return;}
+ if(a==='puzzle'){puzzleIntro(+b.dataset.i);return;}
+ if(a==='acctab'){ACCF.mode=b.dataset.m;ACCF.msg='';ACCF.ok='';render();return;}
+ if(a==='accgo'){accSubmit();return;}
+ if(a==='accout'){accSignOut();return;}
+ if(a==='accbring'){ACCF.bring=!!b.checked;return;}
+ if(a==='lbrefresh'){lbLoad(true);return;}
+ if(a==='story'){setup.screen='story';render();try{window.scrollTo(0,0);}catch(e){}return;}
  if(a==='tutorial'){startTutorial();return;}
  if(a==='nethost'){hostCreate();return;}
  if(a==='netshare'){netShare();return;}
@@ -3896,10 +4249,12 @@ function gameAct(a,ds,remote){
  if(a==='lvl'){run(function(){return humanLevel(+ds.lane);});return;}
  if(a==='emp'){run(function(){return humanEmpower(+ds.lane);});return;}
  if(a==='rush'){run(function(){return humanRush(+ds.lane);});return;}
+ if(a==='pzrestart'){if(S.puzzle&&!S.busy){const k=S.puzzle.i;startPuzzle(k);}return;}
  if(a==='transcend'){S.usel=null;run(function(){return humanTranscend(+ds.lane);});return;}
  if(a==='discardup'){run(function(){return humanDiscardUp(+ds.i);});return;}
 }
 document.addEventListener('keydown',function(e){
+ if(e.key==='Enter'&&e.target&&/^acc(user|email|pass)$/.test(e.target.id)){e.preventDefault();accSubmit();return;}
  if(e.key==='Escape'&&!S&&setup.screen&&setup.screen!=='title'){if(setup.screen==='vs'){finishVs();return;}setup.screen='title';render();return;}
  if(e.key!=='Escape') return;
  if(LM){const i=LM.options.findIndex(function(o){return o.cancel;});const r=LMres;const v=i>=0?LM.options[i].value:null;LM=null;LMres=null;render();if(r) r(v);return;}

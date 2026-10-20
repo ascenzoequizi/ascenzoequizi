@@ -25,3 +25,7 @@ Replace `index.html` with the new version (upload it again with the same name) a
 ## Online play
 
 Online duels connect the two devices directly using PeerJS (included in `index.html`, MIT licence). The host's page must stay open during the game. A few very strict networks (some work or school Wi-Fi) can block the connection; mobile data and home Wi-Fi normally work.
+
+
+## Accounts
+To turn on player accounts (same rank on every device), follow `SETUP-ACCOUNTS.md`. Until then, progress is saved per device.
