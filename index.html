@@ -491,7 +491,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 @keyframes pipPulse{0%{transform:scale(1)}30%{transform:scale(1.25)}100%{transform:scale(1)}}
 .handrow{position:relative}
 .handlock{position:absolute;left:0;right:0;bottom:0;top:8px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;border-radius:12px;background:color-mix(in srgb,var(--bg) 72%,transparent);font-weight:700;z-index:2;pointer-events:none}
-.handlock.soft{background:color-mix(in srgb,var(--bg) 45%,transparent);color:var(--muted)}
+.handlock.soft{top:-2px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);padding:3px 12px;border-radius:999px;font-size:12px;background:var(--panel);color:var(--muted);border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.2);white-space:nowrap}
 .centre.aiturn .msg{color:var(--text)}
 .dots{display:inline-flex;gap:3px;margin-left:6px;vertical-align:middle}
 .dots i{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:dot 1s ease infinite}
@@ -858,6 +858,9 @@ button.deckpile{cursor:pointer}
 @media (max-width:640px){.updiscard{font-size:10px;padding:0 6px;right:2px}}
 
 /* ---------- details panel ---------- */
+.minibtn{padding:0;border:0;background:none;text-align:left;cursor:pointer;border-radius:8px;font:inherit;color:inherit;transition:transform .15s}
+.minibtn:hover{transform:translateY(-2px)}
+.minibtn:focus-visible{outline:2px solid var(--focus,#A98BF0);outline-offset:2px}
 .detail.big{gap:20px}
 .detail.big .dside{display:flex;flex-direction:column;gap:12px;min-width:240px;max-width:520px}
 .dsec{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:color-mix(in srgb,var(--panel2) 55%,transparent)}
@@ -939,9 +942,6 @@ button.deckpile{cursor:pointer}
 #fxl .impact{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff 0,color-mix(in srgb,var(--c) 80%,#fff) 25%,color-mix(in srgb,var(--c) 40%,transparent) 50%,transparent 70%);will-change:transform,opacity}
 .float.f-hit{animation:hitPop 1.2s cubic-bezier(.2,.8,.2,1) forwards;font-size:32px;color:#fff;-webkit-text-stroke:1.5px var(--strike);text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 12px color-mix(in srgb,var(--strike) 70%,transparent)}
 @keyframes hitPop{0%{opacity:0;transform:translate(-50%,6px) scale(.4)}12%{opacity:1;transform:translate(-50%,-6px) scale(1.35)}24%{transform:translate(-50%,-10px) scale(1)}80%{opacity:1;transform:translate(-50%,-34px) scale(1)}100%{opacity:0;transform:translate(-50%,-46px) scale(.9)}}
-.unit.awake .uart,.unit.awake .tart{position:relative;overflow:hidden}
-.unit.awake .uart::after,.unit.awake .tart::after{content:'';position:absolute;inset:-40% -60%;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.28) 50%,transparent 58%);animation:sheen 3.6s ease-in-out infinite;pointer-events:none}
-@keyframes sheen{0%,55%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
 .title{position:relative}
 .orbit{position:relative;width:min(340px,80vw);height:0;margin:0 auto}
 .orbit span{position:absolute;left:50%;top:0;color:var(--c);opacity:.55;transform:rotate(var(--a)) translateX(min(160px,38vw)) rotate(calc(-1 * var(--a)));animation:orbit 40s linear infinite;filter:drop-shadow(0 0 8px var(--c))}
@@ -950,7 +950,7 @@ button.deckpile{cursor:pointer}
 .logo{text-shadow:0 0 30px color-mix(in srgb,var(--focus,#A98BF0) 45%,transparent);background:linear-gradient(100deg,var(--text) 40%,#fff 50%,var(--text) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:logoIn .7s cubic-bezier(.2,.8,.2,1) .75s forwards,logoSheen 6s ease-in-out 1.6s infinite}
 @keyframes logoSheen{0%,60%{background-position:100% 0}100%{background-position:-50% 0}}
 .tpath{transition:transform .25s}.tpath:hover{transform:translateY(-4px)}
-@media (prefers-reduced-motion: reduce){.orbit span,.unit.awake .uart::after,.unit.awake .tart::after,.stch{animation:none;opacity:.8}}
+@media (prefers-reduced-motion: reduce){.stch{animation:none;opacity:.8}}
 </style>
 </head>
 <body>
@@ -3440,7 +3440,7 @@ async function deathMenu(side){
  const opts=[];
  if(mine) owner.death.forEach(function(c){const d=D(c);if(d.type==='skill'&&d.echo){const r=skillPlayable(p,d);opts.push({label:r?'Echo · '+r:'Echo ('+costText(d.cost)+')',value:c.uid,disabled:!!r,card:d});}});
  opts.push({label:'Close',value:null,cancel:true});
- const list=owner.death.length?'<div class="minigrid">'+owner.death.map(function(c){return miniCard(D(c));}).join('')+'</div>':'<p>Empty.</p>';
+ const list=owner.death.length?'<div class="minigrid">'+owner.death.map(function(c){return '<button class="minibtn" data-act="deathcard" data-id="'+c.id+'" data-side="'+side+'" aria-label="'+D(c).name+': details">'+miniCard(D(c))+'</button>';}).join('')+'</div><p class="muted small">Tap a card to see its details.</p>':'<p>Empty.</p>';
  const v=await ask(owner.name+'’s death pile','<p class="muted">'+owner.death.length+' card'+(owner.death.length===1?'':'s')+', most recent last.</p>'+list+(opts.length>1?'<h3 class="display deckh">Echo Skills you can cast again</h3>':''),opts,null,true);
  if(v!==null&&v!==undefined){const c=owner.death.find(function(x){return x.uid===v;});if(c){pickCard(c,true);if(S.pick&&S.pick.mode==='cast'&&setup.rules.confirm) await resolvePick({});}}
 }
@@ -4166,6 +4166,16 @@ document.addEventListener('click',function(e){
  if(b.matches('.ghost,.seg button,.poster,.clsbtn')) sfx('click');
  const a=b.dataset.act;
  if(a==='results'){if(S&&S.over&&!LM){LM={title:'Match stats',body:resultsHtml(),options:[{label:'Close',value:null,cancel:true}],wide:true};LMres=null;render();}return;}
+ if(a==='deathcard'){
+  const d=DEFS[b.dataset.id],side=b.dataset.side;if(!d) return;
+  let reopen=false;
+  if(LM){const r=LMres;LM=null;LMres=null;if(r) r(null);reopen=true;}
+  else if(S&&S.modal){const opts=S.modal.options,ci=Math.max(0,opts.findIndex(function(o){return o.cancel;}));
+   if(S.mode==='online'&&NET.role==='guest'){const ms=S.modal.seq;S.modal=null;guestSend('modal',{i:String(ci)},ms,true);}
+   else{const r=modalResolve;S.modal=null;modalResolve=null;if(r) r(opts[ci].value);}}
+  setTimeout(function(){infoRun(async function(){await showDetails(d,'<p class="muted">In '+escHtml(sideP(side).name)+'’s death pile.</p>');if(reopen) setTimeout(function(){infoRun(function(){return deathMenu(side);});},0);});},0);
+  return;
+ }
  if(a==='logcard'){if(LM||!DEFS[b.dataset.id]) return;infoRun(function(){return showDetails(DEFS[b.dataset.id]);});return;}
  if(a==='lmodal'){if(!LM) return;const opt=LM.options[+b.dataset.i];const r=LMres;LM=null;LMres=null;render();if(r) r(opt?opt.value:null);return;}
  if(a==='modal'){
