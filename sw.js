@@ -1,6 +1,6 @@
 // Lets Nim-Gir install to a home screen and open offline. Always tries the network first,
 // so a new version on GitHub shows up straight away.
-const CACHE='nimgir-v2';
+const CACHE='nimgir-v5';
 const FILES=['./','index.html','config.js','manifest.webmanifest','favicon.svg','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).catch(()=>{}));self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});

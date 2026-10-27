@@ -951,6 +951,30 @@ button.deckpile{cursor:pointer}
 @keyframes logoSheen{0%,60%{background-position:100% 0}100%{background-position:-50% 0}}
 .tpath{transition:transform .25s}.tpath:hover{transform:translateY(-4px)}
 @media (prefers-reduced-motion: reduce){.stch{animation:none;opacity:.8}}
+
+/* ---------- settings: volume, graphics ---------- */
+.volwrap{display:flex;align-items:center;gap:10px;flex:1;max-width:320px}
+.volwrap input[type=range]{flex:1;accent-color:var(--focus,#A98BF0)}
+.volwrap output{min-width:42px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.compchip{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--strike);color:#fff;margin-right:6px;vertical-align:1px}
+body[data-gfx="low"] .unit.awake::after{animation:none!important}
+body[data-gfx="low"] .hcard,body[data-gfx="low"] .unit{transition:none!important}
+body[data-gfx="low"] #fxl .ptc{display:none}
+/* ---------- docked counter prompt: the board stays visible and clickable ---------- */
+.overlay.dock{background:transparent;pointer-events:none;align-items:flex-end;justify-content:flex-end;padding:16px}
+.overlay.dock .modal{pointer-events:auto;max-width:440px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.45),0 0 0 2px var(--focus,#A98BF0);animation:dockIn .25s cubic-bezier(.2,.8,.2,1)}
+.overlay.dock .modal .body{margin-bottom:10px}
+@keyframes dockIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.ctrdock{display:flex;gap:12px;align-items:flex-start}
+.ctrdock .mini{width:92px;flex:none}
+.overlay.dock .opts{display:flex;gap:8px;flex-wrap:wrap}.overlay.dock .opts button{flex:1 1 150px;margin:0}
+.ctrdock p{margin:0 0 6px;font-size:14px}
+@media (max-width:640px){.overlay.dock{padding:8px;justify-content:center}.overlay.dock .modal{max-height:40vh;overflow:auto;border-radius:16px;padding:12px 14px}.overlay.dock .modal h2{font-size:18px;margin:2px 0 6px}.ctrdock .mini{width:70px}.ctrdock p{font-size:13px}}
+/* ---------- stable unit rows ---------- */
+.gamewrap .unit .tags.empty{visibility:hidden}
+.gamewrap .unit .acts{min-height:30px}
+.gamewrap .unit .acts.empty{visibility:hidden}
+.gamewrap .unit .tags{min-height:20px}
 </style>
 </head>
 <body>
@@ -1015,7 +1039,7 @@ const ABIL={
  skillBoost:'When you cast a Skill, +300 ATK until end of turn.',
  skillPing:'When you cast a Skill, deal 300 damage to an enemy Summon.',
  cleave:'When this attacks, every other enemy Summon takes half its ATK.',
- bloodPrice:'When summoned, pay a blood price: lose 1 heart, discard 2 cards, or destroy one of your other Summons.',
+ bloodPrice:'When summoned, pay a blood price: lose 1 heart, discard 3 cards (2 in Competitive), or destroy one of your other Summons.',
  killToHeart:'When this destroys a Summon, add that card to your hearts.',
  taunt:'Taunt: enemies must attack a Summon with Taunt if they can.',
  swift:'Swift: can attack on the turn it is summoned (never on turn 1).',
@@ -1059,17 +1083,17 @@ function SK(cls,name,cost,effect,text,extra){return Object.assign({cls:cls,type:
 function CO(cls,name,cost,trigger,effect,triggerText,effectText,extra){return Object.assign({cls:cls,type:'counter',sub:'instant',name:name,cost:cost,trigger:trigger,effect:effect,triggerText:triggerText,effectText:effectText},extra||{});}
 const DEFS={
  // ===== Awakened Hunter: 11 Summons, 6 Skills, 3 Counters (x2 = 40)
- h_e:SU('hunter','Rank-E Hunter',{R:1},[[700,700],[1100,1000],[1600,1300],[2100,1800],[2900,2500]],{3:['vsHigher300'],5:['directPlus1']},['hunt']),
+ h_e:SU('hunter','Rank-E Hunter',{R:1},[[700,700],[1100,1000],[1600,1400],[2100,1900],[2900,2600]],{3:['vsHigher300'],5:['directPlus1']},['hunt']),
  h_scout:SU('hunter','Shadow Scout',{R:1},[[800,500],[1100,700],[1500,1000]],{1:['onSummonDraw']},['hunt']),
- h_healer:SU('hunter','Rookie Healer',{R:1},[[500,1000],[700,1300],[1000,1600]],{1:['startHealAll']}),
+ h_healer:SU('hunter','Rookie Healer',{R:1},[[500,1000],[700,1400],[1000,1700]],{1:['startHealAll']}),
  h_archer:SU('hunter','Guild Archer',{R:1},[[800,500],[1100,700],[1500,900]],{1:['onSummonDmg400']}),
- h_survivor:SU('hunter','Dungeon Survivor',{R:1},[[500,800],[900,1100],[1300,1400],[1800,1800],[2400,2200]],{2:['onLevelDraw']},['hunt']),
- h_breaker:SU('hunter','Gate Breaker',{R:2},[[1300,1300],[1700,1600],[2100,2000],[2600,2300]],{4:['directPlus1']},['hunt']),
- h_twin:SU('hunter','Twin Blade Hunter',{R:2},[[1300,900],[1700,1200],[2200,1500],[2800,1900]],{1:['swift']},['hunt']),
- h_tank:SU('hunter','Iron Shield Tank',{R:2},[[700,2000],[900,2500],[1200,3000]],{1:['taunt']}),
- h_leader:SU('hunter','Raid Leader',{R:2},[[1200,1400],[1600,1700],[2000,2100]],{1:['allyBoost']}),
- h_captain:SU('hunter','Hunter Captain',{R:3},[[2000,1800],[2400,2200],[2800,2600],[3200,3000],[3700,3400]],{1:['onSummonDraw'],5:['directPlus1']}),
- h_sovereign:SU('hunter','Sovereign of Shadows',{R:3,S:1},[[1500,1500],[2000,2000],[2600,2500],[3200,3000],[4000,3500]],{3:['lifesteal'],5:['cleave']},['hunt']),
+ h_survivor:SU('hunter','Dungeon Survivor',{R:1},[[500,800],[900,1100],[1300,1500],[1800,1900],[2400,2300]],{2:['onLevelDraw']},['hunt']),
+ h_breaker:SU('hunter','Gate Breaker',{R:2},[[1300,1400],[1700,1700],[2100,2100],[2600,2400]],{4:['directPlus1']},['hunt']),
+ h_twin:SU('hunter','Twin Blade Hunter',{R:2},[[1300,900],[1700,1200],[2200,1600],[2800,2000]],{1:['swift']},['hunt']),
+ h_tank:SU('hunter','Iron Shield Tank',{R:2},[[700,2100],[900,2600],[1200,3100]],{1:['taunt']}),
+ h_leader:SU('hunter','Raid Leader',{R:2},[[1200,1500],[1600,1800],[2000,2200]],{1:['allyBoost']}),
+ h_captain:SU('hunter','Hunter Captain',{R:3},[[2000,1900],[2400,2300],[2800,2700],[3200,3100],[3700,3500]],{1:['onSummonDraw'],5:['directPlus1']}),
+ h_sovereign:SU('hunter','Sovereign of Shadows',{R:3,S:1},[[1500,1600],[2000,2100],[2600,2600],[3200,3100],[4000,3600]],{3:['lifesteal'],5:['cleave']},['hunt']),
  h_break:SK('hunter','Breakthrough',{A:1},'levelIgnore','Level up one of your Summons, even if it already levelled up this turn.',{target:'ownBelowMax'}),
  h_rally:SK('hunter','Rally',{A:1},'rally300','Your Summons get +300 ATK until end of turn.'),
  h_adren:SK('hunter','Adrenaline',{A:1},'empower1000','One of your Summons gets +1000 ATK until end of turn.',{target:'ownSummon'}),
@@ -1079,11 +1103,11 @@ const DEFS={
  h_last:CO('hunter','Last Stand',{A:2},'ownWouldDestroy','surviveLevel','When one of your Summons would be destroyed.','It survives instead, then levels up.'),
  h_ambush:CO('hunter','Ambush',{A:1},'enemySummon','dmg800','When your opponent summons.','Deal 800 damage to that Summon.'),
  h_counter:CO('hunter','Counterattack',{A:1},'enemyAttackSummon','reverse','When an enemy Summon attacks one of your Summons.','Your Summon strikes first instead.'),
- h_rookie:SU('hunter','Academy Rookie',{R:1},[[500,500],[800,800],[1200,1100],[1700,1500],[2300,2000]],{1:['deathDraw']},['hunt']),
- h_assassin:SU('hunter','Shadow Assassin',{R:2},[[1500,700],[1900,900],[2400,1200],[3000,1500]],{1:['swift'],3:['lifesteal']},['hunt']),
- h_mentor:SU('hunter','Guild Mentor',{R:2},[[900,1400],[1200,1700],[1600,2100]],{1:['onSummonLevelAlly']}),
- h_berserker:SU('hunter','Berserker',{R:2,S:1},[[2000,1300],[2500,1600],[3000,1900],[3600,2300]],{2:['onKillCrest'],4:['directPlus1']},['hunt']),
- h_monarch:SU('hunter','Gate Monarch',{R:3,A:1},[[2200,2200],[2700,2600],[3200,3000],[3800,3400],[4500,4000]],{1:['skillProof'],3:['regen'],5:['directPlus1']}),
+ h_rookie:SU('hunter','Academy Rookie',{R:1},[[500,500],[800,800],[1200,1100],[1700,1600],[2300,2100]],{1:['deathDraw']},['hunt']),
+ h_assassin:SU('hunter','Shadow Assassin',{R:2},[[1500,700],[1900,900],[2400,1200],[3000,1600]],{1:['swift'],3:['lifesteal']},['hunt']),
+ h_mentor:SU('hunter','Guild Mentor',{R:2},[[900,1500],[1200,1800],[1600,2200]],{1:['onSummonLevelAlly']}),
+ h_berserker:SU('hunter','Berserker',{R:2,S:1},[[2000,1400],[2500,1700],[3000,2000],[3600,2400]],{2:['onKillCrest'],4:['directPlus1']},['hunt']),
+ h_monarch:SU('hunter','Gate Monarch',{R:3,A:1},[[2200,2300],[2700,2700],[3200,3100],[3800,3500],[4500,4200]],{1:['skillProof'],3:['regen'],5:['directPlus1']}),
  h_finish:SK('hunter','Finishing Blow',{A:1},'destroyDamaged','Destroy an enemy Summon that has already taken damage.',{target:'enemyDamaged'}),
  h_medic:SK('hunter','Field Medic',{A:1},'healAll','Fully heal all of your Summons.'),
  h_double:SK('hunter','Double Rank-Up',{A:3},'levelTwice','Level up one of your Summons twice, even if it already levelled up this turn.',{target:'ownBelowMax'}),
@@ -1121,14 +1145,14 @@ const DEFS={
  a_icetrap:CO('arcanist','Ice Trap',{A:1},'enemySummon','freezeSummon','When your opponent summons.','That Summon can’t attack until after their next turn.'),
  a_reflect:CO('arcanist','Arcane Reflection',{A:2},'enemySkillTargets','cancelZap',"When an opponent's Skill targets one of your Summons.",'Cancel it, then deal 600 damage to the caster’s weakest Summon.'),
  // ===== Dragonkin: 8 Summons, 7 Skills, 5 Counters (x2 = 40)
- d_whelp:SU('dragonkin','Ember Whelp',{R:1},[[600,700],[900,1000],[1300,1300]],{},['hoard']),
- d_hatch:SU('dragonkin','Flame Hatchling',{R:1},[[700,500],[1000,700],[1400,900]],{1:['swift']},['hoard']),
- d_warden:SU('dragonkin','Nest Warden',{R:1},[[200,1200],[400,1600],[600,2000]],{1:['taunt']}),
- d_drake:SU('dragonkin','Scale Drake',{R:2},[[1200,1400],[1600,1800],[2100,2200]],{},['hoard']),
- d_storm:SU('dragonkin','Stormwing',{R:2},[[1400,1100],[1800,1400],[2300,1800]],{1:['onSummonDmg500']}),
- d_wyrm:SU('dragonkin','Sky Wyrm',{R:2,S:1},[[1600,1300],[2000,1600],[2600,2000]],{3:['directPlus1']},['hoard']),
- d_hoardlord:SU('dragonkin','Ancient Hoardlord',{R:3},[[1700,2200],[2100,2600],[2700,3000]],{1:['startCrest']},['hoard']),
- d_tyrant:SU('dragonkin','Emberscale Tyrant',{R:3,S:1},[[2100,1900],[2500,2300],[3100,2700]],{1:['skillProof'],3:['cleave']}),
+ d_whelp:SU('dragonkin','Ember Whelp',{R:1},[[600,800],[1000,1100],[1400,1400]],{},['hoard']),
+ d_hatch:SU('dragonkin','Flame Hatchling',{R:1},[[700,500],[1100,800],[1500,1000]],{1:['swift']},['hoard']),
+ d_warden:SU('dragonkin','Nest Warden',{R:1},[[200,1300],[400,1700],[600,2200]],{1:['taunt']}),
+ d_drake:SU('dragonkin','Scale Drake',{R:2},[[1300,1500],[1700,1900],[2200,2400]],{},['hoard']),
+ d_storm:SU('dragonkin','Stormwing',{R:2},[[1500,1200],[1900,1500],[2400,1900]],{1:['onSummonDmg500']}),
+ d_wyrm:SU('dragonkin','Sky Wyrm',{R:2,S:1},[[1700,1400],[2100,1700],[2800,2200]],{3:['directPlus1']},['hoard']),
+ d_hoardlord:SU('dragonkin','Ancient Hoardlord',{R:3},[[1800,2400],[2200,2800],[2900,3200]],{1:['startCrest']},['hoard']),
+ d_tyrant:SU('dragonkin','Emberscale Tyrant',{R:3,S:1},[[2200,2100],[2700,2500],[3300,2900]],{1:['skillProof'],3:['cleave']}),
  d_hoard:SK('dragonkin','Ember Hoard',{A:2},'auraCrest','Aura. At the start of your turn, add 1 crest of your choice to your dial.',{sub:'aura'}),
  d_roar:SK('dragonkin','Dragon\'s Roar',{A:2},'roar400','Deal 400 damage to every enemy Summon.'),
  d_trove:SK('dragonkin','Treasure Trove',{A:1},'crest2','Add 2 crests of your choice to your dial.'),
@@ -1141,10 +1165,10 @@ const DEFS={
  d_molten:CO('dragonkin','Molten Scales',{A:1},'enemyAttackSummon','reflect600','When an enemy Summon attacks one of your Summons.','The attacker takes 600 damage before it strikes.'),
  d_wrath:CO('dragonkin','Dragon\'s Wrath',{A:2},'ownDestroyed','vengeance1000','When one of your Summons is destroyed in battle.','Deal 1000 damage to the Summon that destroyed it.'),
  d_scaled:CO('dragonkin','Scaled Ward',{A:2},'enemySkillTargets','cancel',"When an opponent's Skill targets one of your Summons.",'Cancel it.'),
- d_scout:SU('dragonkin','Ember Scout',{R:1},[[700,600],[1000,800],[1400,1000]],{1:['deathDmg']},['hoard']),
- d_guardian:SU('dragonkin','Scaleback Guardian',{R:2},[[800,1800],[1000,2200],[1300,2700]],{1:['taunt'],2:['regen']}),
- d_matriarch:SU('dragonkin','Brood Matriarch',{R:2,S:1},[[1500,1700],[1900,2100],[2500,2500]],{1:['onSummonLevelAlly']},['hoard']),
- d_elder:SU('dragonkin','Elder Wyrmlord',{R:3,S:2},[[2600,2600],[3100,3000],[3800,3500]],{1:['regen'],3:['directPlus1']},['hoard']),
+ d_scout:SU('dragonkin','Ember Scout',{R:1},[[700,600],[1100,900],[1500,1100]],{1:['deathDmg']},['hoard']),
+ d_guardian:SU('dragonkin','Scaleback Guardian',{R:2},[[800,1900],[1100,2400],[1400,2900]],{1:['taunt'],2:['regen']}),
+ d_matriarch:SU('dragonkin','Brood Matriarch',{R:2,S:1},[[1600,1800],[2000,2300],[2700,2700]],{1:['onSummonLevelAlly']},['hoard']),
+ d_elder:SU('dragonkin','Elder Wyrmlord',{R:3,S:2},[[2800,2800],[3300,3200],[4000,3800]],{1:['regen'],3:['directPlus1']},['hoard']),
  d_heart:SK('dragonkin','Dragon Heart',{A:2},'buffPerm500','One of your Summons gets +500 ATK for the rest of the game.',{target:'ownSummon'}),
  d_tbreath:SK('dragonkin','Treasure Breath',{A:2},'dmgByHoard','Deal 200 damage for each crest left on your dial (max 1200) to an enemy Summon.',{target:'enemySummon'}),
  d_inferno:SK('dragonkin','Inferno',{A:3},'roar700','Deal 700 damage to every enemy Summon.'),
@@ -1152,15 +1176,15 @@ const DEFS={
  d_resolve:CO('dragonkin','Ancient Resolve',{A:1},'enemyAttackSummon','resolve','When an enemy Summon attacks one of your Summons.','Fully heal your Summon. It gets +500 ATK until end of turn.'),
  d_buffet:CO('dragonkin','Wing Buffet',{A:2},'enemyAttack','bounceAttacker','When an enemy Summon attacks.','Stop the attack and return the attacker to its owner’s hand.'),
  // ===== Demon: 9 Summons, 7 Skills, 4 Counters (x2 = 40)
- m_imp:SU('demon','Cinder Imp',{R:1},[[900,600],[1200,800],[1600,1000]],{},['pact'],{pact:true}),
- m_shade:SU('demon','Lesser Shade',{R:1},[[600,600],[900,800],[1200,1000]],{1:['onDeathRise']},['pact'],{pact:true}),
- m_leech:SU('demon','Blood Leech',{R:1},[[700,700],[1000,900],[1400,1100]],{1:['lifesteal']},['pact'],{pact:true}),
- m_merchant:SU('demon','Soul Merchant',{R:1},[[500,800],[800,1000],[1100,1300]],{1:['heartGain']},['pact'],{pact:true}),
- m_fiend:SU('demon','Hollow Pact Fiend',{R:2},[[1600,1000],[2100,1300],[2800,1700]],{1:['bloodPrice'],3:['killToHeart']},['pact'],{pact:true}),
- m_reaper:SU('demon','Bone Reaper',{R:2},[[1800,1100],[2300,1400],[3000,1700]],{1:['bloodPrice'],3:['directPlus1']},['pact'],{pact:true}),
- m_grave:SU('demon','Gravecaller',{R:2},[[1200,1300],[1600,1600],[2000,2000]],{1:['feast']},['pact'],{pact:true}),
- m_hound:SU('demon','Hellhound',{R:2},[[1700,800],[2100,1000],[2600,1300]],{1:['swift']},['pact'],{pact:true}),
- m_lord:SU('demon','Abyss Lord',{R:3},[[2700,2100],[3200,2500],[3800,2900]],{1:['bloodPrice']},['pact'],{pact:true}),
+ m_imp:SU('demon','Cinder Imp',{R:1},[[800,600],[1100,800],[1500,1000]],{},['pact'],{pact:true}),
+ m_shade:SU('demon','Lesser Shade',{R:1},[[600,600],[800,800],[1100,1000]],{1:['onDeathRise']},['pact'],{pact:true}),
+ m_leech:SU('demon','Blood Leech',{R:1},[[700,700],[900,900],[1300,1100]],{1:['lifesteal']},['pact'],{pact:true}),
+ m_merchant:SU('demon','Soul Merchant',{R:1},[[500,800],[700,1000],[1000,1300]],{1:['heartGain']},['pact'],{pact:true}),
+ m_fiend:SU('demon','Hollow Pact Fiend',{R:2},[[1500,1000],[2000,1300],[2600,1700]],{1:['bloodPrice'],3:['killToHeart']},['pact'],{pact:true}),
+ m_reaper:SU('demon','Bone Reaper',{R:2},[[1700,1100],[2100,1400],[2800,1700]],{1:['bloodPrice'],3:['directPlus1']},['pact'],{pact:true}),
+ m_grave:SU('demon','Gravecaller',{R:2},[[1100,1300],[1500,1600],[1900,2000]],{1:['feast']},['pact'],{pact:true}),
+ m_hound:SU('demon','Hellhound',{R:2},[[1600,800],[2000,1000],[2400,1300]],{1:['swift']},['pact'],{pact:true}),
+ m_lord:SU('demon','Abyss Lord',{R:3},[[2500,2100],[3000,2500],[3500,2900]],{1:['bloodPrice']},['pact'],{pact:true}),
  m_offer:SK('demon','Blood Offering',{A:1},'offering','Destroy one of your Summons. Add 2 crests of your choice to your dial.',{pact:true,target:'ownSummon'}),
  m_siphon:SK('demon','Soul Siphon',{A:1},'dmg1000','Deal 1000 damage to an enemy Summon.',{pact:true,target:'enemySummon'}),
  m_rebirth:SK('demon','Dark Rebirth',{A:2},'revive','Summon a Summon from your death pile into an empty slot.',{pact:true}),
@@ -1172,11 +1196,11 @@ const DEFS={
  m_bargain:CO('demon','Dark Bargain',{A:1},'ownDestroyed','bargain','When one of your Summons is destroyed.','Add 2 crests of your choice to your dial.'),
  m_vengeance:CO('demon','Vengeance',{A:1},'ownDestroyed','vengeance1000','When one of your Summons is destroyed in battle.','Deal 1000 damage to the Summon that destroyed it.'),
  m_ward:CO('demon','Blood Ward',{A:1},'enemyDirect','negateDirect','When an enemy Summon attacks you directly.','Cancel that hit.'),
- m_cultist:SU('demon','Blood Cultist',{R:1},[[600,700],[900,900],[1200,1100]],{1:['deathDraw']},['pact'],{pact:true}),
- m_wraith:SU('demon','Wraith',{R:1},[[900,500],[1200,700],[1600,900]],{1:['swift']},['pact'],{pact:true}),
- m_paineater:SU('demon','Pain Eater',{R:2},[[1200,1200],[1600,1500],[2100,1900]],{1:['feast'],3:['lifesteal']},['pact'],{pact:true}),
- m_brute:SU('demon','Hellspawn Brute',{R:2},[[1600,1100],[2100,1400],[2700,1800]],{1:['bloodPrice','deathDmg']},['pact'],{pact:true}),
- m_king:SU('demon','Demon King',{R:3,S:1},[[2700,2300],[3200,2700],[3800,3100]],{1:['bloodPrice'],2:['skillProof'],3:['cleave']},['pact'],{pact:true}),
+ m_cultist:SU('demon','Blood Cultist',{R:1},[[600,700],[800,900],[1100,1100]],{1:['deathDraw']},['pact'],{pact:true}),
+ m_wraith:SU('demon','Wraith',{R:1},[[800,500],[1100,700],[1500,900]],{1:['swift']},['pact'],{pact:true}),
+ m_paineater:SU('demon','Pain Eater',{R:2},[[1100,1200],[1500,1500],[2000,1900]],{1:['feast'],3:['lifesteal']},['pact'],{pact:true}),
+ m_brute:SU('demon','Hellspawn Brute',{R:2},[[1500,1100],[2000,1400],[2500,1800]],{1:['bloodPrice','deathDmg']},['pact'],{pact:true}),
+ m_king:SU('demon','Demon King',{R:3,S:1},[[2500,2300],[3000,2700],[3500,3100]],{1:['bloodPrice'],2:['skillProof'],3:['cleave']},['pact'],{pact:true}),
  m_harvest:SK('demon','Soul Harvest',{A:1},'gainHeartSac','Destroy one of your Summons. Gain 1 heart.',{pact:true,target:'ownSummon'}),
  m_lifedrain:SK('demon','Life Drain',{A:2},'drain','Deal 800 damage to an enemy Summon. Heal each of your Summons by 400.',{pact:true,target:'enemySummon'}),
  m_rite:SK('demon','Sacrificial Rite',{A:1},'sacDraw','Destroy one of your Summons. Draw 2 cards.',{pact:true,target:'ownSummon'}),
@@ -1184,12 +1208,12 @@ const DEFS={
  m_shield:CO('demon','Blood Pact Shield',{A:1},'ownWouldDestroy','paySurvive','When one of your Summons would be destroyed.','Lose 1 heart. It survives and is fully healed.'),
  // ===== The Oathbound (for Marcus): 9 Summons, 9 Skills, 6 Auras, 6 Counters (x2 = 60)
  o_squire:SU('oathbound','Squire of the Order',{R:1},[[600,800],[900,1100],[1300,1400]],{1:['deathDraw']}),
- o_shield:SU('oathbound','The Shieldbearer',{R:1},[[400,1400],[700,1800],[1000,2300]],{1:['taunt'],2:['bulwark'],3:['regen']}),
- o_blade:SU('oathbound','The Oathblade',{R:2},[[1300,1100],[1800,1500],[2400,1900]],{1:['oathStrike'],3:['onKillOath']}),
- o_warden:SU('oathbound','The Warden',{R:2},[[900,1600],[1200,2000],[1600,2500]],{1:['startHealAll'],2:['skillProof'],3:['allyBoost']}),
- o_halo:SU('oathbound','The Fallen Halo',{R:3,S:1},[[2200,1800],[2800,2200],[3500,2700]],{2:['lifesteal'],3:['directPlus1']},[],{vowKind:'halo',vowText:'<b>Vow:</b> when summoned, you may lose 1 heart. If you do, it gets +500 ATK for the rest of the game and can attack this turn.'}),
- o_sister:SU('oathbound','Sister of the Vigil',{R:1},[[400,1100],[600,1400],[900,1800]],{1:['heartGain']}),
- o_drifter:SU('oathbound','Drifter Knight',{R:2},[[1500,1000],[1900,1300],[2400,1700]],{1:['swift'],3:['vsHigher300']}),
+ o_shield:SU('oathbound','The Shieldbearer',{R:1},[[400,1400],[700,1900],[1000,2400]],{1:['taunt'],2:['bulwark'],3:['regen']}),
+ o_blade:SU('oathbound','The Oathblade',{R:2},[[1300,1100],[1900,1500],[2500,2000]],{1:['oathStrike'],3:['onKillOath']}),
+ o_warden:SU('oathbound','The Warden',{R:2},[[900,1600],[1200,2100],[1600,2600]],{1:['startHealAll'],2:['skillProof'],3:['allyBoost']}),
+ o_halo:SU('oathbound','The Fallen Halo',{R:3,S:1},[[2300,1900],[2900,2300],[3600,2800]],{2:['lifesteal'],3:['directPlus1']},[],{vowKind:'halo',vowText:'<b>Vow:</b> when summoned, you may lose 1 heart. If you do, it gets +500 ATK for the rest of the game and can attack this turn.'}),
+ o_sister:SU('oathbound','Sister of the Vigil',{R:1},[[400,1100],[600,1400],[900,1900]],{1:['heartGain']}),
+ o_drifter:SU('oathbound','Drifter Knight',{R:2},[[1500,1000],[2000,1300],[2500,1800]],{1:['swift'],3:['vsHigher300']}),
  o_bash:SK('oathbound','Shield Bash',{A:1},'dmg700','Deal 700 damage to an enemy Summon. <b>Oath 1:</b> deal 1200 instead.',{target:'enemySummon',tag:'Strike',oath:1}),
  o_charge:SK('oathbound','Righteous Charge',{A:1},'chargeVow','One of your Summons gets +800 ATK this turn. <b>Vow:</b> +1600 instead and it can attack even if just summoned, but it is destroyed at the end of your turn.',{target:'ownSummon',tag:'Strike',vowText:'Take the Vow: +1600 ATK and it can attack this turn, but it is destroyed at the end of your turn.'}),
  o_lay:SK('oathbound','Lay on Hands',{A:1},'layHands','Fully heal one of your Summons. <b>Oath 1:</b> it also gets +500 ATK for the rest of the game.',{target:'ownSummon',oath:1}),
@@ -1203,8 +1227,8 @@ const DEFS={
  o_martyr:SK('oathbound','Martyr’s Oath',{A:1},'auraMartyr','Aura. When one of your Summons is destroyed, gain 1 Oath.',{sub:'aura'}),
  o_riposte:CO('oathbound','Riposte',{A:1},'enemyAttackSummon','reverse','When an enemy Summon attacks one of your Summons.','Your Summon strikes first instead.'),
  o_faith:CO('oathbound','Shield of Faith',{A:1},'ownWouldDestroy','surviveHeal','When one of your Summons would be destroyed.','It survives instead with 100 HP.'),
- o_commander:SU('oathbound','Knight-Commander',{R:2},[[1200,1400],[1600,1800],[2100,2200]],{1:['onSummonLevelAlly']}),
- o_marcus:SU('oathbound','Sir Marcus, the Oathbound',{R:3,A:1},[[2400,2600],[3000,3100],[3700,3600]],{1:['aegis'],2:['skillProof'],3:['oathStrike']}),
+ o_commander:SU('oathbound','Knight-Commander',{R:2},[[1200,1400],[1600,1900],[2200,2300]],{1:['onSummonLevelAlly']}),
+ o_marcus:SU('oathbound','Sir Marcus, the Oathbound',{R:3,A:1},[[2500,2700],[3100,3200],[3800,3700]],{1:['aegis'],2:['skillProof'],3:['oathStrike']}),
  o_muster:SK('oathbound','Sworn Muster',{A:1},'tutorSummon','Search your deck for a Summon, add it to your hand, then shuffle.'),
  o_pilgrim:SK('oathbound','Pilgrim’s Fortune',{A:1},'crestOath','Add 2 crests of your choice to your dial. <b>Oath 1:</b> add 3 instead.',{tag:'Wild',oath:1}),
  o_vigil:SK('oathbound','Night Vigil',{A:2},'vigil','Draw 2 cards. <b>Vow:</b> lose 1 heart and draw 4 instead.',{vowText:'Take the Vow: lose 1 heart and draw 4 cards instead of 2.'}),
@@ -1214,11 +1238,11 @@ const DEFS={
  o_rebuke:CO('oathbound','Divine Rebuke',{A:2},'enemySkillTargets','cancel',"When an opponent's Skill targets one of your Summons.",'Cancel it.'),
  o_avenge:CO('oathbound','Avenging Oath',{A:1},'ownDestroyed','vengeance1000','When one of your Summons is destroyed in battle.','Deal 1000 damage to the Summon that destroyed it.'),
  /* ----- The Eclipse (Enzo's deck): vampires, witches, wolves and hybrids. First 17 are Enzo's; the first 20 make the 40-card deck. ----- */
- e_blood:SU('eclipse','Newborn',{R:1},[[900,1000],[1200,1300],[1600,1600]],{1:['deathAnom'],3:['lifesteal']}),
- e_alpha:SU('eclipse','The Alpha',{R:2},[[1500,1200],[1900,1500],[2500,1900]],{1:['killAnom'],3:['vsHigher300']}),
- e_hex:SU('eclipse','Spellbinder',{R:2},[[1100,1600],[1400,2000],[1800,2500]],{1:['onSummonFreeze'],2:['skillProof'],3:['startDmg300']}),
- e_prog:SU('eclipse','The Hybrid',{R:3},[[2200,2100],[2800,2600],[3400,3100]],{1:['onSummonAnom'],2:['lifesteal'],3:['killAnom']}),
- e_tri:SU('eclipse','The Tribrid',{R:3,A:1},[[2500,2500],[3100,3000],[3700,3500]],{1:['onSummonAnom'],2:['skillProof'],3:['transcend']}),
+ e_blood:SU('eclipse','Newborn',{R:1},[[900,1000],[1200,1400],[1700,1700]],{1:['deathAnom'],3:['lifesteal']}),
+ e_alpha:SU('eclipse','The Alpha',{R:2},[[1600,1200],[2000,1600],[2600,2000]],{1:['killAnom'],3:['vsHigher300']}),
+ e_hex:SU('eclipse','Spellbinder',{R:2},[[1100,1700],[1500,2100],[1900,2600]],{1:['onSummonFreeze'],2:['skillProof'],3:['startDmg300']}),
+ e_prog:SU('eclipse','The Hybrid',{R:3},[[2300,2200],[2900,2700],[3500,3200]],{1:['onSummonAnom'],2:['lifesteal'],3:['killAnom']}),
+ e_tri:SU('eclipse','The Tribrid',{R:3,A:1},[[2600,2600],[3200,3100],[3800,3600]],{1:['onSummonAnom'],2:['skillProof'],3:['transcend']}),
  e_oath:SK('eclipse','Sacrifice',{A:1},'bloodOath','One of your Summons takes 500 damage. Draw 2 cards and gain 1 Anomaly.',{target:'ownSummon'}),
  e_circle:SK('eclipse','Boundary Spell',{A:1},'bindCircle','Choose an enemy Summon. On its owner’s next turn it can’t attack or level up.',{target:'enemySummon'}),
  e_fate:SK('eclipse','Premonition',{A:1},'borrowFate','Look at your opponent’s hand. Choose a Skill or Counter in it and discard it.'),
@@ -1230,15 +1254,15 @@ const DEFS={
  e_ecl:SK('eclipse','Coven Circle',{A:1},'auraAnom','Aura. At the start of your turn, gain 1 Anomaly.',{sub:'aura'}),
  e_ward:SK('eclipse','Bloodline',{A:1},'auraBloodline','Aura. When one of your Summons is destroyed, draw 1 card.',{sub:'aura'}),
  e_veil:SK('eclipse','Grimoire',{A:1},'auraVeil','Aura. Your face-down Counters can’t be destroyed by enemy cards. When one of your Counters springs, draw 1 card.',{sub:'aura'}),
- e_conv:SK('eclipse','Dark Magic',{A:2},'auraConv','Aura. Your Summons get +300 ATK for each Anomaly you have. At the start of your turn, lose 1 Anomaly.',{sub:'aura'}),
- e_fledge:SU('eclipse','Lone Wolf',{R:1},[[900,600],[1200,800],[1600,1000]],{1:['swift']}),
+ e_conv:SK('eclipse','Dark Magic',{A:2},'auraConv','Aura. Your Summons get +600 ATK. At the start of your turn, spend 1 Anomaly to keep it, or it’s destroyed.',{sub:'aura'}),
+ e_fledge:SU('eclipse','Lone Wolf',{R:1},[[900,600],[1200,800],[1700,1000]],{1:['swift']}),
  e_siphon:SK('eclipse','Siphon',{A:1},'siphon','Deal 800 damage to an enemy Summon. <b>Anomaly 1:</b> deal 1300 instead.',{target:'enemySummon',tag:'Strike',anom:1}),
  e_omen:CO('eclipse','Curse',{A:1},'enemySummon','omen','When your opponent summons.','They discard a random card from their hand.'),
  e_moon:SK('eclipse','Full Moon',{A:2},'auraAtk300','Aura. Your Summons get +300 ATK.',{sub:'aura'}),
- e_familiar:SU('eclipse','Siphoner',{R:1},[[600,1000],[900,1300],[1200,1600]],{1:['onSummonAnom','deathDraw']}),
- e_veilw:SU('eclipse','Heretic',{R:2},[[1300,1400],[1700,1800],[2200,2200]],{1:['anomStrike']}),
- e_thrall:SU('eclipse','Ripper',{R:2},[[1700,1100],[2100,1400],[2700,1800]],{1:['anomStrike'],2:['lifesteal'],3:['directPlus1']}),
- e_matri:SU('eclipse','The Original',{R:3},[[2300,2300],[2800,2700],[3400,3100]],{1:['onSummonLevelAlly'],3:['cleave']}),
+ e_familiar:SU('eclipse','Siphoner',{R:1},[[600,1000],[900,1400],[1200,1700]],{1:['onSummonAnom','deathDraw']}),
+ e_veilw:SU('eclipse','Heretic',{R:2},[[1400,1500],[1800,1900],[2300,2300]],{1:['anomStrike']}),
+ e_thrall:SU('eclipse','Ripper',{R:2},[[1800,1100],[2200,1500],[2800,1900]],{1:['anomStrike'],2:['lifesteal'],3:['directPlus1']}),
+ e_matri:SU('eclipse','The Original',{R:3},[[2400,2400],[2900,2800],[3500,3200]],{1:['onSummonLevelAlly'],3:['cleave']}),
  e_mirror:SK('eclipse','Compulsion',{A:1},'mirrorHex','Choose an enemy Summon. It strikes another of its owner’s Summons with its full ATK.',{target:'enemySummon'}),
  e_evo:SK('eclipse','Transition',{A:1},'darkEvo','Level up one of your Summons, even if it already levelled up this turn. <b>Anomaly 1:</b> draw 1 card.',{target:'ownBelowMax',anom:1}),
  e_pact:SK('eclipse','Call the Pack',{A:1},'tutorSummon','Search your deck for a Summon, add it to your hand, then shuffle.'),
@@ -1512,18 +1536,25 @@ function playableCount(p){return p.hand.filter(function(c){return !playBlock(c);
 function attackersLeft(p){return p.lanes.filter(function(s){return s&&!attackBlock(s);}).length;}
 
 /* ---------- sound (synthesised, no files) ---------- */
-const SND={ctx:null,master:null,last:{}};
+const SND={ctx:null,master:null,fx:null,last:{}};
+function musicLevel(){return .9*Math.max(0,Math.min(100,+setup.rules.musicVol||0))/100+.0001;}
+function setVolumes(){
+ if(!SND.ctx) return;
+ const t=SND.ctx.currentTime;
+ if(SND.fx) SND.fx.gain.setTargetAtTime(Math.max(0,Math.min(100,+setup.rules.sfxVol||0))/100*1.4,t,.05);
+ if(MUS.gain) MUS.gain.gain.setTargetAtTime(musicLevel(),t,.15);
+}
 function actx(){
- if(!SND.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C) return null;try{SND.ctx=new C();SND.master=SND.ctx.createGain();SND.master.gain.value=.55;SND.master.connect(SND.ctx.destination);}catch(e){SND.ctx=null;return null;}}
+ if(!SND.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C) return null;try{SND.ctx=new C();SND.master=SND.ctx.createGain();SND.master.gain.value=.55;SND.master.connect(SND.ctx.destination);SND.fx=SND.ctx.createGain();SND.fx.connect(SND.master);setVolumes();}catch(e){SND.ctx=null;return null;}}
  if(SND.ctx.state==='suspended'){try{SND.ctx.resume();}catch(e){}}
  return SND.ctx;
 }
-function tn(f,d,o){o=o||{};const c=SND.ctx,t=c.currentTime+(o.at||0),g=c.createGain(),os=c.createOscillator();os.type=o.type||'sine';os.frequency.setValueAtTime(f,t);if(o.to) os.frequency.exponentialRampToValueAtTime(o.to,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(o.vol||.2,t+(o.att||.012));g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(g);g.connect(SND.master);os.start(t);os.stop(t+d+.05);}
+function tn(f,d,o){o=o||{};const c=SND.ctx,t=c.currentTime+(o.at||0),g=c.createGain(),os=c.createOscillator();os.type=o.type||'sine';os.frequency.setValueAtTime(f,t);if(o.to) os.frequency.exponentialRampToValueAtTime(o.to,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(o.vol||.2,t+(o.att||.012));g.gain.exponentialRampToValueAtTime(.0001,t+d);os.connect(g);g.connect(SND.fx||SND.master);os.start(t);os.stop(t+d+.05);}
 let NZBUF=null;
 function nz(d,o){o=o||{};const c=SND.ctx,t=c.currentTime+(o.at||0);
  if(!NZBUF){NZBUF=c.createBuffer(1,c.sampleRate,c.sampleRate);const da=NZBUF.getChannelData(0);for(let i=0;i<da.length;i++) da[i]=Math.random()*2-1;}
  const src=c.createBufferSource();src.buffer=NZBUF;const f=c.createBiquadFilter();f.type=o.ft||'bandpass';f.frequency.setValueAtTime(o.f||1000,t);if(o.fto) f.frequency.exponentialRampToValueAtTime(o.fto,t+d);f.Q.value=o.q||1;
- const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(o.vol||.2,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);src.connect(f);f.connect(g);g.connect(SND.master);src.start(t,Math.random()*.5);src.stop(t+d+.02);}
+ const g=c.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(o.vol||.2,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);src.connect(f);f.connect(g);g.connect(SND.fx||SND.master);src.start(t,Math.random()*.5);src.stop(t+d+.02);}
 const SOUNDS={
  click:function(){tn(880,.05,{type:'triangle',vol:.05});},
  draw:function(){nz(.2,{f:2500,fto:7000,ft:'highpass',vol:.14});tn(1320,.09,{type:'triangle',vol:.05,at:.1});},
@@ -1554,8 +1585,10 @@ function animOK(){if(!ANIM) return false;try{if(window.matchMedia('(prefers-redu
 function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
 function cssC(el,fb){try{const v=getComputedStyle(el).getPropertyValue('--c').trim();return v||fb||'#E8B64C';}catch(e){return fb||'#E8B64C';}}
 function ctr(el){const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,w:r.width,h:r.height};}
+function gfxQ(){return setup.rules.gfx==='low'?0:setup.rules.gfx==='balanced'?1:2;}
 function particles(x,y,color,n,dist,size,dur,up){
  const L=document.getElementById('fxl');if(!L) return;
+ n=Math.max(1,Math.round(n*[0.3,0.6,1][gfxQ()]));
  for(let i=0;i<n;i++){
   const d=document.createElement('i');d.className='ptc';const sz=size*(.5+Math.random()*.8);
   d.style.cssText='left:'+x+'px;top:'+y+'px;width:'+sz+'px;height:'+sz+'px;background:'+color+';box-shadow:0 0 '+(sz*1.5)+'px '+color;
@@ -1580,11 +1613,11 @@ function slashAt(x,y,len){
  });
 }
 function screenFlash(color,op){
- const L=document.getElementById('fxl');if(!L) return;
+ const L=document.getElementById('fxl');if(!L||gfxQ()===0) return;
  const d=document.createElement('i');d.className='flash';d.style.background='radial-gradient(ellipse at center,transparent 35%,'+color+' 100%)';L.appendChild(d);
  const an=d.animate([{opacity:op||.75},{opacity:0}],{duration:650,easing:'ease-out'});an.onfinish=function(){d.remove();};
 }
-function shake(el,mag,dur){if(!el||!el.animate) return;const m=mag||6;el.animate([{transform:'none'},{transform:'translate('+(-m)+'px,'+(m/2)+'px)'},{transform:'translate('+m+'px,'+(-m/2)+'px)'},{transform:'translate('+(-m/2)+'px,0)'},{transform:'none'}],{duration:dur||380,easing:'ease-out'});}
+function shake(el,mag,dur){if(!el||!el.animate||gfxQ()===0) return;const m=mag||6;el.animate([{transform:'none'},{transform:'translate('+(-m)+'px,'+(m/2)+'px)'},{transform:'translate('+m+'px,'+(-m/2)+'px)'},{transform:'translate('+(-m/2)+'px,0)'},{transform:'none'}],{duration:dur||380,easing:'ease-out'});}
 function confetti(colors){
  const w=window.innerWidth;
  for(let k=0;k<5;k++) setTimeout(function(){particles(w*(.15+Math.random()*.7),window.innerHeight*.3,colors[k%colors.length],22,Math.min(260,w*.3),9,1400,true);},k*180);
@@ -1613,7 +1646,7 @@ async function animAttack(s,tuid,opi){
  a.style.zIndex='';
 }
 function streakAt(x1,y1,x2,y2,col){
- const L=document.getElementById('fxl');if(!L) return;
+ const L=document.getElementById('fxl');if(!L||gfxQ()===0) return;
  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;
  const el=document.createElement('div');el.className='streak';el.style.cssText='left:'+x1+'px;top:'+y1+'px;width:'+len+'px;transform:rotate('+ang+'deg);--c:'+col;
  L.appendChild(el);
@@ -1665,7 +1698,7 @@ const AMBSTYLE={
  eclipse:{c:['#f0b3ff','#d81b60','#b77be0'],vy:-.1,vx:.08,sz:[1,2.6],tw:.8}
 };
 const AMB={cv:null,g:null,ps:[],raf:0,top:'hunter',bot:'hunter',t0:0,w:0,h:0};
-function ambWant(){return !!(setup.rules.ambient!==false&&animOK()&&!document.hidden&&(S||setup.screen==='title'||setup.screen==='story'));}
+function ambWant(){return !!(setup.rules.ambient!==false&&gfxQ()>0&&animOK()&&!document.hidden&&(S||setup.screen==='title'||setup.screen==='story'));}
 function ambSync(){
  if(!ambWant()){if(AMB.raf){cancelAnimationFrame(AMB.raf);AMB.raf=0;}if(AMB.cv) AMB.cv.style.opacity='0';return;}
  if(S){AMB.top=OTHER().cls;AMB.bot=VIEW().cls;}else{AMB.top='title';AMB.bot='title';}
@@ -1684,7 +1717,7 @@ function ambTick(t){
  AMB.raf=0;if(!ambWant()){if(AMB.cv) AMB.cv.style.opacity='0';return;}
  AMB.raf=requestAnimationFrame(ambTick);
  if(t-AMB.t0<33) return;const dt=Math.min(3,(t-(AMB.t0||t))/16.7);AMB.t0=t;
- const want=window.innerWidth<640?22:42;
+ const want=Math.round((window.innerWidth<640?22:42)*(gfxQ()===1?.5:1));
  while(AMB.ps.length<want) AMB.ps.push(ambSpawn(AMB.ps.length<want?0:undefined));
  const g=AMB.g;g.clearRect(0,0,AMB.w,AMB.h);
  for(let i=0;i<AMB.ps.length;i++){
@@ -1893,7 +1926,7 @@ function guestView(pend){
   return q;
  });
  let modal=null;
- if(S.modal&&S.modal.pi===G) modal={title:S.modal.title,body:S.modal.body,who:S.modal.who||'',wide:!!S.modal.wide,pi:G,seq:S.modal.seq,options:S.modal.options.map(function(o){return {label:o.label,disabled:!!o.disabled,cancel:!!o.cancel,cid:o.card?o.card.id:null,level:o.level||null};})};
+ if(S.modal&&S.modal.pi===G) modal={title:S.modal.title,body:S.modal.body,who:S.modal.who||'',wide:!!S.modal.wide,dock:!!S.modal.dock,pi:G,seq:S.modal.seq,options:S.modal.options.map(function(o){return {label:o.label,disabled:!!o.disabled,cancel:!!o.cancel,cid:o.card?o.card.id:null,level:o.level||null};})};
  const sp=S.splash?{t:S.splash.t,s:S.splash.s,cls:S.splash.cls,age:Date.now()-S.splash.at,key:S.splash.at}:null;
  return {ack:NET.ack,s:{mode:'online',players:pl,active:S.active,turnNo:S.turnNo,phase:S.phase,log:S.log.slice(0,70),over:S.over?{winner:S.over.winner,draw:!!S.over.draw}:null,modal:modal,pick:S.pick||null,rules:S.rules,splash:sp,
   fx:pend.fx,ghosts:pend.ghosts,heartFx:pend.heartFx,rollFx:pend.rollFx,rollIdx:pend.rollIdx,dialFx:pend.dialFx,drawFx:pend.drawFx,deckFx:pend.deckFx,oathFx:pend.oathFx,reveals:(pend.reveals||[]).slice(-6),waiting:!!(S.modal&&S.modal.pi!==G),drawWait:!!drawResolve&&P()===S.players[G],stats:S.stats||null},anims:pend.anims};
@@ -2002,7 +2035,7 @@ function guestAct(a,ds){
  if(LM) return;
  const mine=P()===VIEW()&&!S.over;
  if(a==='udetail'||a==='slot'||a==='pickdetail'||a==='ophand'||(a==='death'&&!(mine&&S.phase==='main'&&ds.side==='me'))){infoAct(a,ds);return;}
- if(a==='hand'&&!(mine&&(S.phase==='main'||S.phase==='battle')&&!S.modal)){const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
+ if(a==='hand'&&!(mine&&(S.phase==='main'||S.phase==='battle')&&!S.modal)){if(S.modal&&!S.modal.dock) return;const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
  if(!mine) return;
  if(a==='atk'||a==='atkpick'||a==='hand'){NET.usel=null;S.usel=null;}
  if(a==='drawcard'){S.drawWait=false;render();}
@@ -2042,7 +2075,8 @@ function onlineHtml(){
  if(NET.err) h+='<p class="neterr" role="alert">'+NET.err+'</p>';
  return screenWrap('Online duel',h);
 }
-document.addEventListener('input',function(e){if(e.target&&e.target.id==='joincode') NET.typed=e.target.value.toUpperCase();if(e.target&&/^acc(user|email|pass)$/.test(e.target.id)){const k={accuser:'u',accemail:'e',accpass:'p'}[e.target.id];ACCF[k]=e.target.value.slice(0,k==='p'?72:k==='e'?120:16);return;}
+document.addEventListener('input',function(e){
+ if(e.target&&e.target.dataset&&e.target.dataset.vol){const k=e.target.dataset.vol;setup.rules[k]=+e.target.value;const o=e.target.parentNode.querySelector('output');if(o) o.textContent=e.target.value+'%';e.target.setAttribute('aria-valuetext',e.target.value+'%');actx();setVolumes();savePrefs();if(k==='sfxVol') sfx('click');return;}if(e.target&&e.target.id==='joincode') NET.typed=e.target.value.toUpperCase();if(e.target&&/^acc(user|email|pass)$/.test(e.target.id)){const k={accuser:'u',accemail:'e',accpass:'p'}[e.target.id];ACCF[k]=e.target.value.slice(0,k==='p'?72:k==='e'?120:16);return;}
  if(e.target&&(e.target.id==='netname'||e.target.id==='profname')){if(ACC) return;const v=e.target.value.slice(0,24);lsSet('nimgir-guestname',v);IO.me.name=v;lsSet('nimgir-name',v);if(IO.mock) IO.mock.name=v;}});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='joincode'){e.preventDefault();guestJoin(NET.typed);}});
 
@@ -2122,7 +2156,7 @@ function maybeShowResults(){
 }
 /* ---------- big-Summon cut-ins ---------- */
 function cutIn(d,tag,nm,top){
- const L=document.getElementById('fxl');if(!L||!animOK()) return;
+ const L=document.getElementById('fxl');if(!L||!animOK()||gfxQ()===0) return;
  const lv=d.levels[top?d.levels.length-1:0];
  const el=document.createElement('div');el.className='cutin';el.style.setProperty('--c',colorVar(d.cls));
  el.innerHTML='<div class="cutbar"><div class="cutart">'+cardArt(d.id)+'</div><div class="cuttext"><span>'+(tag||(d.cls==='oathbound'?'Arise':d.cls==='eclipse'?'Manifest':'Summon'))+'</span><b>'+(nm||d.name)+'</b><em>'+icon('S',16)+lv[0]+' &nbsp; '+heartIcon(15)+lv[1]+'</em></div></div>';
@@ -2178,7 +2212,7 @@ function musicSync(){
  const want=!!(setup.rules.music&&S&&!S.over&&SND.ctx&&SND.ctx.state==='running'&&animOK());
  const cls=want?VIEW().cls:null;
  if(!want){if(MUS.timer){clearInterval(MUS.timer);MUS.timer=null;}if(MUS.gain){const g=MUS.gain;MUS.gain=null;try{g.gain.setTargetAtTime(.0001,SND.ctx.currentTime,.4);setTimeout(function(){try{g.disconnect();}catch(e){}},2000);}catch(e){}}MUS.cls=null;return;}
- if(!MUS.gain){MUS.gain=SND.ctx.createGain();MUS.gain.gain.value=.0001;MUS.gain.connect(SND.master);MUS.gain.gain.setTargetAtTime(.9,SND.ctx.currentTime,1.2);MUS.next=SND.ctx.currentTime+.1;MUS.beat=0;}
+ if(!MUS.gain){MUS.gain=SND.ctx.createGain();MUS.gain.gain.value=.0001;MUS.gain.connect(SND.master);MUS.gain.gain.setTargetAtTime(musicLevel(),SND.ctx.currentTime,1.2);MUS.next=SND.ctx.currentTime+.1;MUS.beat=0;}
  MUS.cls=cls;
  if(!MUS.timer) MUS.timer=setInterval(musicTick,120);
 }
@@ -2206,12 +2240,15 @@ function sbErr(j,status){
  if(/Password should be/i.test(m)) return 'Your password needs at least 6 characters.';
  if(/duplicate key|profiles_username|unique/i.test(m)) return 'That username is taken.';
  if(/Email not confirmed/i.test(m)) return 'Confirm your email first (check your inbox), then sign in.';
+ if(/Could not find the table|relation .*profiles.* does not exist|PGRST205/i.test(m+' '+(j&&j.code||''))) return 'The account server isn’t finished setting up (the player table is missing). Run supabase-setup.sql in Supabase.';
+ if(/Invalid API key|No API key/i.test(m)) return 'The account server key in config.js isn’t right.';
  return String(m).slice(0,160);
 }
 async function sb(path,opt,anon){
  opt=opt||{};
  const h={'apikey':CLOUD.key,'Content-Type':'application/json'};
- if(!anon&&ACC){await accFresh();h['Authorization']='Bearer '+ACC.access;}else h['Authorization']='Bearer '+CLOUD.key;
+ if(!anon&&ACC){await accFresh();h['Authorization']='Bearer '+ACC.access;}
+ else if(/^eyJ/.test(CLOUD.key)) h['Authorization']='Bearer '+CLOUD.key; // legacy anon JWT keys only; new sb_publishable_ keys go in apikey alone
  if(opt.prefer) h['Prefer']=opt.prefer;
  let r;
  try{r=await fetch(CLOUD.url+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined});}
@@ -2323,7 +2360,7 @@ function profile(){
 function saveProfile(pr){lsSet(ACC?'nimgir-acc-profile':'nimgir-profile',JSON.stringify({rp:pr.rp,games:pr.games.slice(0,30),byCls:pr.byCls}));if(ACC) cloudPush();}
 function rankOf(rp){let i=0;for(let k=0;k<RANKS.length;k++) if(rp>=RANKS[k][1]) i=k;const next=RANKS[i+1];return {i:i,letter:RANKS[i][0],floor:RANKS[i][1],next:next?next[1]:null,pct:next?Math.round((rp-RANKS[i][1])/(next[1]-RANKS[i][1])*100):100};}
 function rankBadge(letter,size){return '<span class="rkb rk-'+letter+(size?' '+size:'')+'" title="'+letter+'-Rank">'+letter+'</span>';}
-function standardRules(r){return Object.keys(RULE_DEFAULTS).every(function(k){return r[k]===RULE_DEFAULTS[k];});}
+function standardRules(r){return Object.keys(RULE_DEFAULTS).every(function(k){return k==='draw'?(r.draw===1||r.draw===2):r[k]===RULE_DEFAULTS[k];});}
 let LASTREC=null;
 function recordMatch(){
  LASTREC=null;
@@ -2426,13 +2463,13 @@ const PUZZLES=[
   op:{cls:'hunter',hearts:1,lanes:[['h_tank',1],['h_scout',1],null]}},
  {id:'p10',title:'Compulsion',diff:'Medium',goal:'hearts',brief:'Their Hunter Captain hits harder than anything you have. Make it work for you.',
   me:{cls:'eclipse',hearts:3,dial:{R:0,A:1,S:0},hand:['e_mirror'],lanes:[['e_fledge',1],['e_blood',1],['e_alpha',1]]},
-  op:{cls:'hunter',hearts:1,lanes:[['h_captain',1],['h_tank',1],null]}},
+  op:{cls:'hunter',hearts:1,lanes:[['h_captain',1],['h_tank',1,100],null]}},
  {id:'p11',title:'Spend or Save',diff:'Medium',goal:'hearts',brief:'Your Heretic grows with Anomaly. Siphon wants it too. Only one of them can have it.',
   me:{cls:'eclipse',hearts:3,anom:1,dial:{R:1,A:1,S:0},hand:['e_siphon','e_fledge'],lanes:[['e_veilw',1],null,null]},
   op:{cls:'oathbound',hearts:1,lanes:[['o_shield',2],null,null]}},
  {id:'p12',title:'Knighthood',diff:'Medium',goal:'hearts',brief:'The Abyss Lord is too big for a Knight. It isn’t too big for a Paladin.',
   me:{cls:'oathbound',hearts:4,oath:1,dial:{R:1,A:1,S:0},hand:['o_knight'],lanes:[['o_blade',1],['o_squire',1],null]},
-  op:{cls:'demon',hearts:1,lanes:[['m_lord',1],null,null]}},
+  op:{cls:'demon',hearts:1,lanes:[['m_lord',2],null,null]}},
  {id:'p15',title:'Sky Dive',diff:'Medium',goal:'hearts',brief:'Your Stormwing burns something as it lands. Pick the right target, then send it diving.',
   me:{cls:'dragonkin',hearts:3,dial:{R:2,A:1,S:0},hand:['d_storm','d_dive'],lanes:[['d_drake',1],null,null]},
   op:{cls:'hunter',hearts:1,lanes:[['h_scout',2],['h_archer',1],null]}},
@@ -2454,7 +2491,7 @@ const PUZZLES=[
   op:{cls:'hunter',hearts:1,lanes:[['h_monarch',3],null,null]}},
  {id:'p18',title:'Pack Hunt',diff:'Expert',goal:'hearts',brief:'Three wolves, three walls, one heart. Every crest and every attack counts.',
   me:{cls:'eclipse',hearts:3,anom:0,dial:{R:2,A:1,S:0},hand:['e_evo','e_fledge'],lanes:[['e_alpha',1],['e_thrall',1],null]},
-  op:{cls:'arcanist',hearts:1,lanes:[['a_golem',1],['a_witch',1],null]}}
+  op:{cls:'arcanist',hearts:1,lanes:[['a_golem',2],['a_witch',1],null]}}
 ];
 function puzzleDone(){try{return JSON.parse(lsGet(ACC?'nimgir-acc-puzzles':'nimgir-puzzles')||'{}')||{};}catch(e){return {};}}
 function puzzleSave(d){lsSet(ACC?'nimgir-acc-puzzles':'nimgir-puzzles',JSON.stringify(d));if(ACC) cloudPush();}
@@ -2540,7 +2577,7 @@ const TUT=[
 ];
 function startTutorial(){
  LM=null;LMres=null;uidc=0;
- const rules=Object.assign({},RULE_DEFAULTS,{tapDraw:true,confirm:setup.rules.confirm,sound:setup.rules.sound,music:setup.rules.music,haptics:setup.rules.haptics});
+ const rules=Object.assign({},RULE_DEFAULTS,{draw:1,tapDraw:true,confirm:setup.rules.confirm,sound:setup.rules.sound,music:setup.rules.music,haptics:setup.rules.haptics});
  const a=makePlayer(escHtml(lsGet('nimgir-name')||'Player'),'hunter',rules),b=makePlayer('Opponent','demon',rules);
  b.ai=true;b.aiLevel=1;
  const take=function(pl,ids){ids.forEach(function(id){const i=pl.deck.findIndex(function(c){return c.id===id;});if(i>=0) pl.hand.push(pl.deck.splice(i,1)[0]);});};
@@ -2600,7 +2637,7 @@ async function tutAiTurn(){
 
 /* ---------- state ---------- */
 let S=null, uidc=0, modalResolve=null, drawResolve=null, LASTSCR=null;
-const setup={mode:'ai',p:[{cls:'hunter'},{cls:'dragonkin'}],rules:{startCrests:true,heartPer:0,hearts:5,draw:1,pass:true,confirm:true,tapDraw:true,sound:true,music:true,haptics:true,ambient:true,aiLevel:2,startHand:5,handLimit:7,dice:3,dialCap:6,deckSize:60,pactRate:2,hoardCap:300,aiSpeed:650,revealHand:false,fullDial:false,freeReroll:false}};
+const setup={mode:'ai',p:[{cls:'hunter'},{cls:'dragonkin'}],rules:{startCrests:true,heartPer:0,hearts:5,draw:2,pass:true,confirm:true,tapDraw:true,sound:true,music:true,haptics:true,ambient:true,musicVol:60,sfxVol:80,gfx:'high',aiLevel:2,startHand:5,handLimit:7,dice:3,dialCap:6,deckSize:60,pactRate:2,hoardCap:300,aiSpeed:650,revealHand:false,fullDial:false,freeReroll:false}};
 const nid=function(){return ++uidc;};
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function makePlayer(name,cls,rules){
@@ -2747,7 +2784,7 @@ function atkParts(p,s,vs){
  const au=p.back.find(function(sl){return sl&&sl.faceUp&&D(sl.card).effect==='auraAtk300';});if(au) add(D(au.card).name,300);
  if(has(s,'oathStrike')) add('Oath ×'+(p.oath||0),200*(p.oath||0));
  if(has(s,'anomStrike')) add('Anomaly ×'+(p.anom||0),200*(p.anom||0));
- if(p.cls==='eclipse'&&auraOn(p,'auraConv')) add('Dark Magic ×'+(p.anom||0),300*(p.anom||0));
+ if(auraOn(p,'auraConv')) add('Dark Magic',600);
  if(p.cls==='oathbound'){if(lastOath(p)) add('The Last Oath',400);if(s.level===maxLv(s)&&auraOn(p,'auraHall')) add('Hall of Paladins',300);}
  return r;
 }
@@ -2806,12 +2843,13 @@ function draw(p,n){
 }
 
 /* ---------- modal ---------- */
-let LM=null,LMres=null,INFO=false,ASKFOR=null,MSEQ=0;
+let LM=null,LMres=null,INFO=false,ASKFOR=null,ASKDOCK=false,MSEQ=0;
 function ask(title,body,options,who,wide){
  const w=!!wide||options.some(function(o){return o.card;});
  if(INFO){INFO=false;return new Promise(function(res){LM={title:title,body:body,options:options,who:who,wide:w};LMres=res;render();});}
  const pi=ASKFOR!==null?ASKFOR:(S?S.players.indexOf(P()):0);ASKFOR=null;
- return new Promise(function(res){S.modal={title:title,body:body,options:options,who:who,wide:w,pi:pi,seq:++MSEQ};modalResolve=res;render();});
+ const dock=ASKDOCK;ASKDOCK=false;
+ return new Promise(function(res){S.modal={title:title,body:body,options:options,who:who,wide:w,pi:pi,seq:++MSEQ,dock:dock};modalResolve=res;render();});
 }
 function infoRun(fn){INFO=true;let r;try{r=fn();}catch(e){INFO=false;console.error(e);return;}Promise.resolve(r).catch(function(e){console.error(e);}).finally(function(){INFO=false;render();});}
 function infoAct(a,ds){
@@ -2835,7 +2873,8 @@ async function tryCounter(owner,triggers,text){
   const d=D(sl.card);
   if(d.type!=='counter'||triggers.indexOf(d.trigger)<0||sl.setTurn>=S.turnNo) continue;
   const who=S.mode==='ai'?'Your Counter can trigger!':owner.name+', this is your call';
-  const yes=await choose(owner,'Activate '+d.name+'?',detailHtml(d,'<p><b>What happened:</b> '+text+'</p><p>Spring this Counter now? It flips face-up and its effect happens straight away. You can only activate one Counter per turn.</p>'),
+  if(!owner.ai) ASKDOCK=true;
+  const yes=await choose(owner,'Activate '+d.name+'?','<div class="ctrdock">'+miniCard(d)+'<div><p><b>What happened:</b> '+text+'</p><p><b>If you spring it:</b> '+d.effectText+'</p><p class="muted small">You can tap any card on the field to check it before you choose.</p></div></div>',
    [{label:'Activate '+d.name,value:true},{label:'Keep it hidden',value:false,cancel:true}],function(){return d.effect!=='paySurvive'||owner.hearts.length>2;},true,who);
   if(yes){
    owner.counterUsedTurn=S.turnNo;stInc(owner,'counters');
@@ -2947,7 +2986,12 @@ async function beginTurn(){
  p.back.forEach(function(sl){if(sl&&sl.faceUp&&D(sl.card).effect==='auraArcane') addCrest(p,'A',1,'Ley Line');});
  if(auraOn(p,'auraHeal400')&&p.lanes.some(function(x){return x&&x.dmg>0;})){p.lanes.forEach(function(x){if(x&&x.dmg>0){x.dmg=Math.max(0,x.dmg-400);fx(x.uid,'heal','+400');}});log('Sanctuary heals '+p.name+'’s Summons by 400.');}
  if(auraOn(p,'auraChapel')&&(p.oath||0)>0) addCrest(p,'R',1,'Chapel of Vows');
- if(auraOn(p,'auraConv')&&(p.anom||0)>0){p.anom--;log('Dark Magic: '+p.name+' loses 1 Anomaly. '+p.anom+' of 3.');}
+ for(let i=0;i<3&&!S.over;i++){const sl=p.back[i];if(!sl||!sl.faceUp||D(sl.card).effect!=='auraConv') continue;
+  if((p.anom||0)<1){p.back[i]=null;p.death.push(sl.card);log('Dark Magic fades: '+p.name+' has no Anomaly to keep it.');continue;}
+  const keep=await choose(p,'Dark Magic upkeep',detailHtml(D(sl.card),'<p>Spend <b>1 Anomaly</b> to keep Dark Magic (+600 ATK to your Summons), or let it break.</p><p class="muted">You have '+p.anom+' Anomaly.</p>'),[{label:'Spend 1 Anomaly and keep it',value:true},{label:'Let it break',value:false,cancel:true}],function(){return p.lanes.some(function(x){return x;})&&!(p.lanes.some(function(x){return x&&has(x,'transcend');})&&p.anom<=2&&!p.lanes.some(function(x){return x&&!has(x,'transcend');}));},true);
+  if(keep){p.anom--;log(p.name+' spends 1 Anomaly to keep Dark Magic. '+p.anom+' of 3.');}
+  else{p.back[i]=null;p.death.push(sl.card);log(p.name+' lets Dark Magic break.');}
+ }
  if(auraOn(p,'auraAnom')) gainAnom(p,'Coven Circle');
  for(let i=0;i<3;i++){const s=p.lanes[i];if(s&&has(s,'startCrest')) await chooseCrests(p,1,D(s.card).name);}
  if(p.lanes.some(function(s){return s&&has(s,'startHealAll');})){p.lanes.forEach(function(s){if(s&&s.dmg>0){s.dmg=Math.max(0,s.dmg-500);}});log(p.name+"'s healer restores 500 HP to each Summon.");}
@@ -2979,20 +3023,22 @@ async function endTurn(){
 /* ---------- actions ---------- */
 function emptyLanes(p){return [0,1,2].filter(function(i){return !p.lanes[i];});}
 function emptySlots(p){return [0,1,2].filter(function(i){return !p.back[i];});}
+function bpCards(){return S&&S.rules&&S.rules.draw===1?2:3;}
 async function bloodPrice(p,s){
+ const BPN=bpCards();
  const others=[0,1,2].filter(function(i){return p.lanes[i]&&p.lanes[i]!==s;});
  const opts=[{label:'Lose 1 heart',value:'heart'}];
- if(p.hand.length>=2) opts.push({label:'Discard 2 cards from your hand',value:'discard'});
+ if(p.hand.length>=BPN) opts.push({label:'Discard '+BPN+' cards from your hand',value:'discard'});
  others.forEach(function(i){opts.push({label:'Destroy it',value:i,card:D(p.lanes[i].card),level:p.lanes[i].level});});
  if(opts.length===1){loseHearts(p,1,'blood price for '+D(s.card).name);return;}
- const ch=await choose(p,'Blood price',detailHtml(D(s.card),'<p><b>'+D(s.card).name+'</b> demands a price. Lose a heart, discard 2 cards, or destroy one of your other Summons.</p>'),opts,function(){
-  if(p.hand.length>=3) return 'discard';if(p.hearts.length>3) return 'heart';
+ const ch=await choose(p,'Blood price',detailHtml(D(s.card),'<p><b>'+D(s.card).name+'</b> demands a price. Lose a heart, discard '+BPN+' cards, or destroy one of your other Summons.</p>'),opts,function(){
+  if(p.hand.length>=BPN+1) return 'discard';if(p.hearts.length>3) return 'heart';
   const w=others.slice().sort(function(a,b){return atkOf(p,p.lanes[a],null)-atkOf(p,p.lanes[b],null);})[0];
-  return w!==undefined?w:(p.hand.length>=2?'discard':'heart');},true);
+  return w!==undefined?w:(p.hand.length>=BPN?'discard':'heart');},true);
  if(ch==='heart') loseHearts(p,1,'blood price');
  else if(ch==='discard'){
-  for(let k=0;k<2;k++){const uid=await choose(p,'Blood price','<p>Choose a card to discard ('+(k+1)+' of 2).</p>',p.hand.map(function(c){return {label:'Discard',value:c.uid,card:D(c)};}),lowestVal,true);const i=p.hand.findIndex(function(c){return c.uid===uid;});if(i>=0) p.death.push(p.hand.splice(i,1)[0]);}
-  log(p.name+' discards 2 cards as a blood price.');
+  for(let k=0;k<BPN;k++){const uid=await choose(p,'Blood price','<p>Choose a card to discard ('+(k+1)+' of '+BPN+').</p>',p.hand.map(function(c){return {label:'Discard',value:c.uid,card:D(c)};}),lowestVal,true);const i=p.hand.findIndex(function(c){return c.uid===uid;});if(i>=0) p.death.push(p.hand.splice(i,1)[0]);}
+  log(p.name+' discards '+BPN+' cards as a blood price.');
  }
  else destroyNow(p,ch);
 }
@@ -3782,7 +3828,7 @@ function unitHtml(s,owner,side,lane){
   '<span class="uart">'+cardArt(d.id)+'</span>'+
   '<span class="ustats"><span class="atk" title="Attack">'+icon('S',14)+atkOf(owner,s,null)+'</span><span class="hp'+(s.dmg>0?' hurt':'')+'" title="Health">'+heartIcon(13)+hpNow(s)+'<small>/'+hpMax(s)+'</small></span></span>'+
   '<span class="hpbar" aria-hidden="true"><i style="width:'+pct+'%"></i></span>'+
-  (tags.length?'<span class="tags">'+tags.join('')+'</span>':'')+(acts?'<span class="acts">'+acts+'</span>':'')+'</div>';
+  '<span class="tags'+(tags.length?'':' empty')+'">'+tags.join('')+'</span>'+(side==='me'||acts?'<span class="acts'+(acts?'':' empty')+'">'+acts+'</span>':'')+'</div>';
 }
 const BACKSVG='<svg viewBox="0 0 400 400" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="200" cy="200" r="150" stroke-width="10"/><circle cx="200" cy="200" r="105" stroke-width="6"/><path d="M200 70v-40M200 330v40M70 200h-40M330 200h40" stroke-width="12"/><path d="M200 110l20 70 70 20-70 20-20 70-20-70-70-20 70-20z" stroke-width="12"/></svg>';
 function deckGfx(p,ready,cls,extra){
@@ -3913,7 +3959,7 @@ function handHtml(p){
 function modalHtml(m,act){
  m=m||S.modal;act=act||'modal';if(!m) return '';
  const all=m.options.map(function(o,i){return [o,i];}),cards=all.filter(function(x){return x[0].card;}),rest=all.filter(function(x){return !x[0].card;});
- return '<div class="overlay" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="modal'+(m.wide?' wide':'')+'">'+(m.who?'<div class="who">'+m.who+'</div>':'')+'<h2 id="mt" class="display">'+m.title+'</h2><div class="body">'+m.body+'</div>'+
+ return '<div class="overlay'+(m.dock?' dock':'')+'" role="dialog" aria-modal="'+(m.dock?'false':'true')+'" aria-labelledby="mt"><div class="modal'+(m.wide&&!m.dock?' wide':'')+'">'+(m.who?'<div class="who">'+m.who+'</div>':'')+'<h2 id="mt" class="display">'+m.title+'</h2><div class="body">'+m.body+'</div>'+
   (cards.length?'<div class="choices">'+cards.map(function(x){return '<button class="choice" data-act="'+act+'" data-i="'+x[1]+'"'+(x[0].disabled?' disabled':'')+'>'+cardFace(x[0].card,{size:'s',level:x[0].level})+'<span class="clabel">'+x[0].label+'</span></button>';}).join('')+'</div>':'')+
   '<div class="opts">'+rest.map(function(x){return '<button data-act="'+act+'" data-i="'+x[1]+'"'+(x[0].disabled?' disabled':'')+(x[0].cancel?' class="cancel"':'')+'>'+x[0].label+'</button>';}).join('')+'</div></div></div>';
 }
@@ -3928,7 +3974,6 @@ const RULEOPTS=[
  {k:'hearts',label:'Hearts',opts:[[3,'3'],[4,'4'],[5,'5'],[6,'6'],[7,'7']]},
  {k:'deckSize',label:'Deck size',opts:[[40,'40 (classic)'],[60,'60']]},
  {k:'startHand',label:'Starting hand',opts:[[3,'3'],[4,'4'],[5,'5'],[6,'6'],[7,'7']]},
- {k:'draw',label:'Cards drawn per turn',opts:[[1,'1'],[2,'2']]},
  {k:'handLimit',label:'Hand limit',opts:[[5,'5'],[7,'7'],[9,'9'],[0,'None']]},
  {k:'dice',label:'Crest dice per turn',opts:[[2,'2'],[3,'3'],[4,'4']]},
  {k:'dialCap',label:'Crest dial max (per crest)',opts:[[4,'4'],[6,'6'],[8,'8'],[10,'10']]},
@@ -3940,15 +3985,21 @@ const TESTOPTS=[
  {k:'fullDial',label:'Start with a full crest dial',opts:[[false,'Off'],[true,'On']]},
  {k:'freeReroll',label:'Unlimited rerolls',opts:[[false,'Off'],[true,'On']]},
 ];
-const RULE_DEFAULTS={startCrests:true,heartPer:0,hearts:5,deckSize:60,startHand:5,draw:1,handLimit:7,dice:3,dialCap:6,pactRate:2,hoardCap:300,revealHand:false,fullDial:false,freeReroll:false};
+const PREF_KEYS=['sound','music','musicVol','sfxVol','gfx','ambient','haptics','confirm','tapDraw','aiSpeed','aiLevel','draw'];
+(function(){try{const pf=JSON.parse(lsGet('nimgir-prefs')||'null');if(pf&&typeof pf==='object') PREF_KEYS.forEach(function(k){if(pf[k]!==undefined) setup.rules[k]=pf[k];});}catch(e){}if(setup.rules.aiSpeed) AI_DELAY=setup.rules.aiSpeed;})();
+let PREFJ='';
+function savePrefs(){const o={};PREF_KEYS.forEach(function(k){o[k]=setup.rules[k];});const j=JSON.stringify(o);if(j!==PREFJ){PREFJ=j;lsSet('nimgir-prefs',j);}try{document.body.dataset.gfx=setup.rules.gfx||'high';}catch(e){}}
+const RULE_DEFAULTS={startCrests:true,heartPer:0,hearts:5,deckSize:60,startHand:5,draw:2,handLimit:7,dice:3,dialCap:6,pactRate:2,hoardCap:300,revealHand:false,fullDial:false,freeReroll:false};
 const AILEVELS=['Very Easy','Easy','Medium','Hard','Expert'];
 const AIOPTS=[{k:'aiLevel',label:'AI difficulty',opts:AILEVELS.map(function(n,i){return [i,n];})}];
 const GAMEOPTS=[
+ {k:'draw',label:'Game mode',opts:[[2,'Standard · draw 2'],[1,'Competitive · draw 1']]},
  {k:'confirm',label:'“Are you sure?” pop-ups',opts:[[true,'On'],[false,'Off']]},
  {k:'tapDraw',label:'Draw at the start of your turn',opts:[[true,'Tap your deck'],[false,'Automatic']]},
  {k:'sound',label:'Sound effects',opts:[[true,'On'],[false,'Off']]},
  {k:'music',label:'Music',opts:[[true,'On'],[false,'Off']]},
  {k:'haptics',label:'Phone vibration',opts:[[true,'On'],[false,'Off']]},
+ {k:'gfx',label:'Graphics',opts:[['high','High'],['balanced','Balanced'],['low','Low']]},
  {k:'ambient',label:'Background effects',opts:[[true,'On'],[false,'Off']]},
  {k:'aiSpeed',label:'AI speed',opts:[[1100,'Slow'],[650,'Normal'],[300,'Fast'],[60,'Instant']]},
  {k:'pass',label:'Pass-the-device screen (local 2 player)',opts:[[true,'On'],[false,'Off']]}
@@ -4073,7 +4124,8 @@ function cardsHtml(){
 function settingsHtml(){
  const row=function(r){return '<div class="rrow"><span>'+r.label+'</span><span class="seg">'+r.opts.map(function(o,i){return '<button data-act="rule" data-k="'+r.k+'" data-i="'+i+'" aria-pressed="'+(setup.rules[r.k]===o[0])+'">'+o[1]+'</button>';}).join('')+'</span></div>';};
  const changed=Object.keys(RULE_DEFAULTS).filter(function(k){return setup.rules[k]!==RULE_DEFAULTS[k];}).length;
- return screenWrap('Settings','<div class="pickcol rules"><h2 class="display">Gameplay</h2>'+GAMEOPTS.concat(AIOPTS).map(row).join('')+'</div><div class="pickcol rules"><h2 class="display">Rules</h2><p class="muted setnote">Change the rules to test and break the game. '+(changed?'<b>'+changed+' rule'+(changed>1?'s':'')+' changed</b> from the standard game. <button class="linkbtn" data-act="resetrules">Reset to standard</button>':'You’re on the standard rules.')+'</p>'+RULEOPTS.map(row).join('')+'</div><div class="pickcol rules"><h2 class="display">Testing</h2><p class="muted setnote">Cheats for testing cards and combos.</p>'+TESTOPTS.map(row).join('')+'</div><p style="margin-top:20px"><button class="primary big" data-act="go" data-to="mode">Play</button></p>');
+ const slider=function(k,label){const v=Math.round(+setup.rules[k]||0);return '<div class="rrow"><label for="vol-'+k+'">'+label+'</label><span class="volwrap"><input type="range" min="0" max="100" step="5" id="vol-'+k+'" data-vol="'+k+'" value="'+v+'" aria-valuetext="'+v+'%"><output>'+v+'%</output></span></div>';};
+ return screenWrap('Settings','<div class="pickcol rules"><h2 class="display">Sound</h2>'+slider('musicVol','Music volume')+slider('sfxVol','Effects volume')+'<p class="muted setnote">Turn music or sound effects off completely with the Sound and Music switches below or in the in-game Options menu.</p></div><div class="pickcol rules"><h2 class="display">Gameplay</h2>'+GAMEOPTS.concat(AIOPTS).map(row).join('')+'<p class="muted setnote">Graphics: <b>High</b> is everything on. <b>Balanced</b> halves particles and background effects. <b>Low</b> turns off cut-ins, screen shake, flashes and background effects for older phones.</p></div><div class="pickcol rules"><h2 class="display">Rules</h2><p class="muted setnote">Change the rules to test and break the game. '+(changed?'<b>'+changed+' rule'+(changed>1?'s':'')+' changed</b> from the standard game. <button class="linkbtn" data-act="resetrules">Reset to standard</button>':'You’re on the standard rules.')+'</p>'+RULEOPTS.map(row).join('')+'</div><div class="pickcol rules"><h2 class="display">Testing</h2><p class="muted setnote">Cheats for testing cards and combos.</p>'+TESTOPTS.map(row).join('')+'</div><p style="margin-top:20px"><button class="primary big" data-act="go" data-to="mode">Play</button></p>');
 }
 function vsHtml(){
  const a=setup.p[0].cls,b=setup.p[1].cls,ai=setup.mode==='ai';
@@ -4120,13 +4172,13 @@ function scrollRestore(o){
 function render(){
  const app=document.getElementById('app');
  const SV=scrollSave();
- if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr===LASTSCR) scrollRestore(SV);if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;try{ambSync();}catch(e){}return;}
+ if(!S){try{musicSync();}catch(e){}const scr=setup.screen+(setup.view||'');app.innerHTML=setupScreenHtml()+(LM?modalHtml(LM,'lmodal'):'');if(scr===LASTSCR) scrollRestore(SV);if(scr!==LASTSCR&&animOK()&&app.firstElementChild&&app.firstElementChild.animate) app.firstElementChild.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});LASTSCR=scr;try{ambSync();savePrefs();}catch(e){}return;}
  const enterGame=LASTSCR!=='game';LASTSCR='game';
  try{if(S.tutorial) tutTick();}catch(e){console.error(e);}
  const me=VIEW(),op=OTHER(),act=P();
  const hidePick=S.mode==='online'&&me!==act,svPick=S.pick,svUsel=S.usel;if(hidePick){S.pick=null;S.usel=null;}
  const title=S.puzzle?'Puzzle · '+PUZZLES[S.puzzle.i].title+' · '+(S.puzzle.goal==='clear'?'Destroy every enemy Summon':'Win this turn'):S.mode==='ai'?(act.ai?'Opponent’s turn':'Your turn'):S.mode==='online'?(act===me?'Your turn':act.name+'’s turn'):act.name+'’s turn';
- const phaseName={handoff:'',draw:'Draw',roll:'Roll',main:'Play phase',battle:'Battle phase'}[S.phase]||'';
+ const phaseName=(S.rules.draw===1&&!S.puzzle&&!S.tutorial?'<span class="compchip">Competitive</span> ':'')+({handoff:'',draw:'Draw',roll:'Roll',main:'Play phase',battle:'Battle phase'}[S.phase]||'');
  const pop=setup.optsOpen?'<div class="optpop" role="menu"><button class="ghost" data-act="optconfirm" aria-pressed="'+!!setup.rules.confirm+'">“Are you sure?” pop-ups: <b>'+(setup.rules.confirm?'On':'Off')+'</b></button><button class="ghost" data-act="optsound" aria-pressed="'+!!setup.rules.sound+'">Sound: <b>'+(setup.rules.sound?'On':'Off')+'</b></button><button class="ghost" data-act="optmusic" aria-pressed="'+!!setup.rules.music+'">Music: <b>'+(setup.rules.music?'On':'Off')+'</b></button>'+(S.puzzle?'<button class="ghost" data-act="pzrestart">Restart puzzle</button>':'')+'<button class="ghost" data-act="togglelog">Show / hide game log</button><button class="ghost" data-act="quit">Quit to title</button></div>':'';
  const hidden=S.phase==='handoff'&&S.mode==='local';
  let handNote='';
@@ -4152,7 +4204,7 @@ function render(){
  if(enterGame&&animOK()){const g=document.querySelector('.gamewrap');if(g&&g.animate) g.animate([{opacity:0,transform:'scale(.985)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'});}
  try{postFx();}catch(e){}
  try{showReveals();}catch(e){console.error(e);}
- try{maybeShowResults();musicSync();puzzleCheck();}catch(e){}
+ try{maybeShowResults();musicSync();puzzleCheck();savePrefs();}catch(e){}
  try{ambSync();}catch(e){}
  try{if(S&&S.tutorial) coachHighlight();}catch(e){console.error(e);}
  if(NET.role==='host'&&S.mode==='online') netCapture();
@@ -4227,7 +4279,7 @@ function gameAct(a,ds,remote){
  if(a==='quit'||a==='newgame'){if(S.busy&&!S.over&&!drawResolve) return;setup.optsOpen=false;drawResolve=null;const wasPz=S&&S.puzzle;if(S&&S.tutorial) lsSet('nimgir-tutorial','1');S=null;setup.screen=wasPz?'puzzles':a==='newgame'?'select':'title';render();return;}
  if(a==='drawcard'){if(drawResolve&&!S.modal){const r=drawResolve;drawResolve=null;r();}return;}
  if(!remote&&(a==='udetail'||a==='slot'||a==='pickdetail'||(a==='death'&&!(canAct()&&ds.side==='me')))&&(S.mode==='online'||S.busy||!canAct())){if(LM) return;infoAct(a,ds);return;}
- if(!remote&&a==='hand'&&(S.busy||!canAct()||VIEW()!==P())){if(LM||S.modal) return;const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
+ if(!remote&&a==='hand'&&(S.busy||!canAct()||VIEW()!==P())){if(LM||(S.modal&&!S.modal.dock)) return;const c=VIEW().hand.find(function(x){return x.uid===+ds.uid;});if(c) infoRun(function(){return showDetails(D(c));});return;}
  if(S.busy||S.modal) return;
  if(a==='death'){run(function(){return deathMenu(ds.side);});return;}
  if(a==='ophand'){const o=OTHER();run(function(){return ask(o.name+'’s hand','<p class="muted">Testing option: the opponent’s hand is revealed.</p>'+(o.hand.length?'<div class="minigrid">'+o.hand.map(function(c){return miniCard(D(c));}).join('')+'</div>':'<p>Empty.</p>'),[{label:'Close',value:null,cancel:true}],null,true);});return;}
