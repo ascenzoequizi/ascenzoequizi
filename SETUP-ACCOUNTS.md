@@ -13,6 +13,9 @@
    Commit. The anon key is meant to be public; the database rules from step 2 stop players editing anyone else's profile.
 7. Open the game → **Player** → **Create account**.
 
+Upgrading an existing project (November 2026)
+- Already set up accounts before? Open **SQL Editor → New query**, paste everything from `supabase-upgrade-progress.sql`, and click **Run**. This adds one column so quests, Shards, deck mastery, cosmetics, Gate Run and Arcade progress follow each player's account. Until you run it, ranks still sync and the game shows a reminder on the Player screen.
+
 Notes
 - Ranks are worked out by the game on each player's device, which is fine for friends. A public, competitive ladder would need the server to check results.
 - Installing: on iPhone, open the site in Safari → Share → Add to Home Screen. On Android/Chrome, use "Install app". On PC, the install icon in the address bar.

@@ -6,6 +6,7 @@ create table if not exists public.profiles (
   by_cls jsonb not null default '{}'::jsonb,
   games jsonb not null default '[]'::jsonb,
   puzzles jsonb not null default '{}'::jsonb,
+  progress jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -19,3 +20,6 @@ drop policy if exists "Players create their own profile" on public.profiles;
 create policy "Players create their own profile" on public.profiles for insert with check (auth.uid() = id);
 drop policy if exists "Players update their own profile" on public.profiles;
 create policy "Players update their own profile" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
+
+-- Safe to run again: adds the progress column to tables made before it existed.
+alter table public.profiles add column if not exists progress jsonb not null default '{}'::jsonb;
